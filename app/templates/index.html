@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block navbar %}{% endblock%}
+{% block content %}
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+
+    <div class="container-fluid" data-aos="fade-up">
+      <div class="row justify-content-center">
+        <div class="col-xl-5 col-lg-6 pt-3 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
+          <h1>Custom Language Model Builder</h1>
+          <h2>New Languages for NLP: Building Linguistic Diversity in the Digital Humanities</h2>
+          <div>
+            {% if message %}
+            <a  class="btn-get-started scrollto">{{ message }}</a>
+            {% endif %}
+            <br><br>
+            <form method="post">
+              <input type="password" id="password" name="password" placeholder="enter password"><br>
+              <input class="btn btn-dark" type="submit" value="Submit">
+            </form> 
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 order-1 order-lg-2 hero-img" data-aos="zoom-in" data-aos-delay="150">
+          <img id="spaceman" style="opacity: 0.8; margin-left:100px;" src="{{ url_for('static', path='/img/spaceman.png') }}" class="img-fluid animated" alt="">
+        </div>
+      </div>
+    </div>
+
+  </section><!-- End Hero -->
+
+
+
+  {% endblock %}
+
+  {% block extrajs %}
+  <script>
+   
+    $('#spaceman').mouseenter(function() {
+        $('#spaceman').attr('src', "{{ url_for('static', path='/img/spaceman_upsidedown.png') }}");
+});
+$('#spaceman').mouseleave(function() {
+        $('#spaceman').attr('src', "{{ url_for('static', path='/img/spaceman.png') }}");
+});
+
+  </script>
+  {% endblock %}
