@@ -18,12 +18,16 @@ async def create(request: Request):
 
 @router.post("/create")
 async def create_post(request: Request,
-                      lang_name:Optional[str]= Form(None), 
-                      lang_code:Optional[str]=Form(None), 
-                      spacy_language: Optional[str]=Form(None)
+                      lang_name:str= Form(...), 
+                      lang_code:str= Form(...), 
+                      spacy_language: Optional[str]= Form(None)
                       ):
-    print(lang_name, lang_code, spacy_language)
-    return templates.TemplateResponse("create.html", {"request": request})
+    if spacy_language:
+        clone_object(lang_name,lang_code, spacy_language)
+    else:
+        create_object(lang_name,lang_code)
+    message = f"Created a new object for {lang_name} with code {lang_code}"
+    return templates.TemplateResponse("create.html", {"request": request, "message":message})
 
 #Select2 endpoint
 @router.get("/spacy_languages") #/spacy_languages?term=Russian&_type=query&q=Russian
