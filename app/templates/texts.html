@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block navbar %}
+<li class="active"><a href="/main">Home</a></li>
+{% endblock%}
+{% block content %}
+<main style="margin-top: 200px;" id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Load Texts</h2>
+        </div>
+
+      </div>
+    </section><!-- End Breadcrumbs -->
+
+    
+
+        
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+        <div class="container">
+            
+          <div class="row">
+            <div class="col-lg-6 order-1 order-lg-2" data-aos="zoom-in" data-aos-delay="150">
+              <img src="static/img/load_shuttle.png" class="img-fluid" alt="">
+            </div>
+            <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content" data-aos="fade-right">
+              <h3>Load Texts from File or plaintext</h3>
+              <p>Cadet can process various types of files, including txt, docx, pdf, jpg, tiff and <a href="https://textract.readthedocs.io/en/stable/#currently-supporting">others</a></p>
+              <ul>
+                <li><i class="icofont-check-circled"></i>Cadet uses these initial text files to identify frequent terms.</li>
+                <li><i class="icofont-check-circled"></i>These seed terms will jump start your new language model.</li>
+              </ul>
+                <form enctype="multipart/form-data" method="post">
+                    <div class="mb-3">
+                      <label for="text_url">Enter a URL to a file to load:</label>
+                      <input name="text_url"  type="url" class="form-control" id="text_url" aria-describedby="text_url">
+                      <small id="emailHelp" class="form-text text-muted"></small>
+                    </div>
+                    
+                    
+                      <div class="mb-3">
+                        <input name="files" class="form-control" type="file" id="text_files"  multiple>
+                      </div>
+                      <div class="mb-3">
+                        <textarea id="text_area" name="text_area" rows="10" cols="68" placeholder="Enter text here"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="read-more">Submit</button>
+                  </form>
+                 
+                  {% if message %}
+                  <div class="mb-3">
+                    <b class="text-grad">{{ message }}</b>
+                    </div>
+                  <a href='/corpus' class="read-more">Next <i class="icofont-long-arrow-right"></i></a>
+                  {% endif %}
+              
+            </div>
+          </div>
+  
+        </div>
+      </section><!-- End About Section -->
+
+
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $('#header').addClass('header-scrolled')
+    
+</script>
+{% endblock %}
