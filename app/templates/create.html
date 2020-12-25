@@ -48,16 +48,53 @@
                     <h4>Language Code</h4>
                     <p>Enter a two or three character identifier for your language (such as "ru" or "sr")</p>
                     <input required style="width: 33%;" name="lang_code"  type="text" class="form-control" id="lang_code" maxlength="4" aria-describedby="lang_code">
-                    <!-- TODO Validate that not equal to existing code -->
+                    
+
+                  </div>
+
+                  <div style="padding-top:30px;" class="icon-box mt-5 mt-lg-0" data-aos="fade-up" data-aos-delay="300">
+                    <i class="bx bx-directions"></i>
+                    <h4>Direction</h4>
+                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+                      <label onclick="$('#direction').val('ltr');" class="btn btn-outline-primary" for="btnradio1">Left to Right</label>
+                    
+                      <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                      <label onclick="$('#direction').val('rtl');" style="unicode-bidi:bidi-override; direction:rtl;" class="btn btn-outline-primary" for="btnradio2">Right to Left</label>
+                      <input id="direction" name="direction" type="hidden" value="ltr">
+                      
+                    </div>
+
+                  </div>
+                  <div class="icon-box mt-5" data-aos="fade-up" data-aos-delay="400">
+                    <i class="bx bx-braille"></i>
+                    <h4>Case and Letters</h4>
+                    
+                   <br>
+                   <br>
+                    <input class="form-check-input" type="checkbox" name="has_case" value=True id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Has case 
+                    </label>
+                    <p>This languages has upper and lower case system.</p>
+                    
+                  
+                    <input class="form-check-input" type="checkbox" name="has_letters" value=True id="flexCheckDefault">
+                    <label class="form-check-label" for="flexCheckDefault">
+                      Has letters
+                    </label>
+                    <p>This languages has letters rather than symbols or gliphs.</p>
+                    
+                 
                 </div>
-                <div class="icon-box mt-5" data-aos="fade-up" data-aos-delay="300">
+                <div class="icon-box mt-5" data-aos="fade-up" data-aos-delay="500">
                     <i class="bx bx-copy-alt"></i>
-                    <h4>Clone from an existing language object</h4>
+                    <h4>Clone an existing language object</h4>
                     <p> Basic language objects exist for many languages in spaCy. Rather than starting entirely from scratch, you can copy and customize an existing object</p>
                     <select style="width: 33%;" class="spacy_languages" name="spacy_language"></select>       
                         
                 </div>
-              <div class="icon-box mt-5" data-aos="fade-up" data-aos-delay="400">
+              <div class="icon-box mt-5" data-aos="fade-up" data-aos-delay="600">
                 <button type="submit" class="read-more">Create</button>
                 
                
@@ -89,7 +126,8 @@
           // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
         }
       });
-        
+
+    // Validate lang code. Display error if code exists
     let spacy_languages = {{ spacy_languages|safe }};
     $('#lang_code').on('input', function() {
       let code = $('#lang_code').val();
@@ -101,7 +139,6 @@
       };
   });
        
-    
     
 </script>
 {% endblock %}

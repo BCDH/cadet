@@ -25,13 +25,18 @@ async def create(request: Request):
 async def create_post(request: Request,
                       lang_name:str= Form(...), 
                       lang_code:str= Form(...), 
-                      spacy_language: Optional[str]= Form(None)
+                      spacy_language: Optional[str]= Form(None),
+                      direction:str = Form(...),
+                      has_letters: bool = Form(False),
+                      has_case: bool = Form(False)
                       ):
     if spacy_language:
-        clone_object(lang_name,lang_code, spacy_language)
+        #clone_object(lang_name,lang_code, spacy_language)
+        pass
        
     else:
-        create_object(lang_name,lang_code)
+        create_object(lang_name,lang_code,direction,has_case,has_letters)
+
         
     message = f"Created a new object for {lang_name} with code {lang_code}"
     return templates.TemplateResponse("create.html", {"request": request, "message":message})
