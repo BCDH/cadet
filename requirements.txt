@@ -6,3 +6,4 @@ requests
 jinja2
 iofiles
 httpx
+python-slugify

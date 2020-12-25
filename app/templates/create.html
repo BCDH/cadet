@@ -10,19 +10,31 @@
 
 
 <main style="margin-top: 200px;" id="main">
+    {% if message %}
+    <section id="features" class="features">
+        <div class="container" data-aos="fade-up">
+    <div class="alert alert-success" role="alert">
+        {{ message }}  
 
-    
+      </div>
+      <a href='/defaults' class="read-more">Next<i style="color:white;"class="icofont-long-arrow-right"></i></a>
+
+      </div>
+    </section>
+    {% endif %}
+    {% if not message %}
     <!-- ======= Features Section ======= -->
     <section id="features" class="features">
         <div class="container" data-aos="fade-up">
   
             <div class="section-title">
-                <h2>Create Language Object</h2>
+                <h2>Create a New Language Object</h2>
                 <p>All things begin with a <a target="_blank" href="https://spacy.io/api/language">Language object</a> in spaCy.</p>      
             </div>
   
           <div class="row">
             <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column align-items-lg-center">
+               
                 <form enctype="multipart/form-data" method="post">
                 <div class="icon-box mt-5 mt-lg-0" data-aos="fade-up" data-aos-delay="100">
                     <i class="bx bx-sun"></i>
@@ -36,35 +48,36 @@
                     <h4>Language Code</h4>
                     <p>Enter a two or three character identifier for your language (such as "ru" or "sr")</p>
                     <input required style="width: 33%;" name="lang_code"  type="text" class="form-control" id="lang_code" maxlength="4" aria-describedby="lang_code">
-        
+                    <!-- TODO Validate that not equal to existing code -->
                 </div>
                 <div class="icon-box mt-5" data-aos="fade-up" data-aos-delay="300">
                     <i class="bx bx-copy-alt"></i>
                     <h4>Clone from an existing language object</h4>
                     <p> Basic language objects exist for many languages in spaCy. Rather than starting entirely from scratch, you can copy and customize an existing object</p>
-                    <select style="width: 33%;" class="spacy_languages" name="spacy_language"></select>
-                    <p id="lang_code"></p>
-                    <p id="lang_dependencies"></p>
-                    <p id="lang_models"></p>
+                    <select style="width: 33%;" class="spacy_languages" name="spacy_language"></select>       
+                        
                 </div>
               <div class="icon-box mt-5" data-aos="fade-up" data-aos-delay="400">
-                <button type="submit" class="read-more">Begin</button>
-                {{ message }}
+                <button type="submit" class="read-more">Create</button>
+                
+               
               </div>
               </form>
             </div>
+            
             <div class="image col-lg-6 order-1 order-lg-2 " data-aos="zoom-in" data-aos-delay="100">
               <img src="static/img/skylab.jpg" alt="" class="img-fluid">
             </div>
+           
           </div>
-  
+          
         </div>
       </section><!-- End Features Section -->
+      {% endif %}
 </main> 
 {% endblock %}
 
 {% block extrajs %}
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 
 <script>
     $('#header').addClass('header-scrolled');
@@ -77,47 +90,17 @@
         }
       });
         
-       let lang_data 
-       $.getJSON("https://raw.githubusercontent.com/explosion/spaCy/8cc5ed6771010322954c2211b0e1f5a0fd14828a/website/meta/languages.json", function(json){
-        lang_data = json;
-       });
-      $('.spacy_languages').on("select2:select", function(event) {
-        let selected_lang = $('.spacy_languages').select2('data')[0]['text'];
-
-        for (x in lang_data.languages){
-            if (lang_data.languages[x].name == selected_lang){
-                let selected_lang_data = lang_data.languages[x];
-                $('#lang_code').text(selected_lang_data.code);
-                
-                if (selected_lang_data.models){
-                    var i;
-                    for (i = 0; i < selected_lang_data.models.length; i++) {
-                        let model_name = selected_lang_data.models[i];
-                        console.log(model_name);
-                    }
-                };
-
-                if (selected_lang_data.dependencies){
-                    var i;
-                    for (i = 0; i < selected_lang_data.dependencies.length; i++) {
-                        let dep_name = selected_lang_data.dependencies[i].name;
-                        let dep_url = selected_lang_data.dependencies[i].url;
-                        console.log(dep_name, dep_url)
-                    }
-                    
-                };
-
-                if (selected_lang_data.starters){
-                    var i;
-                    for (i = 0; i < selected_lang_data.starters.length; i++) {
-                        let starter_name = selected_lang_data.starters[i];
-                        console.log(starter_name)
-                    }
-                    
-                };
-            } 
-        };
-      });
+    let spacy_languages = {{ spacy_languages|safe }};
+    $('#lang_code').on('input', function() {
+      let code = $('#lang_code').val();
+      if (spacy_languages.includes(code)){
+        $('#lang_code').after('<p id="lang_error">That language code already exists, please choose another.</p>')
+      };
+      if (!spacy_languages.includes(code)){
+        $('#lang_error').remove();
+      };
+  });
+       
     
     
 </script>

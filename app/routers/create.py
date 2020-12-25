@@ -5,15 +5,20 @@ import spacy
 from fastapi import APIRouter
 from fastapi import Request, Form, File, UploadFile
 from fastapi.templating import Jinja2Templates
-
+from app.util.create_util import create_object, clone_object
+import json 
 templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter()
 
+#Get list of currently support Language objects from spacy.lang
+spacy_path = Path(spacy.__file__.replace('__init__.py',''))
+spacy_lang = spacy_path / 'lang'
+spacy_languages = json.dumps([i.stem for i in spacy_lang.iterdir() if len(i.stem) < 3])
 
 @router.get("/create")
 async def create(request: Request):
-    return templates.TemplateResponse("create.html", {"request": request})
+    return templates.TemplateResponse("create.html", {"request": request, "spacy_languages":spacy_languages})
 
 
 @router.post("/create")
@@ -24,8 +29,10 @@ async def create_post(request: Request,
                       ):
     if spacy_language:
         clone_object(lang_name,lang_code, spacy_language)
+       
     else:
         create_object(lang_name,lang_code)
+        
     message = f"Created a new object for {lang_name} with code {lang_code}"
     return templates.TemplateResponse("create.html", {"request": request, "message":message})
 

@@ -693,6 +693,24 @@ section {
   position: relative;
 }
 
+
+.services .icon-box img {
+  margin: 0 auto;
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: ease-in-out 0.3s;
+  position: relative;
+}
+
+.services .icon-box .icon img {
+  font-size: 36px;
+  transition: 0.5s;
+  position: relative;
+}
+
 .services .icon-box .icon svg {
   position: absolute;
   top: 0;
@@ -809,6 +827,12 @@ section {
 
 .features .icon-box i {
   font-size: 48px;
+  float: left;
+  color: #5846f9;
+}
+
+.features .icon-box img {
+  height: 60px;
   float: left;
   color: #5846f9;
 }
