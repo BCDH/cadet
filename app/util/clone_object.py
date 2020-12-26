@@ -4,6 +4,8 @@ import shutil
 import httpx
 from pathlib import Path
 from slugify import slugify
+import subprocess
+import sys
 
 
 def clone_object(lang_name,lang_code, spacy_language):
@@ -13,8 +15,10 @@ def clone_object(lang_name,lang_code, spacy_language):
 
     #Create a directory for the new language
     new_lang_path = (Path.cwd() / 'new_lang' / new_lang_name)
+    if new_lang_path.exists(): # TODO Revisit this choice, should we replace if exists?
+        shutil.rmtree(new_lang_path)
     new_lang_path.mkdir(parents=True, exist_ok=True)
-
+    
     #Identify spaCy language and directory to clone 
     spacy_languages = httpx.get('https://raw.githubusercontent.com/explosion/spaCy/8cc5ed6771010322954c2211b0e1f5a0fd14828a/website/meta/languages.json').json()
     spacy_code = [a['code'] for a in spacy_languages['languages'] if a['name'] == spacy_language][0]
@@ -27,18 +31,24 @@ def clone_object(lang_name,lang_code, spacy_language):
         dest = new_lang_path / src.name
         shutil.copyfile(src, dest)
 
-    # Adjust imports and variable names for all other files
+    # Adjust imports and variable names (ex. GreekLemmatizer becomes AncientGreekLemmatizer)
+    # This seems crazy, but spaCy is so consistent, I think it works
     new_files = [x for x in new_lang_path.glob('**/*') if x.is_file() and 'pyc' not in str(x)]
     for file in new_files:
         file_text = file.read_text()
-        # DEBUG replace statements not working 
-        file_text = file_text.replace(spacy_language, new_lang_name.capitalize()).replace('"'+spacy_code+'"','"'+new_lang_code+'"') # quotes added to avoid false matches
-        file_text = file.read_text()
+        file_text = file_text.replace(spacy_language, new_lang_name.capitalize())
+        file_text = file_text.replace('"'+spacy_code+'"','"'+new_lang_code+'"') # quotes added to avoid false matches
         file_text = file_text.replace('from ...', 'from spacy.')
         file_text = file_text.replace('from ..', 'from spacy.lang.')
         file.write_text(file_text)
 
-    # TODO confirm language dependencies are installed 
+    #Install language dependencies
+    dependencies = [a['dependencies'] for a in spacy_languages['languages'] if a['name'] == spacy_language][0]
+    for dep in dependencies:
+        try:
+            install(dep['name'])
+        except Exception as e:
+            print(e) #TODO Revisit this. Just install all dependencies on install? 
 
     #spacy lookups ~ using pip install spacy[lookups]
     spacy_lookups = Path(spacy_lookups_data.__file__.replace('__init__.py','')) / 'data'
@@ -54,3 +64,7 @@ def clone_object(lang_name,lang_code, spacy_language):
         shutil.copyfile(src, dest)
 
     return new_lang_name, new_lang_code
+
+def install(package):
+    "Helper function to pip install from script: https://stackoverflow.com/questions/12332975/installing-python-module-within-code"
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
