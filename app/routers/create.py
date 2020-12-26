@@ -5,7 +5,8 @@ import spacy
 from fastapi import APIRouter
 from fastapi import Request, Form, File, UploadFile
 from fastapi.templating import Jinja2Templates
-from app.util.create_util import create_object, clone_object
+from app.util.create_object import create_object
+from app.util.clone_object import clone_object
 import json 
 templates = Jinja2Templates(directory="app/templates")
 
@@ -31,14 +32,13 @@ async def create_post(request: Request,
                       has_case: bool = Form(False)
                       ):
     if spacy_language:
-        #clone_object(lang_name,lang_code, spacy_language)
-        pass
+        lang_name, lang_code = clone_object(lang_name,lang_code, spacy_language)
        
     else:
-        create_object(lang_name,lang_code,direction,has_case,has_letters)
+        lang_name, lang_code = create_object(lang_name,lang_code,direction,has_case,has_letters)
 
         
-    message = f"Created a new object for {lang_name} with code {lang_code}"
+    message = f"Created a new object for {lang_name} with code {lang_code}<br>To use type <span style='background:white;'>from new_lang.{lang_name} import {lang_name.capitalize()}</span>"
     return templates.TemplateResponse("create.html", {"request": request, "message":message})
 
 #Select2 endpoint
@@ -47,6 +47,7 @@ async def language_options(_type:Optional[str]=None, term:Optional[str]=None, q:
     response = {}
     response['results'] = []
     
+    #TODO automatically load most recent languages.json from explosion
     spacy_languages = httpx.get('https://raw.githubusercontent.com/explosion/spaCy/8cc5ed6771010322954c2211b0e1f5a0fd14828a/website/meta/languages.json').json()
     for lang in spacy_languages['languages']:
         if q:

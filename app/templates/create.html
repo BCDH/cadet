@@ -14,7 +14,7 @@
     <section id="features" class="features">
         <div class="container" data-aos="fade-up">
     <div class="alert alert-success" role="alert">
-        {{ message }}  
+        {{ message|safe }}  
 
       </div>
       <a href='/defaults' class="read-more">Next<i style="color:white;"class="icofont-long-arrow-right"></i></a>
@@ -76,14 +76,14 @@
                     <label class="form-check-label" for="flexCheckDefault">
                       Has case 
                     </label>
-                    <p>This languages has upper and lower case system.</p>
+                    <p>This languages has upper and lower case system. Right? Not really sure about this. English tests show yes, Chinese, Japanese no.</p>
                     
                   
                     <input class="form-check-input" type="checkbox" name="has_letters" value=True id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                       Has letters
                     </label>
-                    <p>This languages has letters rather than symbols or gliphs.</p>
+                    <p>This languages has letters rather than symbols.</p>
                     
                  
                 </div>

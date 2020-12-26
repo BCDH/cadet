@@ -24,8 +24,8 @@ security = HTTPBasic()
 
 
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = secrets.compare_digest(credentials.username, "stanleyjobson")
-    correct_password = secrets.compare_digest(credentials.password, "swordfish")
+    correct_username = secrets.compare_digest(credentials.username, "cadet")
+    correct_password = secrets.compare_digest(credentials.password, "NewNLP")
     if not (correct_username and correct_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
