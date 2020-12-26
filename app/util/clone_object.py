@@ -48,7 +48,7 @@ def clone_object(lang_name,lang_code, spacy_language):
         try:
             install(dep['name'])
         except Exception as e:
-            print(e) #TODO Revisit this. Just install all dependencies on install? 
+            print(e) #TODO Revisit this. Works with Japanese, not Korean. Just install all dependencies on install? 
 
     #spacy lookups ~ using pip install spacy[lookups]
     spacy_lookups = Path(spacy_lookups_data.__file__.replace('__init__.py','')) / 'data'
