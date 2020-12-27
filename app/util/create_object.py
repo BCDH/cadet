@@ -4,8 +4,8 @@ from slugify import slugify
 
 def create_object(lang_name:str,lang_code:str,direction:str,has_case:bool,has_letters:bool):
     #Convert user input to prevent Python and os errors
-    lang_name = slugify(lang_name)
-    lang_code = slugify(lang_code)
+    lang_name = slugify(lang_name).replace('-','_')
+    lang_code = slugify(lang_code).replace('-','_')
     
     
     create_object_file(lang_name,lang_code,direction,has_case,has_letters)
