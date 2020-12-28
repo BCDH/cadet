@@ -4,13 +4,14 @@ import spacy
 import shutil
 from pathlib import Path
 from typing import Optional
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi import Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import RedirectResponse
 
 from app.util.create_object import create_object
 from app.util.clone_object import clone_object
+from app.util.login import get_current_username
 templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter()
@@ -21,7 +22,7 @@ spacy_lang = spacy_path / 'lang'
 spacy_languages = json.dumps([i.stem for i in spacy_lang.iterdir() if len(i.stem) < 3])
 
 @router.get("/create")
-async def create(request: Request):
+async def create(request: Request, login = Depends(get_current_username)):
     # Check if a new language exists already, give option to delete if so
     new_lang = (Path.cwd() / 'new_lang')
     if new_lang.exists():
@@ -53,7 +54,7 @@ async def create_post(request: Request,
     return templates.TemplateResponse("create.html", {"request": request, "message":message})
 
 @router.get("/delete_new_lang/{name}") 
-async def delete(name):
+async def delete(name:str, login = Depends(get_current_username)):
     new_lang = (Path.cwd() / 'new_lang' / name)
     shutil.rmtree(new_lang)
     return RedirectResponse(url='/create')

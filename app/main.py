@@ -7,6 +7,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from app.routers import create, texts, corpus, tokenization
+from app.util.login import get_current_username
 
 from pathlib import Path
 
@@ -20,19 +21,6 @@ app.include_router(create.router)
 app.include_router(texts.router)
 app.include_router(corpus.router)
 app.include_router(tokenization.router)
-security = HTTPBasic()
-
-
-def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = secrets.compare_digest(credentials.username, "cadet")
-    correct_password = secrets.compare_digest(credentials.password, "NewNLP")
-    if not (correct_username and correct_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Basic"},
-        )
-    return credentials.username
 
 
 # app.include_router(home.router)
