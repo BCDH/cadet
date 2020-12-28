@@ -132,7 +132,24 @@
       if (!spacy_languages.includes(code)){
         $('#lang_error').remove();
       };
-  });
+    });
+
+    let spacy_names = []; 
+    $.getJSON("/spacy_languages", function(json){
+      for (i in json.results){
+        spacy_names.push(json.results[i]['text']);
+      }
+    });
+
+    $('#lang_name').on('input', function() {
+      let name = $('#lang_name').val();
+      if (spacy_names.includes(name)){
+        $('#lang_name').after('<p id="lang__name_error">That language name already exists, please choose another.</p>')
+      };
+      if (!spacy_names.includes(name)){
+        $('#lang__name_error').remove();
+      };
+    });
        
     
 </script>
