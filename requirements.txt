@@ -1,3 +1,5 @@
+spacy-nightly 
+spacy-lookups-data
 fastapi
 pytz
 uvicorn
