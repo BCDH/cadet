@@ -1,4 +1,5 @@
 {
   "name": "FastAPI Base",
-  "description": "A basic FastAPI app"
+  "description": "A basic FastAPI app",
+  "stack": "heroku-20"
 }
