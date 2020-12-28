@@ -12,13 +12,9 @@
     {% if message %}
     <section id="features" class="features">
         <div class="container" data-aos="fade-up">
-    <div class="alert alert-success" role="alert">
         {{ message|safe }}  
 
-      </div>
-      <a href='/defaults' class="read-more">Next<i style="color:white;"class="icofont-long-arrow-right"></i></a>
-
-      </div>
+        </div>
     </section>
     {% endif %}
     {% if not message %}
