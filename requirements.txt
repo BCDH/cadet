@@ -4,6 +4,6 @@ uvicorn
 textract
 requests
 jinja2
-iofiles
+aiofiles
 httpx
 python-slugify
