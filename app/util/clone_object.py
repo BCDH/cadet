@@ -43,6 +43,8 @@ def clone_object(lang_name,lang_code, spacy_language):
     new_files = [x for x in new_lang_path.glob('**/*') if x.is_file() and 'pyc' not in str(x)]
     for file in new_files:
         file_text = file.read_text()
+        # TODO if file is init add import spacy
+        # TODO if file is init add @spacy.registry.languages("{lang_code}")
         file_text = file_text.replace(spacy_language, new_lang_name.capitalize())
         file_text = file_text.replace('"'+spacy_code+'"','"'+new_lang_code+'"') # quotes added to avoid false matches
         file_text = file_text.replace('from ...', 'from spacy.')

@@ -6,7 +6,7 @@ import secrets
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
-from app.routers import create, texts, corpus
+from app.routers import create, texts, corpus, tokenization
 
 from pathlib import Path
 
@@ -19,7 +19,7 @@ app.include_router(create.router)
 
 app.include_router(texts.router)
 app.include_router(corpus.router)
-
+app.include_router(tokenization.router)
 security = HTTPBasic()
 
 
