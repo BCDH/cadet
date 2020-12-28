@@ -7,5 +7,6 @@ textract
 requests
 jinja2
 aiofiles
+python-multipart
 httpx
 python-slugify
