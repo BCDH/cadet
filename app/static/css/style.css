@@ -936,20 +936,20 @@ section {
 
 .quote-icon-left, .quote-icon-right {
   color: #b1a9fc;
-  font-size: 26px;
+  /* font-size: 26px; */
 }
 
 .quote-icon-left {
   display: inline-block;
-  left: -5px;
-  position: relative;
+  /* left: -5px;
+  position: relative; */
 }
 
 .quote-icon-right {
   display: inline-block;
-  right: -5px;
-  position: relative;
-  top: 10px;
+  right: -150px;
+  /* position: relative; */
+  /* top: 10px; */
 }
 
 .testimonials .testimonial-item p {

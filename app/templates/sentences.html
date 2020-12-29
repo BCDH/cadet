@@ -16,12 +16,16 @@
       </div>
       <div id="sentences">
       {% for sentence in sentences %}
-      <div class="card">
+      <div class="card text">
+        
+        <span onclick="delete_sentence(this);" aria-hidden="true">&times;</span>
+
         <div class="card-body">
-          
-          <i class="bx bxs-quote-alt-left quote-icon-left"></i><p class="sentence" contenteditable="true" id="{{loop.index}}" >{{ sentence }}</p><i class="bx bxs-quote-alt-right quote-icon-right"></i>
-        </div>
+          <i class="bx bxs-quote-alt-left quote-icon-left"></i><p class="sentence" contenteditable="true" id="{{loop.index}}" >{{ sentence }}</p><i class="bx bxs-quote-alt-right quote-icon-right"></i>        </div>
+         
+         
       </div>
+      
       {% endfor %}
     </div>
       <button class="nice-button" onclick="add_sentence();"><i style='color:white;'class='icofont-plus'></i>Add</button>
@@ -58,5 +62,8 @@
       </div>`)
       
     }
+        function delete_sentence(element){
+          element.parentNode.remove();
+    };
 </script>
 {% endblock %}
