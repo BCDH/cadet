@@ -3,6 +3,9 @@ need to add tokenizer, norm,
 # Create base language object
     - create defaults
     - clone defaults, lookups data
+    TODO 
+        - change so only one language, give option to delete and start over
+        - create lookups-data (not just on clone)
 
 # Tokenizer  https://nightly.spacy.io/usage/linguistic-features#tokenization
     - enter example sentences, 
@@ -24,6 +27,7 @@ need to add tokenizer, norm,
 # Serve auto-suggestions 
     - endpoint to serve suggestions from current lang object
     - endpoint to serve suggestions from trained models 
+    - serve suggestions from spaCy, Stanza, HuggingFace
 
 # Receive updated annotation data
     - endpoint to receive data
@@ -40,3 +44,8 @@ need to add tokenizer, norm,
 
 
 
+Design problems:
+- Allow more than one project in the app?
+    - Users will want to experiment and try different approaches (cloned/not-cloned)
+    - User will be confused, potentially working on wrong project add errors
+    - Simplicity of one app, one project, can easily deploy another copy 
