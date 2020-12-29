@@ -2,6 +2,8 @@ import importlib.util # https://stackoverflow.com/questions/67631/how-to-import-
 import json
 from pathlib import Path
 from fastapi import APIRouter, Depends
+from fastapi.responses import HTMLResponse
+
 from fastapi import Request, Form
 from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="app/templates")
@@ -13,16 +15,18 @@ router = APIRouter()
 @router.get("/sentences")
 async def create(request: Request, login = Depends(get_current_username)):
     new_lang = (Path.cwd() / 'new_lang')
-    if new_lang.exists():
-        if len(list(new_lang.iterdir())) > 0:
-            path = list(new_lang.iterdir())[0]
-            path = path / 'examples.py'
-            print(path)
-            spec = importlib.util.spec_from_file_location("sentences", str(path))
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            sentences = module.sentences
-            return templates.TemplateResponse("sentences.html", {"request": request, "sentences": sentences })
+    
+    if len(list(new_lang.iterdir())) > 0:
+        path = list(new_lang.iterdir())[0]
+        path = path / 'examples.py'
+        print(path)
+        spec = importlib.util.spec_from_file_location("sentences", str(path))
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        sentences = module.sentences
+        return templates.TemplateResponse("sentences.html", {"request": request, "sentences": sentences })
+    else:
+        return templates.TemplateResponse("error_please_create.html", {"request": request })
 
     
 @router.post("/update_sentences")
