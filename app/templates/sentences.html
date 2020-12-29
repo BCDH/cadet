@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block extrastyle %}{% endblock %}
+{% block navbar %}
+<li class="active"><a href="/main">Home</a></li>
+{% endblock%}
+
+{% block content %}
+
+ <!-- ======= Testimonials Section ======= -->
+ <section id="testimonials" class="testimonials section-bg">
+    <div class="container" data-aos="fade-up">
+
+      <div class="section-title">
+        <h2>Example Sentences</h2>
+        <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
+      </div>
+      <div id="sentences">
+      {% for sentence in sentences %}
+      <div class="card">
+        <div class="card-body">
+          
+          <i style="color: #b1a9fc; font-size: 26px;" class="bx bxs-quote-alt-left"></i><p class="sentence" contenteditable="true" id="{{loop.index}}" >{{ sentence }}</p><i style="color: #b1a9fc; font-size: 26px;" class="bx bxs-quote-alt-right"></i>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+      <button class="nice-button" onclick="add_sentence();"><i style='color:white;'class='icofont-plus'></i>Add</button>
+      <button class="nice-button" onclick="save_sentences();"><i style='color:white;'class='icofont-save'></i>Save</button>
+      <button class="nice-button" onclick="location.href='/tokenization'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
+      
+    </div>
+  </section><!-- End Testimonials Section -->
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $('#header').addClass('header-scrolled');
+
+    function save_sentences(){
+      var elements = document.getElementsByClassName("test");
+      let sentences = [];
+      var all = $(".sentence").map(function() {
+        sentences.push(this.innerHTML);
+      }).get();
+      $.post("/update_sentences", {"sentences": JSON.stringify(sentences)}, function(result){
+        console.log(result);
+      });
+    };
+
+    function add_sentence(){
+      $('#sentences').after(`
+      <div class="card">
+        <div class="card-body">    
+          <i style="color: #b1a9fc; font-size: 26px;" class="bx bxs-quote-alt-left"></i><p class="sentence" contenteditable="true">enter sentence</p><i style="color: #b1a9fc; font-size: 26px;" class="bx bxs-quote-alt-right"></i>
+        </div>
+      </div>`)
+      
+    }
+</script>
+{% endblock %}
