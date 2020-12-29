@@ -934,18 +934,18 @@ section {
   margin: 0 0 0 45px;
 }
 
-.testimonials .testimonial-item .quote-icon-left, .testimonials .testimonial-item .quote-icon-right {
+.quote-icon-left, .quote-icon-right {
   color: #b1a9fc;
   font-size: 26px;
 }
 
-.testimonials .testimonial-item .quote-icon-left {
+.quote-icon-left {
   display: inline-block;
   left: -5px;
   position: relative;
 }
 
-.testimonials .testimonial-item .quote-icon-right {
+.quote-icon-right {
   display: inline-block;
   right: -5px;
   position: relative;

@@ -10,6 +10,7 @@ def create_object(lang_name:str,lang_code:str,direction:str,has_case:bool,has_le
     
     create_object_file(lang_name,lang_code,direction,has_case,has_letters)
     create_stop_words(lang_name,lang_code)
+    create_examples(lang_name,lang_code)
 
     return lang_name, lang_code
 
@@ -79,4 +80,24 @@ for new_exc in _new_exc:
     _exc[new_exc[ORTH]] = [new_exc]
 
 TOKENIZER_EXCEPTIONS = update_exc(BASE_EXCEPTIONS, _exc)
+""")
+
+def create_examples(lang_name,lang_code):
+    path = (Path.cwd() / 'new_lang' / lang_name)
+    path = path / 'examples.py'
+    path.write_text(
+f"""
+# coding: utf8
+from __future__ import unicode_literals
+
+
+'''
+Example sentences to test spaCy and its language models.
+
+>>> from new_lang.{lang_code}.examples import sentences
+>>> docs = nlp.pipe(sentences)
+'''
+
+
+sentences = [  ]
 """)
