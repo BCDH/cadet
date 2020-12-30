@@ -1,4 +1,4 @@
-need to add tokenizer, norm, 
+1. add code editor for all files in the object 
 
 # Create base language object
     x create defaults

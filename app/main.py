@@ -7,7 +7,7 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from app.routers import create, texts, corpus, tokenization, sentences
-from app.util.login import get_current_username
+from app.util.login import get_current_username, logout
 
 from pathlib import Path
 
@@ -52,3 +52,7 @@ def root(request: Request,):
 @app.get("/main")
 def main(request: Request, username: str = Depends(get_current_username)):
     return templates.TemplateResponse("main_page.html", {"request": request})
+
+@app.get("/logout")
+async def route_logout(request: Request, username: str = Depends(logout)):
+    return templates.TemplateResponse("login.html", {"request": request})
