@@ -1,0 +1,17 @@
+site_name: Cadet
+site_description: A Tool to Generate and Customize New Language Models for spaCy
+theme:
+  name: mkdocs
+repo_name: apjanco/cadet-nightly
+repo_url: https://github.com/apjanco/cadet-nightly
+edit_uri: ''
+plugins:
+- search
+nav:
+- Main: index.md
+- About: about.md
+- Languages:
+  - en: /
+# - features.md
+# - fastapi-people.md
+# - python-types.md
