@@ -39,7 +39,9 @@ app.include_router(sentences.router)
 # 1 Create basic language object
 # 2 Create basic model with pipelines
 # 3 Create custom model with transformers, pytorch models, and so on
-
+new_lang = (Path.cwd() / 'new_lang')
+if not new_lang.exists(): # Directory does not exist the first time the app is used
+    new_lang.mkdir(parents=True, exist_ok=True)
 
 @app.get("/")
 def root(request: Request,):

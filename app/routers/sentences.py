@@ -15,7 +15,6 @@ router = APIRouter()
 @router.get("/sentences")
 async def create(request: Request, login = Depends(get_current_username)):
     new_lang = (Path.cwd() / 'new_lang')
-    
     if len(list(new_lang.iterdir())) > 0:
         path = list(new_lang.iterdir())[0]
         path = path / 'examples.py'
