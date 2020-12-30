@@ -1,7 +1,8 @@
 site_name: Cadet
 site_description: A Tool to Generate and Customize New Language Models for spaCy
 theme:
-  name: mkdocs
+  name: material
+  logo: assets/favicon.png
 repo_name: apjanco/cadet-nightly
 repo_url: https://github.com/apjanco/cadet-nightly
 edit_uri: ''
@@ -9,7 +10,7 @@ plugins:
 - search
 nav:
 - Main: index.md
-- About: about.md
+- Get Started: get_started.md
 - Languages:
   - en: /
 # - features.md
