@@ -5,13 +5,13 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 security = HTTPBasic()
 try:
-    env_username = os.environ['CADET_PASSWORD']
+    env_username = os.environ['CADET_USERNAME']
 except KeyError:
-    os.environ['CADET_PASSWORD'] = 'cadet'
+    env_username = 'cadet'
 try:
     env_password = os.environ['CADET_PASSWORD']
 except  KeyError:
-    os.environ['CADET_PASSWORD'] = 'NewNLP'
+    env_password = 'NewNLP'
 
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, env_username)
