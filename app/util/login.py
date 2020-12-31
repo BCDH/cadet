@@ -1,6 +1,6 @@
 import os
 import secrets
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 security = HTTPBasic()
@@ -24,13 +24,9 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
         )
     return credentials.username
 
-def logout(credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = secrets.compare_digest(credentials.username, 'foo')
-    correct_password = secrets.compare_digest(credentials.password, 'bar')
+def logout(request: Request, credentials: HTTPBasicCredentials = Depends(security)):
+    correct_username = secrets.compare_digest(credentials.username, '')
+    correct_password = secrets.compare_digest(credentials.password, '')
     if not (correct_username and correct_password):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Basic"},
-        )
+        return templates.TemplateResponse("login.html", {"request": request})
     return credentials.username
