@@ -1226,7 +1226,7 @@ section {
 # Frequently Asked Questions
 --------------------------------------------------------------*/
 .faq {
-  background: linear-gradient(42deg, #5846f9 0%, #7b27d8 100%);
+  background: linear-gradient(45deg, rgba(86, 58, 250, 0.5) 0%, rgba(116, 15, 214, 0.5) 100%), url("../img/stars.jpg") center center no-repeat;
 }
 
 .faq .section-title h2, .faq .section-title p {

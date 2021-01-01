@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block navbar %}{% endblock%}
+
+{% block content %}
+
+
+<!-- ======= Frequently Asked Questions Section ======= -->
+<section id="faq" class="faq">
+    <div class="container" data-aos="fade-up">
+
+      <div class="section-title">
+        <h2>tokenization</h2>
+        <p>spaCy has a <a style="color:white;" href="https://spacy.io/usage/spacy-101#annotations-token">default tokenizer</a>. Here you can test its performance with your language and make necessary adjustments.</p>
+      </div>
+
+      <div class="faq-list">
+        <ul>
+            {% for sentence in sentences %}
+            <li data-aos="fade-up" data-aos="fade-up">
+                         <p>
+                {{ sentence }}
+              </p>
+           
+          </li>
+          {% endfor %}
+          
+        </ul>
+      </div>
+
+    </div>
+  </section><!-- End Frequently Asked Questions Section -->
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    
+</script>
+{% endblock %}
