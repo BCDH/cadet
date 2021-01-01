@@ -54,13 +54,17 @@ def clone_object(lang_name,lang_code, spacy_language):
     #Install language dependencies
     has_dependencies = get_dependencies(spacy_language,spacy_languages)
     if has_dependencies:
+        requirements = new_lang_path / 'requirements.txt'
+        req_text = ''
         for dep in has_dependencies:
+            req_text += dep['name'] +'\n'
             if dep['name'] == 'mecab-ko':
-                install_mecab_ko()
+                install_mecab_ko() #TODO write sh script
             if dep['name'] == 'mecab-ko-dic':
-                install_mecab_ko_dic()
+                install_mecab_ko_dic() #TODO write sh script
             else:
                 install(dep['name'])
+        requirements.write_text(req_text)
            
     #copy spacy lookups data
     spacy_lookups = Path(spacy_lookups_data.__file__.replace('__init__.py','')) / 'data'
