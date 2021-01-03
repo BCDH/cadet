@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
 from app.routers import create, texts, corpus, tokenization, sentences, edit_code
 from app.util.login import get_current_username
-from app.auth.routes import router as auth_router
+#from app.auth.routes import router as auth_router
 from pathlib import Path
 
 

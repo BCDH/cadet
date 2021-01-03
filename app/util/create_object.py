@@ -11,7 +11,11 @@ def create_object(lang_name:str,lang_code:str,direction:str,has_case:bool,has_le
     create_object_file(lang_name,lang_code,direction,has_case,has_letters)
     create_stop_words(lang_name,lang_code)
     create_examples(lang_name,lang_code)
-
+    create_lex_attrs(lang_name,lang_code)
+    create_tokenizer_exceptions(lang_name,lang_code)
+    create_tag_map(lang_name,lang_code)
+    create_punctuation(lang_name,lang_code)
+    create_syntax_iterators(lang_name,lang_code)
     return lang_name, lang_code
 
 
@@ -25,7 +29,9 @@ from spacy.language import Language
 from spacy.lang.tokenizer_exceptions import URL_MATCH
 from thinc.api import Config
 from .stop_words import STOP_WORDS
-
+from .lex_attrs import LEX_ATTRS
+from .tag_map import TAG_MAP
+from .syntax_iterators import SYNTAX_ITERATORS
 
 # https://nightly.spacy.io/api/language#defaults
 class {lang_name.capitalize()}Defaults(Language.Defaults):
@@ -35,6 +41,7 @@ class {lang_name.capitalize()}Defaults(Language.Defaults):
    infixes = tuple()
    token_match = None
    url_match = URL_MATCH
+   tag_map = TAG_MAP
    writing_system = {{"direction": "{direction}", "has_case": {has_case}, "has_letters": {has_letters}}}
 
 @spacy.registry.languages("{lang_code}") #https://nightly.spacy.io/api/top-level#registry
@@ -100,4 +107,83 @@ Example sentences to test spaCy and its language models.
 
 
 sentences = [  ]
+""")
+
+def create_lex_attrs(lang_name:str,lang_code:str):
+    path = (Path.cwd() / 'new_lang' / lang_name)
+    path = path / 'lex_attrs.py'
+    path.write_text(
+f"""
+from spacy.attrs import LIKE_NUM
+
+_num_words = []
+
+def like_num(text):
+    if text.startswith(("+", "-", "±", "~")):
+        text = text[1:]
+    text = text.replace(",", "").replace(".", "")
+    if text.isdigit():
+        return True
+    if text.count("/") == 1:
+        num, denom = text.split("/")
+        if num.isdigit() and denom.isdigit():
+            return True
+    if text.lower() in _num_words:
+        return True
+    return False
+
+LEX_ATTRS = {{LIKE_NUM: like_num}}
+""")
+
+
+
+def create_tag_map(lang_name:str,lang_code:str):
+    path = (Path.cwd() / 'new_lang' / lang_name)
+    path = path / 'tag_map.py'
+    path.write_text(
+f"""
+from spacy.symbols import POS, AUX, ADJ, CCONJ, NUM, ADV, ADP, X, VERB, DET, SCONJ, PUNCT
+from spacy.symbols import NOUN, PART, INTJ, PRON
+
+TAG_MAP = {{}}
+""")
+
+def create_punctuation(lang_name:str,lang_code:str):
+    path = (Path.cwd() / 'new_lang' / lang_name)
+    path = path / 'punctuation.py'
+    path.write_text(
+f"""
+from spacy.char_classes import LIST_ELLIPSES, LIST_ICONS, LIST_PUNCT, LIST_QUOTES
+from spacy.char_classes import CURRENCY, UNITS, PUNCT
+from spacy.lang.char_classes import CONCAT_QUOTES, ALPHA, ALPHA_LOWER, ALPHA_UPPER
+from spacy.lang.punctuation import TOKENIZER_PREFIXES as BASE_TOKENIZER_PREFIXES
+from spacy.lang.punctuation import TOKENIZER_SUFFIXES as BASE_TOKENIZER_SUFFIXES
+from spacy.lang.punctuation import TOKENIZER_INFIXES as BASE_TOKENIZER_INFIXES
+
+
+_prefixes = BASE_TOKENIZER_PREFIXES
+
+_suffixes = BASE_TOKENIZER_SUFFIXES
+
+_infixes = BASE_TOKENIZER_INFIXES
+
+
+TOKENIZER_PREFIXES = _prefixes
+TOKENIZER_SUFFIXES = _suffixes
+TOKENIZER_INFIXES = _infixes
+""")
+
+def create_syntax_iterators(lang_name:str,lang_code:str):
+    path = (Path.cwd() / 'new_lang' / lang_name)
+    path = path / 'syntax_iterators.py'
+    path.write_text(
+f"""
+SYNTAX_ITERATORS = {{}}
+""")
+
+def create_lemmatizer(lang_name:str,lang_code:str):
+    path = (Path.cwd() / 'new_lang' / lang_name)
+    path = path / 'lemmatizer.py'
+    path.write_text(
+f"""
 """)

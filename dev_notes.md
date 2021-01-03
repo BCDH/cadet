@@ -4,6 +4,10 @@
     x create defaults
     x clone defaults, lookups data
     x change so only one language/project, give option to delete and start over
+    - lex_attrs = rules for token.like_num() add to _num_words
+    - prefixes = tuple()
+    - suffixes = tuple()
+    - infixes = tuple()
 
 # Tokenizer  https://nightly.spacy.io/usage/linguistic-features#tokenization
     X enter example sentences, 

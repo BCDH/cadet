@@ -8,7 +8,19 @@
 /*--------------------------------------------------------------
 # Custom AJ
 --------------------------------------------------------------*/
+.token:hover {
+  border-left: 3px solid rgba(5,40,164,0.5);
+  border-right: 3px solid rgba(5,40,164,0.5);
+  border-radius: 40px;
+  }
 
+.token {
+  border: 3px solid #0704a8b4;
+  border-radius: 40px;
+  outline-offset: -1px;
+  color: black;
+  padding: 8px;
+}
 .text-grad {
   font-size: 24px;
   background: -webkit-linear-gradient(45deg, rgba(86, 58, 250, 0.5) 0%, rgba(116, 15, 214, 0.5) 100%);

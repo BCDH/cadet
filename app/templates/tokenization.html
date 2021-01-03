@@ -10,7 +10,8 @@
 
       <div class="section-title">
         <h2>tokenization</h2>
-        <p>spaCy has a <a style="color:white;" href="https://spacy.io/usage/spacy-101#annotations-token">default tokenizer</a>. Here you can test its performance with your language and make necessary adjustments.</p>
+        <p>spaCy has a <a style="color:white;" target="_blank" href="https://spacy.io/usage/spacy-101#annotations-token">default tokenizer</a>. Here you can test its performance with your language and make necessary adjustments.</p>
+        <a style="color:white;" target="_blank" href="https://spacy.io/usage/linguistic-features#how-tokenizer-works">How spaCy's tokenizer works</a>
       </div>
 
       <div class="faq-list">
@@ -18,7 +19,7 @@
             {% for sentence in sentences %}
             <li data-aos="fade-up" data-aos="fade-up">
                          <p>
-                {{ sentence }}
+                {{ sentence|safe }}
               </p>
            
           </li>

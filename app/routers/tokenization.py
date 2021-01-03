@@ -27,9 +27,11 @@ async def tokenization(request: Request, login = Depends(get_current_username)):
         cls = getattr(mod, lang_name.capitalize())
         nlp = cls()
 
+        spacy_sentences = []
         for sentence in sentences:
+            sent = ''
             doc = nlp(sentence)
             for token in doc:
-                print(token)
-
-    return templates.TemplateResponse("tokenization.html", {"request": request, "sentences":sentences })
+                sent += f"<span class='token'>{token}</span>&nbsp;"
+            spacy_sentences.append(sent)
+    return templates.TemplateResponse("tokenization.html", {"request": request, "sentences":spacy_sentences })
