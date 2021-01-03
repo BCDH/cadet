@@ -22,7 +22,7 @@ app.include_router(corpus.router)
 app.include_router(tokenization.router)
 app.include_router(sentences.router)
 app.include_router(edit_code.router)
-app.include_router(auth_router, prefix="/auth")
+#app.include_router(auth_router, prefix="/auth")
 
 
 new_lang = (Path.cwd() / 'new_lang')
