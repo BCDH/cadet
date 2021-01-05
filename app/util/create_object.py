@@ -29,20 +29,23 @@ from spacy.language import Language
 from spacy.lang.tokenizer_exceptions import URL_MATCH
 from thinc.api import Config
 from .stop_words import STOP_WORDS
+from .tokenizer_exceptions import TOKENIZER_EXCEPTIONS
+from .punctuation import TOKENIZER_PREFIXES, TOKENIZER_SUFFIXES, TOKENIZER_INFIXES
 from .lex_attrs import LEX_ATTRS
 from .tag_map import TAG_MAP
 from .syntax_iterators import SYNTAX_ITERATORS
 
 # https://nightly.spacy.io/api/language#defaults
 class {lang_name.capitalize()}Defaults(Language.Defaults):
-   stop_words = STOP_WORDS
-   prefixes = tuple()
-   suffixes = tuple()
-   infixes = tuple()
-   token_match = None
-   url_match = URL_MATCH
-   tag_map = TAG_MAP
-   writing_system = {{"direction": "{direction}", "has_case": {has_case}, "has_letters": {has_letters}}}
+    stop_words = STOP_WORDS
+    tokenizer_exceptions = TOKENIZER_EXCEPTIONS
+    prefixes = TOKENIZER_PREFIXES
+    suffixes = TOKENIZER_SUFFIXES
+    infixes = TOKENIZER_INFIXES
+    token_match = None
+    url_match = URL_MATCH
+    tag_map = TAG_MAP
+    writing_system = {{"direction": "{direction}", "has_case": {has_case}, "has_letters": {has_letters}}}
 
 @spacy.registry.languages("{lang_code}") #https://nightly.spacy.io/api/top-level#registry
 class {lang_name.capitalize()}(Language):
@@ -153,8 +156,8 @@ def create_punctuation(lang_name:str,lang_code:str):
     path = path / 'punctuation.py'
     path.write_text(
 f"""
-from spacy.char_classes import LIST_ELLIPSES, LIST_ICONS, LIST_PUNCT, LIST_QUOTES
-from spacy.char_classes import CURRENCY, UNITS, PUNCT
+from spacy.lang.char_classes import LIST_ELLIPSES, LIST_ICONS, LIST_PUNCT, LIST_QUOTES
+from spacy.lang.char_classes import CURRENCY, UNITS, PUNCT
 from spacy.lang.char_classes import CONCAT_QUOTES, ALPHA, ALPHA_LOWER, ALPHA_UPPER
 from spacy.lang.punctuation import TOKENIZER_PREFIXES as BASE_TOKENIZER_PREFIXES
 from spacy.lang.punctuation import TOKENIZER_SUFFIXES as BASE_TOKENIZER_SUFFIXES

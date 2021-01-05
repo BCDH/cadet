@@ -50,3 +50,24 @@ Design problems:
     - Simplicity of one app, one project, can easily deploy another copy 
 
 Start on documentation now!
+
+# List of all files types in spacy.lang 
+64 '__init__.py',
+63 'stop_words.py', 
+53 'examples.py', 
+44 'lex_attrs.py', like_num 
+33 'tokenizer_exceptions.py'}
+29 'tag_map.py', dict of tags and cooresponding UD labels 
+26 'punctuation.py', 
+11 'syntax_iterators.py', noun_chunks
+7 'lemmatizer.py',
+
+fr id'_tokenizer_exceptions_list.py',
+fa 'generate_verbs_exc.py',
+el 'get_pos_from_wiktionary.py',
+ga 'irish_morphology_helpers.py',
+sr 'lemma_lookup_licence.txt',
+hr 'lemma_lookup_license.txt',
+ja 'tag_bigram_map.py',
+ja 'tag_orth_map.py',
+ 
