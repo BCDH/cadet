@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block navbar %}{% endblock%}
 
+@st.cache(allow_output_mutation=True)
+def load_corpusbase(mei_list:List):
+    corpus = CorpusBase(paths=mei_list, urls=mei_list)
+    return corpus
+​
+corpus = load_corpusbase(WorkList_mei)
     {% block extrastyle %}
   <link rel="stylesheet" href="https://codemirror.net/theme/cobalt.css">
   <link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
@@ -54,6 +60,14 @@
     editor.on("change", function (cm, change) {
       let code = cm.getValue();
       let filename = window.location.search.substr('file_name').slice(11);
+      $.ajax({
+        type: 'POST',
+        url: '/edit',
+        data: JSON.stringify ({'code': code, 'filename':filename}),
+        success: function(data) { alert('data: ' + data); },
+        contentType: "application/json",
+        dataType: 'json'
+      });
 
     });
 
