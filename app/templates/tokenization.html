@@ -18,8 +18,10 @@
       <button class="nice-button" onclick="add_prefix();"><i style='color:white;'class='icofont-plus'></i>Prefix</button>
       <button class="nice-button" onclick="add_suffix();"><i style='color:white;'class='icofont-plus'></i>Suffix</button>
       <button class="nice-button" onclick="add_infix();"><i style='color:white;'class='icofont-plus'></i>Infix</button>
-      <button class="nice-button" onclick="add_exception();"><i style='color:white;'class='icofont-plus'></i>Exception</button>
-
+      <button type="button" class="nice-button" data-bs-toggle="modal" data-bs-target="#exceptionModal">
+        <i style='color:white;'class='icofont-plus'></i>Exception
+      </button>
+      
       <button class="nice-button" onclick="save_sentences();"><i style='color:white;'class='icofont-save'></i>Save</button>
       <button class="nice-button" onclick="location.href='/edit?file_name=tokenizer_exceptions.py'">Edit Code<i style='color:white;'class='icofont-code-alt'></i></button>
       <button class="nice-button" onclick="location.href='/texts'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
@@ -35,14 +37,39 @@
           
         </ul>
       </div>
-
     </div>
   </section><!-- End Frequently Asked Questions Section -->
+  
+<!-- Start Tokenizer exception form modal -->
+<div class="modal" id="exceptionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add tokenizer exception</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/add_tokenization_exception">
+          <label for="orth">Orth:</label><br>
+          <input type="text" id="orth" name="orth"><br>
+          <label for="norm">Norm:</label><br>
+          <input type="text" id="norm" name="norm" >
+        
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Add exception</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>  
+  <!-- End Tokenizer exception form modal -->
 
+  
 {% endblock %}
 
 {% block extrajs %}
 <script>
-    
+
 </script>
 {% endblock %}

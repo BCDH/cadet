@@ -3,6 +3,9 @@ from pathlib import Path
 from fastapi import APIRouter
 from fastapi import Request, Form, Depends,HTTPException
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
+from starlette.status import HTTP_302_FOUND
+
 templates = Jinja2Templates(directory="app/templates")
 from app.util.login import get_current_username
 import importlib.util # https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
@@ -56,6 +59,7 @@ async def add_tokenization_exception(
         addition = f'{{ORTH: "{orth}", NORM: "{norm}"}},'
         new_script = script[:cursor] + addition + script[cursor:]
         exceptions_file.write_text(new_script)
+        return RedirectResponse(url="/tokenization", status_code=HTTP_302_FOUND)
 
     else:
         raise HTTPException(status_code=404, detail="File not found")
