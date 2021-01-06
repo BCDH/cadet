@@ -1,7 +1,7 @@
 import spacy
 from pathlib import Path
 from fastapi import APIRouter
-from fastapi import Request, Form, Depends
+from fastapi import Request, Form, Depends,HTTPException
 from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="app/templates")
 from app.util.login import get_current_username
@@ -35,3 +35,74 @@ async def tokenization(request: Request, login = Depends(get_current_username)):
                 sent += f"<span class='token'>{token}</span>&nbsp;"
             spacy_sentences.append(sent)
     return templates.TemplateResponse("tokenization.html", {"request": request, "sentences":spacy_sentences })
+
+
+@router.post("/add_tokenization_exception")
+async def add_tokenization_exception(
+    request: Request, 
+    login = Depends(get_current_username),
+    orth:str = Form(None),
+    norm:str = Form(None),
+    #caps_variation:bool = Form(None), # Generate variations of the term with caps, no caps
+    #exception_type:str = Form(None), # abbreviation, slang, 
+    ):
+
+    new_lang = (Path.cwd() / 'new_lang')
+    new_lang_dir = list(new_lang.iterdir())[0]
+    exceptions_file = new_lang_dir / 'tokenizer_exceptions.py'
+    if exceptions_file.exists():
+        script = exceptions_file.read_text()
+        cursor = script.find('_new_exc = [') + 12
+        addition = f'{{ORTH: "{orth}", NORM: "{norm}"}},'
+        new_script = script[:cursor] + addition + script[cursor:]
+        exceptions_file.write_text(new_script)
+
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
+
+# prefix, suffix and infix is a tuple of lists
+# the lists contain regular expressions or characters
+# many default lists exist and can be imported from lang.char_classes
+# there are also default lists in lang.punctuation BASE_TOKENIZER_PREFIXES...
+# create object uses BASE defaults, may need to drop them? 
+# Users will need to import, add and remove elements from these lists
+
+@router.post("/add_tokenization_prefix")
+async def add_tokenization_prefix(
+    request: Request, 
+    login = Depends(get_current_username),
+    orth:str = Form(None),
+    norm:str = Form(None),
+    caps_variation:bool = Form(None), # Generate variations of the term with caps, no caps
+    exception_type:str = Form(None), # abbreviation, slang, 
+    ):
+    pass
+
+
+@router.post("/add_tokenization_suffix")
+async def add_tokenization_suffix(
+    request: Request, 
+    login = Depends(get_current_username),
+    char_class:str = Form(None),
+    norm:str = Form(None),
+    caps_variation:bool = Form(None), # Generate variations of the term with caps, no caps
+    exception_type:str = Form(None), # abbreviation, slang, 
+    ):
+    pass
+
+
+@router.post("/add_tokenization_infix")
+async def add_tokenization_infix(
+    request: Request, 
+    login = Depends(get_current_username),
+    char_class:str = Form(None),
+    norm:str = Form(None),
+    caps_variation:bool = Form(None), # Generate variations of the term with caps, no caps
+    exception_type:str = Form(None), # abbreviation, slang, 
+    ):
+    pass
+
+@router.get("/char_class_types")
+async def char_class_types():
+    char_class_types = 'variables listed in spacy.lang.char_classes'
+    return char_class_types
