@@ -9,11 +9,13 @@ from app.util.login import get_current_username
 
 templates = Jinja2Templates(directory="app/templates")
 
-router = APIRouter()
+router = APIRouter(
+    dependencies=[Depends(get_current_username)]
+)
 
 
 @router.get("/edit")
-async def edit_code(request: Request, file_name:str, username: str = Depends(get_current_username)):
+async def edit_code(request: Request, file_name:str):
     new_lang = (Path.cwd() / 'new_lang')
     if len(list(new_lang.iterdir())) > 0:
         path = list(new_lang.iterdir())[0]
@@ -27,7 +29,7 @@ async def edit_code(request: Request, file_name:str, username: str = Depends(get
 @router.post("/edit")
 async def update_code(
     request: Request, 
-    username: str = Depends(get_current_username)):
+    ):
     
     data = await request.json()
     filename = data['filename']

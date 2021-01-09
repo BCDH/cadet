@@ -9,11 +9,12 @@ from fastapi.templating import Jinja2Templates
 templates = Jinja2Templates(directory="app/templates")
 from app.util.login import get_current_username
 
-router = APIRouter()
-
+router = APIRouter(
+    dependencies=[Depends(get_current_username)]
+)
 
 @router.get("/sentences")
-async def create(request: Request, login = Depends(get_current_username)):
+async def create(request: Request):
     new_lang = (Path.cwd() / 'new_lang')
     if len(list(new_lang.iterdir())) > 0:
         path = list(new_lang.iterdir())[0]

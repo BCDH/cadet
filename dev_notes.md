@@ -7,6 +7,9 @@
     - suffixes = tuple()
     - infixes = tuple()
 
+# Sentences 
+    x add example sentences to test tokenizer defaults 
+
 # Tokenization  https://nightly.spacy.io/usage/linguistic-features#tokenization
     X enter example sentences, 
     - visualize defaults, highlight problems
@@ -14,26 +17,28 @@
     - add exceptions and alter rules as needed 
       - https://nightly.spacy.io/usage/linguistic-features#native-tokenizers
 
-# Lemmatization/Lookups Data
+# Lookups and Matching Data
     - create/update lookups-data (not just on clone)
     - Lemma lists/dicts
-    - pre-trained vectors 
-    - create/update lookups data (lemmatization dict)
+    - Cadet serves automatic suggestions to INCEpTION to create model training data.  To facilitate annotation, Cadet can serve suggestions from lists of lemmata, part-of-speech or entities.
 
-# Load seed corpus     
+
+# Load sample corpus texts
     - upload data, save to jsonl
     - tokenize, return frequencies of tokens
     - use frequencies to recommend Stop Words 
 
-# Quickly bulk-annotate frequent terms (w/context?)
+# Identify and create stop words, frequent terms with annotation suggestions
+    - Quickly bulk-annotate frequent terms (w/context?)
     - mark pos, morph, (rule-based lookups)
+    - add to lookups lists for auto-suggestion 
 
 # Serve auto-suggestions 
     - endpoint to serve suggestions from current lang object
     - endpoint to serve suggestions from trained models 
     - serve suggestions from spaCy, Stanza, HuggingFace
 
-# Receive updated annotation data, update lookups
+# Receive data from INCEpTION save as spaCy training data, run debug
 
 # export object and training data
     - export packaged language object, ready for training 
@@ -101,3 +106,12 @@ data work from English and Greek examples
 )
 def make_lemmatizer(nlp: Language, model: Optional[Model], name: str, mode: str):
     return EnglishLemmatizer(nlp.vocab, model, name, mode=mode)
+
+tokenizer exceptions, defaults:
+URL_PATTERN
+BASE_EXCEPTIONS (extra space, \n \t also letter with period and emoticons)
+
+punctuation, defaults:
+TOKENIZER_PREFIXES
+TOKENIZER_SUFFIXES (good but all Latin)
+TOKENIZER_INFIXES

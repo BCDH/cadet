@@ -14,20 +14,18 @@ from app.util.clone_object import clone_object
 from app.util.login import get_current_username
 templates = Jinja2Templates(directory="app/templates")
 
-router = APIRouter()
-
+router = APIRouter(
+    dependencies=[Depends(get_current_username)]
+)
 #Get list of currently support Language objects from spacy.lang
 spacy_path = Path(spacy.__file__.replace('__init__.py',''))
 spacy_lang = spacy_path / 'lang'
 spacy_languages = json.dumps([i.stem for i in spacy_lang.iterdir() if len(i.stem) < 3])
 
 @router.get("/create")
-async def create(request: Request, login = Depends(get_current_username)):
+async def create(request: Request):
     # Check if a new language exists already, give option to delete if so
-    new_lang = (Path.cwd() / 'new_lang')
-
-    if not new_lang.exists(): # Directory does not exist the first time the app is used
-        new_lang.mkdir(parents=True, exist_ok=True)
+    
 
     if len(list(new_lang.iterdir())) > 0:
         name = list(new_lang.iterdir())[0].name
@@ -57,7 +55,7 @@ async def create_post(request: Request,
     return templates.TemplateResponse("create.html", {"request": request, "message":message})
 
 @router.get("/delete_new_lang/{name}") 
-async def delete(name:str, login = Depends(get_current_username)):
+async def delete(name:str):
     new_lang = (Path.cwd() / 'new_lang' / name)
     shutil.rmtree(new_lang)
     return RedirectResponse(url='/create')

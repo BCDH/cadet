@@ -40,7 +40,7 @@
               <img src="static/img/noun/noun_Space_1922243.png">
             </div>
             <h4>2. Sentences</h4>
-            <p>Here we add several example sentences that will be used for initial tokenization.</p>
+            <p>Add several example sentences that will be used for initial tokenization.</p>
           </a>
           </div>
         </div>
@@ -56,23 +56,23 @@
               <img src="static/img/noun/noun_Nebula_1922250.png">
             </div>
             <h4><a href="">3. Tokenization</a></h4>
-            <p>This is where we count the words and select seed terms for annotation. (<a href="https://nightly.spacy.io/usage/linguistic-features#tokenization">docs</a>)</p>
+            <p>During tokenization, a text is split into its constituent parts. The spaCy tokenizes texts using a default algorythm. (<a href="https://nightly.spacy.io/usage/linguistic-features#tokenization">docs</a>)</p>
           </a>
           </div>
         </div>
 
         <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="100">
           <div class="icon-box iconbox-yellow">
-            <a style="color:black;" href="/texts">
+            <a style="color:black;" href="/lookups">
               <div class="icon">
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                   <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
                 </svg>
                 <img src="static/img/noun/noun_Planet_1922249.png">
               </div>
-              <h4>4. Load Texts</h4>
-              <p>Cadet uses an initial corpus of texts to identify frequent terms for annotation. The texts are used to test the existing defaults in spaCy for use with your language.</p>
-          </a>  
+              <h4>4. Lookups and Matching</h4>
+              <p>Cadet serves automatic suggestions to INCEpTION to create model training data.  To facilitate annotation, Cadet can serve suggestions from lists of lemmata, part-of-speech or entities.</p>
+            </a>  
           </div>
         </div>
 
@@ -85,8 +85,9 @@
               </svg>
               <img src="static/img/noun/noun_solar system_1922262.png">
             </div>
-            <h4>5. Corpus Analytics</h4>
-            <p>This is where we count the words and select seed terms for annotation.</p>
+            <h4>5. Create a Corpus to identify Stop Words and Frequent Terms</h4>
+            <p>Cadet uses an initial corpus of texts to identify frequent terms for annotation. The texts are used to test the existing defaults in spaCy for use with your language.</p>
+
           </a>
           </div>
         </div>
@@ -99,8 +100,8 @@
               </svg>
               <img src="static/img/noun/noun_constellation_1922251.png">
             </div>
-            <h4><a href="">6. Export Object</a></h4>
-            <p>Modi nostrum vel laborum. Porro fugit error sit minus sapiente sit aspernatur</p>
+            <h4><a href="">6. Identify and annotate stop words and frequent terms</a></h4>
+            <p>Using the corpus from the earlier section, add data to frequent terms to generate auto-suggestions.</p>
           </div>
         </div>
 
@@ -113,8 +114,8 @@
                 </svg>
                 <img src="static/img/noun/noun_Space_2292488.png">
               </div>
-              <h4>7. Serve Predictions</h4>
-              <p>Cadet uses an initial corpus of texts to identify frequent terms for annotation. The texts are used to test the existing defaults in spaCy for use with your language.</p>
+              <h4>7. Serve Auto-suggestions</h4>
+              <p>Configure endpoints to serve suggestions to INCEpTION.</p>
           </a>  
           </div>
         </div>
@@ -128,8 +129,8 @@
               </svg>
               <img src="static/img/noun/noun_Space_1758786.png">
             </div>
-            <h4>8. Corpus Analytics</h4>
-            <p>This is where we count the words and select seed terms for annotation.</p>
+            <h4>8. Fetch data from INCEpTION</h4>
+            <p>Connect to INCEpTION to gather annotation data, save it as spaCy training data and debug to assess if the data is ready.</p>
           </a>
           </div>
         </div>
@@ -142,8 +143,8 @@
               </svg>
               <img src="static/img/noun/noun_tile design_2610741.png">
             </div>
-            <h4><a href="">9. Export Object</a></h4>
-            <p>Modi nostrum vel laborum. Porro fugit error sit minus sapiente sit aspernatur</p>
+            <h4><a href="">9. Export Language Object and Training Data</a></h4>
+            <p>The final step.  Cadet exports files for the language object, its lookups data and training data from INCEpTION. It's everything you'll need to begin training model pipelines.</p>
           </div>
         </div>
 

@@ -4,14 +4,15 @@ import srsly
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import APIRouter
-from fastapi import Request, Form, File, UploadFile
+from fastapi import Request, Form, File, UploadFile,APIRouter, Depends
 from fastapi.templating import Jinja2Templates
+from app.util.login import get_current_username
 
 templates = Jinja2Templates(directory="app/templates")
 
-router = APIRouter()
-
+router = APIRouter(
+    dependencies=[Depends(get_current_username)]
+)
 
 @router.get("/texts")
 async def read_items(request: Request):
