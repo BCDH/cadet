@@ -26,7 +26,7 @@ spacy_languages = json.dumps([i.stem for i in spacy_lang.iterdir() if len(i.stem
 async def create(request: Request):
     # Check if a new language exists already, give option to delete if so
     
-
+    new_lang = (Path.cwd() / 'new_lang')
     if len(list(new_lang.iterdir())) > 0:
         name = list(new_lang.iterdir())[0].name
         message = f"<div class='alert alert-warning' role='alert'>Found an existing object for {name}. If you'd like to delete {name} and start over click delete. To continue to edit {name}, click next.</div><a href='/delete_new_lang/{name}' class='read-more'><i style='color:white;'class='icofont-trash'></i> Delete {name}</a><div></div><br><a href='/sentences' class='read-more'>Next<i style='color:white;'class='icofont-long-arrow-right'></i></a>"

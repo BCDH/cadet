@@ -26,7 +26,12 @@ async def tokenization(request: Request, login = Depends(get_current_username)):
 
         # Load language object as nlp
         lang_name = list(new_lang.iterdir())[0].name
-        mod = __import__(f'new_lang.{lang_name}', fromlist=[lang_name.capitalize()])
+        try:
+            mod = __import__(f'new_lang.{lang_name}', fromlist=[lang_name.capitalize()])
+        except SyntaxError: #Unable to load __init__ due to syntax error
+            #redirect /edit?file_name=examples.py
+            message = "[*] SyntaxError, please correct this file to proceed."
+            return RedirectResponse(url='/edit?file_name=tokenizer_exceptions.py')
         cls = getattr(mod, lang_name.capitalize())
         nlp = cls()
 

@@ -1,12 +1,6 @@
 {% extends 'base.html' %}
 {% block navbar %}{% endblock%}
 
-@st.cache(allow_output_mutation=True)
-def load_corpusbase(mei_list:List):
-    corpus = CorpusBase(paths=mei_list, urls=mei_list)
-    return corpus
-​
-corpus = load_corpusbase(WorkList_mei)
     {% block extrastyle %}
   <link rel="stylesheet" href="https://codemirror.net/theme/cobalt.css">
   <link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
@@ -22,6 +16,13 @@ corpus = load_corpusbase(WorkList_mei)
   {% block content %}
   <div style="margin-top:150px" class="container"> 
     <div class="row">
+      {% if content %}
+      <div class="col">
+        {{ content }}
+      </div></div>
+      {% endif %}
+      <div class="row">
+
         <div class="col">
             <button class="btn btn-light" type="button" onclick="window.location.href='/main'">
                 <svg class="bi bi-arrow-left" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -59,7 +60,9 @@ corpus = load_corpusbase(WorkList_mei)
     });
     editor.on("change", function (cm, change) {
       let code = cm.getValue();
-      let filename = window.location.search.substr('file_name').slice(11);
+      let current_url = new URL(window.location.href);
+      let filename = current_url.searchParams.get("file_name");
+      
       $.ajax({
         type: 'POST',
         url: '/edit',
