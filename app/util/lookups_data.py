@@ -8,7 +8,7 @@ from slugify import slugify
 from typing import List
 
 
-def create_lookups_data(lang_name,lang_code, spacy_language):
+def create_lookups_data(lang_name,lang_code):
     #Slugify user input to prevent Python and os errors
     new_lang_name = slugify(lang_name).replace('-','_')
     new_lang_code = slugify(lang_code).replace('-','_')
@@ -25,12 +25,19 @@ def create_lookups_data(lang_name,lang_code, spacy_language):
 
     #create symbolic link to lookups dir, during nightly-dev this is only option, but should be replaced by registering lookups in init 
     spacy_lookups_dir = Path(spacy_lookups_data.__file__.replace('__init__.py','')) / 'data'
-    spacy_lookups_dir.symlink_to(upos_filename)
-    
+    try:
+        spacy_lookups_dir.symlink_to(upos_filename)
+    except FileExistsError:
+        pass
+
+
     #LEMMA lookups 
     lemma_filename = new_lookups_path / (new_lang_code + '_lemma_lookup.json.gz')
     srsly.write_gzip_json(lemma_filename, {})
-    spacy_lookups_dir.symlink_to(lemma_filename)
+    try:
+        spacy_lookups_dir.symlink_to(lemma_filename)
+    except FileExistsError:
+        pass
 
 
 def clone_lookups_data(lang_name,lang_code, spacy_language):
