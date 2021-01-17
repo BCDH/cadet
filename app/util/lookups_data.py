@@ -25,19 +25,14 @@ def create_lookups_data(lang_name,lang_code):
 
     #create symbolic link to lookups dir, during nightly-dev this is only option, but should be replaced by registering lookups in init 
     spacy_lookups_dir = Path(spacy_lookups_data.__file__.replace('__init__.py','')) / 'data'
-    try:
-        spacy_lookups_dir.symlink_to(upos_filename)
-    except FileExistsError:
-        pass
-
+    (spacy_lookups_dir / (new_lang_code + '_upos_lookup.json.gz')).symlink_to(upos_filename)
 
     #LEMMA lookups 
     lemma_filename = new_lookups_path / (new_lang_code + '_lemma_lookup.json.gz')
     srsly.write_gzip_json(lemma_filename, {})
-    try:
-        spacy_lookups_dir.symlink_to(lemma_filename)
-    except FileExistsError:
-        pass
+    (spacy_lookups_dir / (new_lang_code + '_lemma_lookup.json.gz')).symlink_to(lemma_filename)
+
+
 
 
 def clone_lookups_data(lang_name,lang_code, spacy_language):
@@ -59,6 +54,8 @@ def clone_lookups_data(lang_name,lang_code, spacy_language):
     lookups_files = list(spacy_lookups_dir.glob(f'{spacy_code}*'))
     
     for src in lookups_files:
-        dest = new_lookups_path / src.name.replace(spacy_code,new_lang_code)
+        new_name = src.name.replace(spacy_code,new_lang_code)
+        dest = new_lookups_path / new_name
         shutil.copyfile(src, dest)
-        spacy_lookups_dir.symlink_to(dest)
+        (spacy_lookups_dir / new_name).symlink_to(dest)
+        
