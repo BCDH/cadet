@@ -1,3 +1,8 @@
+Jan 15 Working on: 
+- lookups for pos, lemmata, 
+- stop words and freqent terms from corpus
+
+
 # Create base language object
     x create defaults
     x clone defaults, lookups data
@@ -17,16 +22,20 @@
     - add exceptions and alter rules as needed 
       - https://nightly.spacy.io/usage/linguistic-features#native-tokenizers
 
+    - Tokenize texts and export them as conllu for import into INCEpTION, otherwise they'll use something else. 
+
 # Lookups and Matching Data
     - create/update lookups-data (not just on clone)
     - Lemma lists/dicts
+    - Pos dict
     - Cadet serves automatic suggestions to INCEpTION to create model training data.  To facilitate annotation, Cadet can serve suggestions from lists of lemmata, part-of-speech or entities.
 
 
-# Load sample corpus texts
+# Load sample corpus texts, export tokenized texts to INCEpTION
     - upload data, save to jsonl
     - tokenize, return frequencies of tokens
     - use frequencies to recommend Stop Words 
+    - Tokenize texts and export them as conllu for import into INCEpTION, otherwise they'll use something else. https://github.com/inception-project/inception/issues/1707
 
 # Identify and create stop words, frequent terms with annotation suggestions
     - Quickly bulk-annotate frequent terms (w/context?)
@@ -39,11 +48,16 @@
     - serve suggestions from spaCy, Stanza, HuggingFace
 
 # Receive data from INCEpTION save as spaCy training data, run debug
-
+    https://github.com/inception-project/inception/blob/master/inception-active-learning/src/main/java/de/tudarmstadt/ukp/inception/active/learning/ActiveLearningServiceImpl.java
 # export object and training data
     - export packaged language object, ready for training 
     - ready for spacy train with data from inception 
 
+## deployment
+- Heroku (Hobby per app)
+- Deta(problem with cassis dependency)
+- Digital Ocean(paid per app) 
+- DO VM w/ redirect from princeton domain
 
 
 Design problems:

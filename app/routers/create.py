@@ -11,6 +11,8 @@ from fastapi.responses import RedirectResponse
 
 from app.util.create_object import create_object
 from app.util.clone_object import clone_object
+from app.util.lookups_data import create_lookups_data, clone_lookups_data
+
 from app.util.login import get_current_username
 templates = Jinja2Templates(directory="app/templates")
 
@@ -46,12 +48,14 @@ async def create_post(request: Request,
                       ):
     if spacy_language:
         lang_name, lang_code = clone_object(lang_name,lang_code, spacy_language)
+        clone_lookups_data(lang_name, lang_code, spacy_language)   
        
     else:
         lang_name, lang_code = create_object(lang_name,lang_code,direction,has_case,has_letters)
+        create_lookups_data(lang_name, lang_code)   
 
-        
-    message = f"<div class='alert alert-success' role='alert'>Created a new object for {lang_name} with code {lang_code}<br>To use type <span style='background:white;'>from new_lang.{lang_name} import {lang_name.capitalize()}</span></div><a href='/sentences' class='read-more'>Next<i style='color:white;'class='icofont-long-arrow-right'></i></a>"
+
+    message = f"<div class='alert alert-success' role='alert'>Created a new object for {lang_name.capitalize()} with code {lang_code}<br>To use type <span style='background:white;'>from new_lang.{lang_name} import {lang_name.capitalize()}</span></div><a href='/sentences' class='read-more'>Next<i style='color:white;'class='icofont-long-arrow-right'></i></a>"
     return templates.TemplateResponse("create.html", {"request": request, "message":message})
 
 @router.get("/delete_new_lang/{name}") 

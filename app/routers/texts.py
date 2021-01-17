@@ -75,3 +75,43 @@ async def save_texts(
 @router.get("/texts/stats")
 async def get_text_stats():
     pass
+
+
+@router.get("/tokenized/texts")
+async def get_tokenized_texts(request:Request):
+    for file in file_save_path.iterdir():
+        print(file.name)
+        #load lang object
+        #tokenize text with obj 
+        #for token in tokens: 
+
+#WebAnno TSV
+#FORMAT=WebAnno TSV 3.2
+#1-2        4-8        Haag
+
+#Line needs to have 10 tab-separated fields
+# # text = Sag, Xaverle, hoscht ebbes oreachts verdwischt?
+# 1	Sag	_	_	_	_	_	_	_	SpaceAfter=No
+# 2	,	_	_	_	_	_	_	_	_
+# 3	Xaverle	_	_	_	_	_	_	_	SpaceAfter=No
+# 4	,	_	_	_	_	_	_	_	_
+# 5	hoscht	_	_	_	_	_	_	_	_
+# 6	ebbes	_	_	_	_	_	_	_	_
+# 7	oreachts	_	_	_	_	_	_	_	_
+# 8	verdwischt	_	_	_	_	_	_	_	SpaceAfter=No
+# 9	?	_	_	_	_	_	_	_	_
+
+# Sentences consist of one or more word lines, and word lines contain the following fields:
+
+# ID: Word index, integer starting at 1 for each new sentence; may be a range for multiword tokens; may be a decimal number for empty nodes (decimal numbers can be lower than 1 but must be greater than 0).
+# FORM: Word form or punctuation symbol.
+# LEMMA: Lemma or stem of word form.
+# UPOS: Universal part-of-speech tag.
+# XPOS: Language-specific part-of-speech tag; underscore if not available.
+# FEATS: List of morphological features from the universal feature inventory or from a defined language-specific extension; underscore if not available.
+# HEAD: Head of the current word, which is either a value of ID or zero (0).
+# DEPREL: Universal dependency relation to the HEAD (root iff HEAD = 0) or a defined language-specific subtype of one.
+# DEPS: Enhanced dependency graph in the form of a list of head-deprel pairs.
+# MISC: Any other annotation.
+
+#Can export Lemma, pos, morph, SpaceAfter=No (token.whitespace_)
