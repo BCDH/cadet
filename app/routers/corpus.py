@@ -38,14 +38,16 @@ async def read_items(request: Request):
         nlp = cls()   
         doc = nlp(corpus) 
         # I use namedtuple/Token rather than spaCy Token for needed results and variation of tokens
-        tokens = [Token(text=t.text,lemma_=t.lemma_,pos_=t.pos_,ent_type_=t.ent_type_,tag_=t.tag_) for t in doc]
+        token_count = len([t for t in doc])  
+        ignore = ['\n',' ','\n\n','\n     ','\n\n\n\n',]
+        tokens = [Token(text=t.text,lemma_=t.lemma_,pos_=t.pos_,ent_type_=t.ent_type_,tag_=t.tag_) for t in doc if not t.text in ignore and not t.is_punct]
         to_json = []
         for i in Counter(tokens).most_common():
+            print(i)
             dict_ = i[0]._asdict()
             dict_['count'] = i[1]
             to_json.append(dict_)
         tokens_json = srsly.json_dumps(to_json)
-        token_count = len(tokens)  
         try: 
             sent_count = len([s for s in doc.sents])
         except ValueError:

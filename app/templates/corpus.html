@@ -3,8 +3,6 @@
 <li class="active"><a href="/main">Home</a></li>
 {% endblock%}
 {% block content %}
-<link href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css
-" rel="stylesheet">
 
 <main style="margin-top: 200px;" id="main">
 
@@ -47,12 +45,16 @@
           <p>Entities</p>
         </div>
         {% endif %}
-        <table id="tokens" class="display" style="width:100%"></table>
+        
 
       </div>
     </div>
   </section><!-- End Counts Section -->
-
+  <section id="testimonials" class="testimonials section-bg">
+    <div class="container">
+      <table id="tokens" class="display" style="width:100%"></table>
+      </div>
+  </section>
 
 
 
@@ -67,15 +69,22 @@
 <script>
     $('#header').addClass('header-scrolled')
     let tokens = {{ tokens_json|safe }};
+    let data = []; 
+    for (const token of tokens) {
+      data.push(new Array(token.count, token.text, token.lemma_,token.pos_,token.tag_));
+    }
     $('#tokens').DataTable( {
-      data: tokens,
+      data: data,
+      pageLength: 50,
+      order: [[ 0, "desc" ]],
       columns: [
-            { title: "Name" },
-            { title: "Position" },
-            { title: "Office" },
-            { title: "Extn." },
-            { title: "Start date" },
-            { title: "Salary" }
+            { title: "Count" },
+            //{ title: "Before" },
+            { title: "Text" },
+            //{ title: "After" },
+            { title: "Lemma" },
+            { title: "Pos." },
+            { title: "Tag" },
         ]
   } );
 </script>
