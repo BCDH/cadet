@@ -20,17 +20,16 @@ def create_lookups_data(lang_name,lang_code):
         new_lookups_path.mkdir(parents=True, exist_ok=True)
     
     #UPOS lookups
-    upos_filename = new_lookups_path / (new_lang_code + '_upos_lookup.json.gz')
-    srsly.write_gzip_json(upos_filename, {})
-
-    #create symbolic link to lookups dir, during nightly-dev this is only option, but should be replaced by registering lookups in init 
-    spacy_lookups_dir = Path(spacy_lookups_data.__file__.replace('__init__.py','')) / 'data'
-    (spacy_lookups_dir / (new_lang_code + '_upos_lookup.json.gz')).symlink_to(upos_filename)
+    upos_filename = new_lookups_path / (new_lang_code + '_upos_lookup.json')
+    srsly.write_json(upos_filename, {})
 
     #LEMMA lookups 
-    lemma_filename = new_lookups_path / (new_lang_code + '_lemma_lookup.json.gz')
-    srsly.write_gzip_json(lemma_filename, {})
-    (spacy_lookups_dir / (new_lang_code + '_lemma_lookup.json.gz')).symlink_to(lemma_filename)
+    lemma_filename = new_lookups_path / (new_lang_code + '_lemma_lookup.json')
+    srsly.write_json(lemma_filename, {})
+
+    #ENT lookups 
+    lemma_filename = new_lookups_path / (new_lang_code + '_entity_lookup.json')
+    srsly.write_json(lemma_filename, {})
 
 
 

@@ -1,9 +1,12 @@
 Jan 15 Working on: 
+
+- identify stop words and freqent terms from corpus
+- add data to frequent terms, upload ling data
 - lookups for pos, lemmata, 
-- stop words and freqent terms from corpus
 
 
-# Create base language object
+
+# 1. Create base language object
     x create defaults
     x clone defaults, lookups data
     x change so only one language/project, give option to delete and start over
@@ -12,10 +15,10 @@ Jan 15 Working on:
     - suffixes = tuple()
     - infixes = tuple()
 
-# Sentences 
+# 2. Sentences 
     x add example sentences to test tokenizer defaults 
 
-# Tokenization  https://nightly.spacy.io/usage/linguistic-features#tokenization
+# 3. Tokenization  https://nightly.spacy.io/usage/linguistic-features#tokenization
     X enter example sentences, 
     - visualize defaults, highlight problems
     - regex
@@ -24,32 +27,36 @@ Jan 15 Working on:
 
     - Tokenize texts and export them as conllu for import into INCEpTION, otherwise they'll use something else. 
 
-# Lookups and Matching Data
+# 4. Lookups and Matching Data
     - create/update lookups-data (not just on clone)
     - Lemma lists/dicts
     - Pos dict
     - Cadet serves automatic suggestions to INCEpTION to create model training data.  To facilitate annotation, Cadet can serve suggestions from lists of lemmata, part-of-speech or entities.
 
 
-# Load sample corpus texts, export tokenized texts to INCEpTION
+# 5. Load sample corpus texts
     - upload data, save to jsonl
     - tokenize, return frequencies of tokens
     - use frequencies to recommend Stop Words 
     - Tokenize texts and export them as conllu for import into INCEpTION, otherwise they'll use something else. https://github.com/inception-project/inception/issues/1707
 
-# Identify and create stop words, frequent terms with annotation suggestions
+    -IS Raw text
+    -S Lookups lists
+    -O output as conllu
+
+# 6. Identify and create stop words, frequent terms with annotation suggestions
     - Quickly bulk-annotate frequent terms (w/context?)
     - mark pos, morph, (rule-based lookups)
     - add to lookups lists for auto-suggestion 
 
-# Serve auto-suggestions 
+# 7. Export texts to INCEpTION and Serve auto-suggestions 
     - endpoint to serve suggestions from current lang object
     - endpoint to serve suggestions from trained models 
     - serve suggestions from spaCy, Stanza, HuggingFace
 
-# Receive data from INCEpTION save as spaCy training data, run debug
+# 8? Receive data from INCEpTION save as spaCy training data, run debug
     https://github.com/inception-project/inception/blob/master/inception-active-learning/src/main/java/de/tudarmstadt/ukp/inception/active/learning/ActiveLearningServiceImpl.java
-# export object and training data
+# 9. export finished object and  training data
     - export packaged language object, ready for training 
     - ready for spacy train with data from inception 
 

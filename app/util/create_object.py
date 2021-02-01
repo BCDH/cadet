@@ -34,6 +34,8 @@ from .punctuation import TOKENIZER_PREFIXES, TOKENIZER_SUFFIXES, TOKENIZER_INFIX
 from .lex_attrs import LEX_ATTRS
 from .tag_map import TAG_MAP
 from .syntax_iterators import SYNTAX_ITERATORS
+from spacy.tokens import Doc
+import srsly
 
 # https://nightly.spacy.io/api/language#defaults
 class {lang_name.capitalize()}Defaults(Language.Defaults):
@@ -52,8 +54,30 @@ class {lang_name.capitalize()}(Language):
     lang = "{lang_code}"
     Defaults = {lang_name.capitalize()}Defaults
 
+class {lang_name.capitalize()}Lemmatizer:
+    def __call__(self, doc: Doc) -> Doc:
+        lookup = srsly.read_json('new_lang/{lang_name}/lookups/{lang_code}_lemma_lookup.json')
+        for t in doc:
+            lemma = lookup.get(t.text, None)
+            if lemma:
+                t.lemma_ = lemma
+        return doc
 
-__all__ = ["{lang_name.capitalize()}"]
+
+@Language.factory(
+    "{lang_code}_lemmatizer",
+    assigns=["token.lemma"],
+    default_config={{}},
+    default_score_weights={{"lemma_acc": 1.0}},
+)
+def make_lemmatizer(
+    nlp: Language,
+    name: str,
+):
+    return {lang_name.capitalize()}Lemmatizer()
+
+
+__all__ = ["{lang_name.capitalize()}","make_lemmatizer"]
 ''')
 
 
@@ -184,9 +208,3 @@ f"""
 SYNTAX_ITERATORS = {{}}
 """)
 
-def create_lemmatizer(lang_name:str,lang_code:str):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'lemmatizer.py'
-    path.write_text(
-f"""
-""")

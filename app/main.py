@@ -3,7 +3,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import RedirectResponse
-from app.routers import create, texts, corpus, tokenization, sentences, edit_code
+from app.routers import create, texts, corpus, tokenization, sentences, edit_code, lookups
 from app.util.login import get_current_username
 #from app.auth.routes import router as auth_router
 from pathlib import Path
@@ -22,6 +22,8 @@ app.include_router(corpus.router)
 app.include_router(tokenization.router)
 app.include_router(sentences.router)
 app.include_router(edit_code.router)
+app.include_router(lookups.router)
+
 #app.include_router(auth_router, prefix="/auth")
 
 
