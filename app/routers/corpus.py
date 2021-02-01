@@ -13,4 +13,12 @@ router = APIRouter(
 
 @router.get("/corpus")
 async def read_items(request: Request):
+    new_lang = (Path.cwd() / 'new_lang')
+    if len(list(new_lang.iterdir())) > 0:
+        text_path = list(new_lang.iterdir())[0] / 'texts'
+        corpus = ''
+        for text in text_path.iterdir():
+            corpus += text.read_text()
+        print(corpus)
+        stats = {'texts':0, "tokens":0}
     return templates.TemplateResponse("corpus.html", {"request": request})

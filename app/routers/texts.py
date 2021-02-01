@@ -27,9 +27,11 @@ async def save_texts(
     text_area: Optional[str] = Form(None),
 ):
 
-    save_path = Path.cwd() / "data" / "texts"
-    if not save_path.exists():
-        save_path.mkdir(parents=True, exist_ok=True)
+    new_lang = (Path.cwd() / 'new_lang')
+    if len(list(new_lang.iterdir())) > 0:
+        save_path = list(new_lang.iterdir())[0] / 'texts'
+        if not save_path.exists():
+            save_path.mkdir(parents=True, exist_ok=True)
 
     # get highest current text id
     def current_id():
@@ -41,9 +43,11 @@ async def save_texts(
 
     if text_url:
         text = httpx.get(text_url).text
-        data = [{"text": line} for line in text.split("\n")]
-        file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
-        srsly.write_jsonl(file_save_path, data)
+        file_save_path = (save_path / f"{current_id()+1}.txt")
+        file_save_path.write_text(text)
+        #data = [{"text": line} for line in text.split("\n")]
+        #file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
+        #srsly.write_jsonl(file_save_path, data)
 
     if files:
 
@@ -54,17 +58,20 @@ async def save_texts(
                 p.write_bytes(file.file.read())
                 text = textract.process(str(p))
                 text = text.decode("utf-8")
-                data = [{"text": line} for line in text.split("\n")]
-                file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
-                srsly.write_jsonl(file_save_path, data)
+                #data = [{"text": line} for line in text.split("\n")]
+                file_save_path = (save_path / f"{current_id()+1}.txt")
+                file_save_path.write_text(text)
+                #srsly.write_jsonl(file_save_path, data)
                 p.unlink()
 
             except IsADirectoryError:
                 pass  # No file selected
     if text_area:
-        data = [{"text": line} for line in text_area.split("\n")]
-        file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
-        srsly.write_jsonl(file_save_path, data)
+        file_save_path = (save_path / f"{current_id()+1}.txt")
+        file_save_path.write_text(text_area)
+        #data = [{"text": line} for line in text_area.split("\n")]
+        #file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
+        #srsly.write_jsonl(file_save_path, data)
 
     message = "Text added successfully"
     return templates.TemplateResponse(
@@ -80,10 +87,15 @@ async def get_text_stats():
 @router.get("/tokenized/texts")
 async def get_tokenized_texts(request:Request):
     for file in file_save_path.iterdir():
+        file_txt = ''
         print(file.name)
         #load lang object
         #tokenize text with obj 
-        #for token in tokens: 
+        #for token in tokens:
+        #if len(token.whitespace_ == 0:
+        #   MISC += SpaceAfter=No 
+
+ 
 
 #WebAnno TSV
 #FORMAT=WebAnno TSV 3.2
