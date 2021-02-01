@@ -3,6 +3,9 @@
 <li class="active"><a href="/main">Home</a></li>
 {% endblock%}
 {% block content %}
+<link href="https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css
+" rel="stylesheet">
+
 <main style="margin-top: 200px;" id="main">
 
     <!-- ======= Breadcrumbs ======= -->
@@ -23,27 +26,30 @@
       <div class="row counters">
 
         <div class="col-lg-3 col-6 text-center">
-          <span data-toggle="counter-up">232</span>
+          <span data-toggle="counter-up">{{ stats.texts }}</span>
           <p>Texts</p>
         </div>
 
         <div class="col-lg-3 col-6 text-center">
-          <span data-toggle="counter-up">521</span>
+          <span data-toggle="counter-up">{{ stats.tokens }}</span>
           <p>Tokens</p>
         </div>
-
+        {% if stats.sents %}
         <div class="col-lg-3 col-6 text-center">
-          <span data-toggle="counter-up">1,463</span>
+          <span data-toggle="counter-up">{{ stats.sents }}</span>
           <p>Sentences</p>
         </div>
+        {% endif %}
 
+        {% if stats.sents %}
         <div class="col-lg-3 col-6 text-center">
-          <span data-toggle="counter-up">15</span>
+          <span data-toggle="counter-up">{{ stats.ents }}</span>
           <p>Entities</p>
         </div>
+        {% endif %}
+        <table id="tokens" class="display" style="width:100%"></table>
 
       </div>
-
     </div>
   </section><!-- End Counts Section -->
 
@@ -55,8 +61,22 @@
 {% endblock %}
 
 {% block extrajs %}
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+
 <script>
     $('#header').addClass('header-scrolled')
-    
+    let tokens = {{ tokens_json|safe }};
+    $('#tokens').DataTable( {
+      data: tokens,
+      columns: [
+            { title: "Name" },
+            { title: "Position" },
+            { title: "Office" },
+            { title: "Extn." },
+            { title: "Start date" },
+            { title: "Salary" }
+        ]
+  } );
 </script>
 {% endblock %}

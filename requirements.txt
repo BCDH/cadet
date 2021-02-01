@@ -1,4 +1,4 @@
-spacy-nightly 
+spacy==3.0.0
 spacy-lookups-data
 fastapi
 pytz
