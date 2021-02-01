@@ -15,19 +15,28 @@ router = APIRouter(
 
 
 @router.get("/edit")
-async def edit_code(request: Request, file_name:str, content: Optional[str] = None ):
+async def edit_code(request: Request, file_name:str, content: Optional[str] = None, is_text: Optional[str] = None ):
     context = {}
     if content:
         context['content'] = content
     context['request'] = request 
-    new_lang = (Path.cwd() / 'new_lang')
-    if len(list(new_lang.iterdir())) > 0:
-        path = list(new_lang.iterdir())[0]
-        path = path / file_name
-        if path.exists():
-            context['code'] = path.read_text()
-        else:
-            raise HTTPException(status_code=404, detail="File not found")
+    if is_text:
+        new_lang = (Path.cwd() / 'new_lang')
+        if len(list(new_lang.iterdir())) > 0:
+            path = list(new_lang.iterdir())[0] / 'texts' / file_name
+            if path.exists():
+                context['code'] = path.read_text()
+            else:
+                raise HTTPException(status_code=404, detail="File not found")
+    else:
+        new_lang = (Path.cwd() / 'new_lang')
+        if len(list(new_lang.iterdir())) > 0:
+            path = list(new_lang.iterdir())[0]
+            path = path / file_name
+            if path.exists():
+                context['code'] = path.read_text()
+            else:
+                raise HTTPException(status_code=404, detail="File not found")
     return templates.TemplateResponse("edit_code.html", context)
 
 @router.post("/edit")
@@ -48,3 +57,4 @@ async def update_code(
         else:
             raise HTTPException(status_code=404, detail="File not found")
     return templates.TemplateResponse("edit_code.html", {"request": request, "code":code})
+

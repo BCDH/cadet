@@ -12,7 +12,12 @@
         <div class="d-flex justify-content-between align-items-center">
           <h2>Load Texts</h2>
         </div>
-
+        <div class="faq-list">
+          <button class="nice-button" onclick="location.href='/lookups'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
+          
+          <button class="nice-button" onclick="location.href='/corpus'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
+         </div>  
+  
       </div>
     </section><!-- End Breadcrumbs -->
 
@@ -61,7 +66,12 @@
               
             </div>
           </div>
-  
+          <div class="row">
+            <h4>Edit existing texts</h4>
+          {% for text in texts %}
+          <a href="/edit?file_name={{ text }}&is_text=True">{{ text }}</a><br>
+          {% endfor %}
+        </div>
         </div>
       </section><!-- End About Section -->
 
