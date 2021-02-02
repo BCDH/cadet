@@ -24,13 +24,17 @@
       <div class="row counters">
 
         <div class="col-lg-3 col-6 text-center">
+          {% if stats.texts %}
           <span data-toggle="counter-up">{{ stats.texts }}</span>
           <p>Texts</p>
+          {% endif %}
         </div>
 
         <div class="col-lg-3 col-6 text-center">
+          {% if stats.tokens %}
           <span data-toggle="counter-up">{{ stats.tokens }}</span>
           <p>Tokens</p>
+          {% endif %}
         </div>
         {% if stats.sents %}
         <div class="col-lg-3 col-6 text-center">
