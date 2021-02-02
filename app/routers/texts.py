@@ -23,7 +23,9 @@ async def read_items(request: Request):
         if not texts_path.exists():
             texts_path.mkdir(parents=True, exist_ok=True)
         texts = [text.name for text in texts_path.iterdir()]
-    return templates.TemplateResponse("texts.html", {"request": request, "texts": texts})
+        return templates.TemplateResponse("texts.html", {"request": request, "texts": texts})
+    else:
+        return templates.TemplateResponse("texts.html", {"request": request})
 
 
 @router.post("/texts")
