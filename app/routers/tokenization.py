@@ -42,7 +42,9 @@ async def tokenization(request: Request, login = Depends(get_current_username)):
             for token in doc:
                 sent += f"<span class='token'>{token}</span>&nbsp;"
             spacy_sentences.append(sent)
-    return templates.TemplateResponse("tokenization.html", {"request": request, "sentences":spacy_sentences })
+        return templates.TemplateResponse("tokenization.html", {"request": request, "sentences":spacy_sentences })
+    else:
+        return templates.TemplateResponse("tokenization.html", {"request": request})
 
 
 @router.post("/add_tokenization_exception")
