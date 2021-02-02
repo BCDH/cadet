@@ -54,4 +54,6 @@ async def read_items(request: Request):
             sent_count = False
         ent_count = len([e for e in doc.ents])
         stats = {'texts':text_count, "tokens":token_count, "sents":sent_count, "ents":ent_count}
-    return templates.TemplateResponse("corpus.html", {"request": request, "stats":stats, 'tokens_json':tokens_json})
+        return templates.TemplateResponse("corpus.html", {"request": request, "stats":stats, 'tokens_json':tokens_json})
+    else:
+        return templates.TemplateResponse("corpus.html", {"request": request})
