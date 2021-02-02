@@ -20,6 +20,8 @@ async def read_items(request: Request):
     new_lang = (Path.cwd() / 'new_lang')
     if len(list(new_lang.iterdir())) > 0:
         texts_path = list(new_lang.iterdir())[0] / 'texts'
+        if not texts_path.exists():
+            texts_path.mkdir(parents=True, exist_ok=True)
         texts = [text.name for text in texts_path.iterdir()]
     return templates.TemplateResponse("texts.html", {"request": request, "texts": texts})
 
