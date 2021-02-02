@@ -22,7 +22,7 @@
     <div class="container">
 
       <div class="row counters">
-
+        {% if stats %}
         <div class="col-lg-3 col-6 text-center">
           {% if stats.texts %}
           <span data-toggle="counter-up">{{ stats.texts }}</span>
@@ -50,7 +50,7 @@
         </div>
         {% endif %}
         
-
+        {% endif %}
       </div>
     </div>
   </section><!-- End Counts Section -->
