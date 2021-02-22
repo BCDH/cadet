@@ -10,6 +10,7 @@ Jan 15 Working on:
     x create defaults
     x clone defaults, lookups data
     x change so only one language/project, give option to delete and start over
+    ? add additional dependencies
     - lex_attrs = rules for token.like_num() add to _num_words
     - prefixes = tuple()
     - suffixes = tuple()

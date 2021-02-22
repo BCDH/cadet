@@ -42,6 +42,7 @@ async def create_post(request: Request,
                       lang_name:str= Form(...), 
                       lang_code:str= Form(...), 
                       spacy_language: Optional[str]= Form(None),
+                      dependencies: Optional[str]= Form(None),
                       direction:str = Form(...),
                       has_letters: bool = Form(False),
                       has_case: bool = Form(False)

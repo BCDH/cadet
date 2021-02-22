@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from slugify import slugify
 
@@ -16,6 +17,10 @@ def create_object(lang_name:str,lang_code:str,direction:str,has_case:bool,has_le
     create_tag_map(lang_name,lang_code)
     create_punctuation(lang_name,lang_code)
     create_syntax_iterators(lang_name,lang_code)
+    create_setup(lang_name,lang_code)
+    install_lang(lang_name,lang_code)
+    create_base_config(lang_name,lang_code)
+
     return lang_name, lang_code
 
 
@@ -208,3 +213,98 @@ f"""
 SYNTAX_ITERATORS = {{}}
 """)
 
+def create_setup(lang_name,lang_code):
+    path = (Path.cwd() / 'new_lang' / lang_name)
+    path = path / 'setup.py'
+    path.write_text(
+f"""
+from setuptools import setup
+setup(
+    name="{lang_code}",
+    entry_points={{
+        "spacy_languages": ["{lang_code} = {lang_code}:{lang_name.capitalize()}"],
+    }}
+)
+""")    
+
+def install_lang(lang_name,lang_code):
+    os.system(f"pip install -e  ./new_lang/{lang_name}")
+
+def create_base_config(lang_name,lang_code):
+    path = (Path.cwd() / 'new_lang' / lang_name)
+    path = path / 'base_config.cfg'
+    path.write_text(
+f"""[system]
+gpu_allocator = null
+
+[nlp]
+lang = "{lang_code}"
+pipeline = ["tok2vec","tagger","parser", "attribute_ruler", "lemmatizer"]
+tokenizer = {{"@tokenizers": "spacy.Tokenizer.v1"}}
+batch_size = 1000
+
+[components]
+
+[components.tok2vec]
+factory = "tok2vec"
+
+[components.tok2vec.model]
+@architectures = "spacy.Tok2Vec.v2"
+
+[components.tok2vec.model.embed]
+@architectures = "spacy.MultiHashEmbed.v1"
+width = ${{components.tok2vec.model.encode.width}}
+attrs = ["ORTH", "SHAPE"]
+rows = [5000, 2500]
+include_static_vectors = false
+
+[components.tok2vec.model.encode]
+@architectures = "spacy.MaxoutWindowEncoder.v2"
+width = 96
+depth = 4
+window_size = 1
+maxout_pieces = 3
+
+[components.attribute_ruler]
+factory = "attribute_ruler"
+
+[components.lemmatizer]
+factory = "srp_lemmatizer"
+lemma_lookup = "new_lang/{lang_name}/lookups/{lang_code}_lemma_lookup.json"
+#lexeme_norm_lookup = "assets/lookups/srp_lexeme_norm.json"
+
+
+# There are no recommended transformer weights available for language 'sr'
+# yet, so the pipeline described here is not transformer-based.
+
+
+[components.tagger]
+factory = "tagger"
+
+[components.tagger.model]
+@architectures = "spacy.Tagger.v1"
+nO = null
+
+[components.parser]
+factory = "parser"
+
+[components.parser.model]
+@architectures = "spacy.TransitionBasedParser.v1"
+tok2vec=${{components.tok2vec.model}}
+state_type = "parser"
+extra_state_tokens = false
+hidden_width = 128
+maxout_pieces = 3
+use_upper = true
+nO = null
+
+[initialize]
+
+[initialize.components]
+
+[initialize.components.attribute_ruler]
+
+[initialize.components.attribute_ruler.tag_map]
+@readers = "srsly.read_json.v1"
+path = "new_lang/{lang_name}/lookups/{lang_code}_tag_map.json"
+""")    

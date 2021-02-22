@@ -59,22 +59,26 @@ async def save_texts(
         #srsly.write_jsonl(file_save_path, data)
 
     if files:
-
         for file in files:
-            # Write the UploadFile to disk, this is a trade-off required by textract
-            p = Path("/tmp") / file.filename
-            try:
-                p.write_bytes(file.file.read())
-                text = textract.process(str(p))
-                text = text.decode("utf-8")
-                #data = [{"text": line} for line in text.split("\n")]
-                file_save_path = (save_path / f"{current_id()+1}.txt")
-                file_save_path.write_text(text)
-                #srsly.write_jsonl(file_save_path, data)
-                p.unlink()
+            contents = await file.read()
+            file_save_path = (save_path / f"{current_id()+1}.txt")
+            file_save_path.write_text(contents.decode('utf-8'))
+        ### Textract for OCR, too complicated and messy, switching to just txt files
+        # for file in files:
+        #     # Write the UploadFile to disk, this is a trade-off required by textract
+        #     p = Path("/tmp") / file.filename
+        #     try:
+        #         p.write_bytes(file.file.read())
+        #         text = textract.process(str(p))
+        #         text = text.decode("utf-8")
+        #         #data = [{"text": line} for line in text.split("\n")]
+        #         file_save_path = (save_path / f"{current_id()+1}.txt")
+        #         file_save_path.write_text(text)
+        #         #srsly.write_jsonl(file_save_path, data)
+        #         p.unlink()
 
-            except IsADirectoryError:
-                pass  # No file selected
+        #    except IsADirectoryError:
+        #        pass  # No file selected
     if text_area:
         file_save_path = (save_path / f"{current_id()+1}.txt")
         file_save_path.write_text(text_area)
