@@ -10,52 +10,50 @@
 
       <div class="section-title">
         <h2>tokenization</h2>
-        <p>spaCy has a <a style="color:white;" target="_blank" href="https://spacy.io/usage/spacy-101#annotations-token">default tokenizer</a>. Here you can test its performance with your language and make necessary adjustments.</p>
-        <a style="color:white;" target="_blank" href="https://spacy.io/usage/linguistic-features#how-tokenizer-works">How spaCy's tokenizer works</a>
+        <p>Click on a token to split it in two. Highlight a span to join into a single token.<a style="color:white;" target="_blank" href="https://spacy.io/usage/spacy-101#annotations-token">default tokenizer</a>. Here you can test its performance with your language and make necessary adjustments.</p>
+        <h5><a style="color:white;" target="_blank" href="https://spacy.io/usage/linguistic-features#how-tokenizer-works">Tokenizer Documentation</a></h5>
       </div>
 
       <div class="faq-list">
       <button class="nice-button" onclick="location.href='/sentences'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
-      <button class="nice-button" onclick="save_sentences();"><i style='color:white;'class='icofont-save'></i>Save</button>
-      <button class="nice-button" onclick="location.href='/edit?file_name=tokenizer_exceptions.py'">Edit Code<i style='color:white;'class='icofont-code-alt'></i></button>
+      <button class="nice-button" onclick="location.href='/edit?file_name=tokenizer_exceptions.py'">Edit tokenizer exceptions file<i style='color:white;'class='icofont-code-alt'></i></button>
       <button class="nice-button" onclick="location.href='/lookups'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
         <br>
-      <button class="nice-button" onclick="location.href='/edit?file_name=punctuation.py'"><i style='color:white;'class='icofont-plus'></i>Prefix</button>
-      <button class="nice-button" onclick="location.href='/edit?file_name=punctuation.py'"><i style='color:white;'class='icofont-plus'></i>Suffix</button>
-      <button class="nice-button" onclick="location.href='/edit?file_name=punctuation.py'"><i style='color:white;'class='icofont-plus'></i>Infix</button>
-      <button class="nice-button" onclick="location.href='/edit?file_name=tokenizer_exceptions.py'">
-        <i style='color:white;'class='icofont-plus'></i>Exception
-      </button>
       
-        <ul>
+    </div>
+        
             {% for sentence in sentences %}
-            <li data-aos="fade-up" data-aos="fade-up">
-                         <p>
-                {{ sentence|safe }}
-              </p>
-           
-          </li>
+            <div class="card " style="width: 100%;">
+             
+              <div class="card-body">
+                <p class="card-text">{{ sentence|safe }}</p>
+              </div>
+            </div>
+                        
+        
           {% endfor %}
           
-        </ul>
-      </div>
+        
     </div>
   </section><!-- End Frequently Asked Questions Section -->
   
 <!-- Start Tokenizer exception form modal -->
-<div class="modal" id="exceptionModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal" id="splitModal" tabindex="-1" aria-labelledby="splitModal" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add tokenizer exception</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="exampleModalLabel">Split Token</h5>
+        <button type="button" onclick="close_modals()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form method="post" action="/add_tokenization_exception">
-          <label for="orth">Orth:</label><br>
-          <input type="text" id="orth" name="orth"><br>
-          <label for="norm">Norm:</label><br>
-          <input type="text" id="norm" name="norm" >
+          
+
+          <h5 id="selected_token"></h5>
+          
+          <input type="text1" id="orth" name="token1">
+          <input type="text2" id="orth" name="token2"><br>
+          
         
       </div>
       <div class="modal-footer">
@@ -67,11 +65,74 @@
 </div>  
   <!-- End Tokenizer exception form modal -->
 
+  <!-- Start Tokenizer exception form modal -->
+<div class="modal" id="joinModal" tabindex="-1" aria-labelledby="joinModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Join Tokens</h5>
+        <button type="button" onclick="close_modals()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" action="/add_tokenization_exception">
+          
+
+          <h5 id="selected_join_token"></h5>
+          
+          <input type="text1" id="join_orth" name="token1">
+          
+          
+        
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Add exception</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>  
+  <!-- End Tokenizer exception form modal -->
   
 {% endblock %}
 
 {% block extrajs %}
 <script>
+function edit_me(e){
+  let token = e.getAttribute("value");
+  $('#selected_token').text(token);
+  $('#splitModal').show();
+};
 
+
+function getSelectionText() {
+  var text = "";
+  if (window.getSelection) {
+      text = window.getSelection().toString();
+  } else if (document.selection && document.selection.type != "Control") {
+      text = document.selection.createRange().text;
+  }
+  return text;
+}
+
+function edit_span(){
+  let text = getSelectionText();
+  if (text.length > 0) {
+    $('#joinModal').show();
+    let join_text = text //.replace(/[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000]/g,'');
+    console.log(join_text);
+    $('#join_orth').val(join_text);
+
+  } else {
+    $('#selected_token').text(token);
+    $('#splitModal').show();
+  };
+  
+  
+}
+
+function close_modals(){
+  $('#joinModal').hide();
+  $('#splitModal').hide();
+}
 </script>
 {% endblock %}

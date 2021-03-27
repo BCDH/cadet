@@ -4,26 +4,27 @@ import srsly
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import Request, Form, File, UploadFile,APIRouter, Depends
+from fastapi import Request, Form, File, UploadFile, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
 from app.util.login import get_current_username
 
 templates = Jinja2Templates(directory="app/templates")
 
-router = APIRouter(
-    dependencies=[Depends(get_current_username)]
-)
+router = APIRouter(dependencies=[Depends(get_current_username)])
+
 
 @router.get("/texts")
 async def read_items(request: Request):
-    
-    new_lang = (Path.cwd() / 'new_lang')
+
+    new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
-        texts_path = list(new_lang.iterdir())[0] / 'texts'
+        texts_path = list(new_lang.iterdir())[0] / "texts"
         if not texts_path.exists():
             texts_path.mkdir(parents=True, exist_ok=True)
         texts = [text.name for text in texts_path.iterdir()]
-        return templates.TemplateResponse("texts.html", {"request": request, "texts": texts})
+        return templates.TemplateResponse(
+            "texts.html", {"request": request, "texts": texts}
+        )
     else:
         return templates.TemplateResponse("texts.html", {"request": request})
 
@@ -36,9 +37,9 @@ async def save_texts(
     text_area: Optional[str] = Form(None),
 ):
 
-    new_lang = (Path.cwd() / 'new_lang')
+    new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
-        save_path = list(new_lang.iterdir())[0] / 'texts'
+        save_path = list(new_lang.iterdir())[0] / "texts"
         if not save_path.exists():
             save_path.mkdir(parents=True, exist_ok=True)
 
@@ -52,17 +53,17 @@ async def save_texts(
 
     if text_url:
         text = httpx.get(text_url).text
-        file_save_path = (save_path / f"{current_id()+1}.txt")
+        file_save_path = save_path / f"{current_id()+1}.txt"
         file_save_path.write_text(text)
-        #data = [{"text": line} for line in text.split("\n")]
-        #file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
-        #srsly.write_jsonl(file_save_path, data)
+        # data = [{"text": line} for line in text.split("\n")]
+        # file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
+        # srsly.write_jsonl(file_save_path, data)
 
     if files:
         for file in files:
             contents = await file.read()
-            file_save_path = (save_path / f"{current_id()+1}.txt")
-            file_save_path.write_text(contents.decode('utf-8'))
+            file_save_path = save_path / f"{current_id()+1}.txt"
+            file_save_path.write_text(contents.decode("utf-8"))
         ### Textract for OCR, too complicated and messy, switching to just txt files
         # for file in files:
         #     # Write the UploadFile to disk, this is a trade-off required by textract
@@ -80,11 +81,11 @@ async def save_texts(
         #    except IsADirectoryError:
         #        pass  # No file selected
     if text_area:
-        file_save_path = (save_path / f"{current_id()+1}.txt")
+        file_save_path = save_path / f"{current_id()+1}.txt"
         file_save_path.write_text(text_area)
-        #data = [{"text": line} for line in text_area.split("\n")]
-        #file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
-        #srsly.write_jsonl(file_save_path, data)
+        # data = [{"text": line} for line in text_area.split("\n")]
+        # file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
+        # srsly.write_jsonl(file_save_path, data)
 
     message = "Text added successfully"
     return templates.TemplateResponse(
@@ -98,23 +99,22 @@ async def get_text_stats():
 
 
 @router.get("/tokenized/texts")
-async def get_tokenized_texts(request:Request):
+async def get_tokenized_texts(request: Request):
     for file in file_save_path.iterdir():
-        file_txt = ''
+        file_txt = ""
         print(file.name)
-        #load lang object
-        #tokenize text with obj 
-        #for token in tokens:
-        #if len(token.whitespace_ == 0:
-        #   MISC += SpaceAfter=No 
+        # load lang object
+        # tokenize text with obj
+        # for token in tokens:
+        # if len(token.whitespace_ == 0:
+        #   MISC += SpaceAfter=No
 
- 
 
-#WebAnno TSV
-#FORMAT=WebAnno TSV 3.2
-#1-2        4-8        Haag
+# WebAnno TSV
+# FORMAT=WebAnno TSV 3.2
+# 1-2        4-8        Haag
 
-#Line needs to have 10 tab-separated fields
+# Line needs to have 10 tab-separated fields
 # # text = Sag, Xaverle, hoscht ebbes oreachts verdwischt?
 # 1	Sag	_	_	_	_	_	_	_	SpaceAfter=No
 # 2	,	_	_	_	_	_	_	_	_
@@ -139,4 +139,4 @@ async def get_tokenized_texts(request:Request):
 # DEPS: Enhanced dependency graph in the form of a list of head-deprel pairs.
 # MISC: Any other annotation.
 
-#Can export Lemma, pos, morph, SpaceAfter=No (token.whitespace_)
+# Can export Lemma, pos, morph, SpaceAfter=No (token.whitespace_)

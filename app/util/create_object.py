@@ -3,36 +3,39 @@ from pathlib import Path
 from slugify import slugify
 
 
-def create_object(lang_name:str,lang_code:str,direction:str,has_case:bool,has_letters:bool):
-    #Convert user input to prevent Python and os errors
-    lang_name = slugify(lang_name).replace('-','_')
-    lang_code = slugify(lang_code).replace('-','_')
-    
-    
-    create_object_file(lang_name,lang_code,direction,has_case,has_letters)
-    create_stop_words(lang_name,lang_code)
-    create_examples(lang_name,lang_code)
-    create_lex_attrs(lang_name,lang_code)
-    create_tokenizer_exceptions(lang_name,lang_code)
-    create_tag_map(lang_name,lang_code)
-    create_punctuation(lang_name,lang_code)
-    create_syntax_iterators(lang_name,lang_code)
-    create_setup(lang_name,lang_code)
-    install_lang(lang_name,lang_code)
-    create_base_config(lang_name,lang_code)
+def create_object(
+    lang_name: str, lang_code: str, direction: str, has_case: bool, has_letters: bool
+):
+    # Convert user input to prevent Python and os errors
+    lang_name = slugify(lang_name).replace("-", "_")
+    lang_code = slugify(lang_code).replace("-", "_")
+
+    create_object_file(lang_name, lang_code, direction, has_case, has_letters)
+    create_stop_words(lang_name, lang_code)
+    create_examples(lang_name, lang_code)
+    create_lex_attrs(lang_name, lang_code)
+    create_tokenizer_exceptions(lang_name, lang_code)
+    create_tag_map(lang_name, lang_code)
+    create_punctuation(lang_name, lang_code)
+    create_syntax_iterators(lang_name, lang_code)
+    create_setup(lang_name, lang_code)
+    install_lang(lang_name, lang_code)
+    create_base_config(lang_name, lang_code)
 
     return lang_name, lang_code
 
 
-def create_object_file(lang_name:str,lang_code:str,direction:str,has_case:bool,has_letters:bool):
-    path = (Path.cwd() / 'new_lang' / lang_name)
+def create_object_file(
+    lang_name: str, lang_code: str, direction: str, has_case: bool, has_letters: bool
+):
+    path = Path.cwd() / "new_lang" / lang_name
     path.mkdir(parents=True, exist_ok=True)
-    init = path / '__init__.py'
+    init = path / "__init__.py"
     init.write_text(
-f'''import spacy
+        f"""import spacy
 from spacy.language import Language
 from spacy.lang.tokenizer_exceptions import URL_MATCH
-from thinc.api import Config
+#from thinc.api import Config
 from .stop_words import STOP_WORDS
 from .tokenizer_exceptions import TOKENIZER_EXCEPTIONS
 from .punctuation import TOKENIZER_PREFIXES, TOKENIZER_SUFFIXES, TOKENIZER_INFIXES
@@ -83,14 +86,15 @@ def make_lemmatizer(
 
 
 __all__ = ["{lang_name.capitalize()}","make_lemmatizer"]
-''')
+"""
+    )
 
 
-def create_stop_words(lang_name:str,lang_code:str):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'stop_words.py'
+def create_stop_words(lang_name: str, lang_code: str):
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "stop_words.py"
     path.write_text(
-f'''
+        f'''
 # coding: utf8
 from __future__ import unicode_literals
 
@@ -99,33 +103,34 @@ STOP_WORDS = set(
     """
 """.split()
 )
-''')
-    
-def create_tokenizer_exceptions(lang_name:str,lang_code:str):
-    #see https://github.com/explosion/spaCy/blob/develop/spacy/lang/sr/tokenizer_exceptions.py
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'tokenizer_exceptions.py'
+'''
+    )
+
+
+def create_tokenizer_exceptions(lang_name: str, lang_code: str):
+    # see https://github.com/explosion/spaCy/blob/develop/spacy/lang/sr/tokenizer_exceptions.py
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "tokenizer_exceptions.py"
     path.write_text(
-f"""
+        f"""
 from spacy.lang.tokenizer_exceptions import BASE_EXCEPTIONS
-from spacy.symbols import ORTH, NORM
+from spacy.symbols import ORTH, NORM, LEMMA
 from spacy.util import update_exc
 
-_exc = {{}}
+exclusions = [
 
-_new_exc = [] #ex. {{ORTH: "пoн", NORM: "понедељак"}},
+]
 
-for new_exc in _new_exc:
-    _exc[new_exc[ORTH]] = [new_exc]
+TOKENIZER_EXCEPTIONS = update_exc(BASE_EXCEPTIONS, *exclusions)
+"""
+    )
 
-TOKENIZER_EXCEPTIONS = update_exc(BASE_EXCEPTIONS, _exc)
-""")
 
-def create_examples(lang_name,lang_code):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'examples.py'
+def create_examples(lang_name, lang_code):
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "examples.py"
     path.write_text(
-f"""
+        f"""
 # coding: utf8
 from __future__ import unicode_literals
 
@@ -139,13 +144,15 @@ Example sentences to test spaCy and its language models.
 
 
 sentences = [  ]
-""")
+"""
+    )
 
-def create_lex_attrs(lang_name:str,lang_code:str):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'lex_attrs.py'
+
+def create_lex_attrs(lang_name: str, lang_code: str):
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "lex_attrs.py"
     path.write_text(
-f"""
+        f"""
 from spacy.attrs import LIKE_NUM
 
 _num_words = []
@@ -165,26 +172,28 @@ def like_num(text):
     return False
 
 LEX_ATTRS = {{LIKE_NUM: like_num}}
-""")
+"""
+    )
 
 
-
-def create_tag_map(lang_name:str,lang_code:str):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'tag_map.py'
+def create_tag_map(lang_name: str, lang_code: str):
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "tag_map.py"
     path.write_text(
-f"""
+        f"""
 from spacy.symbols import POS, AUX, ADJ, CCONJ, NUM, ADV, ADP, X, VERB, DET, SCONJ, PUNCT
 from spacy.symbols import NOUN, PART, INTJ, PRON
 
 TAG_MAP = {{}}
-""")
+"""
+    )
 
-def create_punctuation(lang_name:str,lang_code:str):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'punctuation.py'
+
+def create_punctuation(lang_name: str, lang_code: str):
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "punctuation.py"
     path.write_text(
-f"""
+        f"""
 from spacy.lang.char_classes import LIST_ELLIPSES, LIST_ICONS, LIST_PUNCT, LIST_QUOTES
 from spacy.lang.char_classes import CURRENCY, UNITS, PUNCT
 from spacy.lang.char_classes import CONCAT_QUOTES, ALPHA, ALPHA_LOWER, ALPHA_UPPER
@@ -203,21 +212,25 @@ _infixes = BASE_TOKENIZER_INFIXES
 TOKENIZER_PREFIXES = _prefixes
 TOKENIZER_SUFFIXES = _suffixes
 TOKENIZER_INFIXES = _infixes
-""")
+"""
+    )
 
-def create_syntax_iterators(lang_name:str,lang_code:str):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'syntax_iterators.py'
+
+def create_syntax_iterators(lang_name: str, lang_code: str):
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "syntax_iterators.py"
     path.write_text(
-f"""
+        f"""
 SYNTAX_ITERATORS = {{}}
-""")
+"""
+    )
 
-def create_setup(lang_name,lang_code):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'setup.py'
+
+def create_setup(lang_name, lang_code):
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "setup.py"
     path.write_text(
-f"""
+        f"""
 from setuptools import setup
 setup(
     name="{lang_code}",
@@ -225,16 +238,19 @@ setup(
         "spacy_languages": ["{lang_code} = {lang_code}:{lang_name.capitalize()}"],
     }}
 )
-""")    
+"""
+    )
 
-def install_lang(lang_name,lang_code):
+
+def install_lang(lang_name, lang_code):
     os.system(f"pip install -e  ./new_lang/{lang_name}")
 
-def create_base_config(lang_name,lang_code):
-    path = (Path.cwd() / 'new_lang' / lang_name)
-    path = path / 'base_config.cfg'
+
+def create_base_config(lang_name, lang_code):
+    path = Path.cwd() / "new_lang" / lang_name
+    path = path / "base_config.cfg"
     path.write_text(
-f"""[system]
+        f"""[system]
 gpu_allocator = null
 
 [nlp]
@@ -307,4 +323,5 @@ nO = null
 [initialize.components.attribute_ruler.tag_map]
 @readers = "srsly.read_json.v1"
 path = "new_lang/{lang_name}/lookups/{lang_code}_tag_map.json"
-""")    
+"""
+    )

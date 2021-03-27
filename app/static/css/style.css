@@ -9,17 +9,16 @@
 # Custom AJ
 --------------------------------------------------------------*/
 .token:hover {
-  border-left: 3px solid rgba(5,40,164,0.5);
-  border-right: 3px solid rgba(5,40,164,0.5);
+  border: 2px solid rgba(64, 52, 235, 1.0);
   border-radius: 40px;
   }
 
 .token {
-  border: 3px solid #0704a8b4;
+  border: 2px solid rgba(64, 52, 235, .3);
   border-radius: 40px;
   outline-offset: -1px;
   color: black;
-  padding: 8px;
+  padding: 1px;
 }
 .text-grad {
   font-size: 24px;

@@ -5,13 +5,14 @@ from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 security = HTTPBasic()
 try:
-    env_username = os.environ['CADET_USERNAME']
+    env_username = os.environ["CADET_USERNAME"]
 except KeyError:
-    env_username = 'cadet'
+    env_username = "cadet"
 try:
-    env_password = os.environ['CADET_PASSWORD']
-except  KeyError:
-    env_password = 'NewNLP'
+    env_password = os.environ["CADET_PASSWORD"]
+except KeyError:
+    env_password = "NewNLP"
+
 
 def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
     correct_username = secrets.compare_digest(credentials.username, env_username)
@@ -24,9 +25,10 @@ def get_current_username(credentials: HTTPBasicCredentials = Depends(security)):
         )
     return credentials.username
 
+
 def logout(request: Request, credentials: HTTPBasicCredentials = Depends(security)):
-    correct_username = secrets.compare_digest(credentials.username, '')
-    correct_password = secrets.compare_digest(credentials.password, '')
+    correct_username = secrets.compare_digest(credentials.username, "")
+    correct_password = secrets.compare_digest(credentials.password, "")
     if not (correct_username and correct_password):
         return templates.TemplateResponse("login.html", {"request": request})
     return credentials.username
