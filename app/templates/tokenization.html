@@ -2,6 +2,13 @@
 {% block navbar %}{% endblock%}
 {% block extrastyle %}
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<style>
+  .splitter {
+    background: -webkit-linear-gradient(#eee, #333);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>
 {% endblock%}
 
 {% block content %}
@@ -55,15 +62,11 @@
 
           <h5 id="selected_token"></h5>
           
-          <input type="text1" id="orth" name="token1">
-          <input type="text2" id="orth" name="token2"><br>
-          <style>
-            #slider {
-              margin: 10px;
-            }
-          </style>
+          <input type="hidden" id="token1" name="token1">
+          <input type="hidden" id="token2" name="token2"><br>
+          
           <div id="slider"></div>
-        
+          
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Add exception</button>
@@ -113,6 +116,22 @@
 function edit_me(e){
   let token = e.getAttribute("value");
   $('#selected_token').text(token);
+  let max = token.length;
+  // initialize the split slider 
+ $("#slider").slider({
+  min: 0,
+  max: max,
+
+  slide: function (event, ui) {
+    let text1 = token.slice(0,ui.value)
+    let text2 = token.slice(ui.value);
+    $("#selected_token").html(text1+' <span class="splitter">┋</span> '+text2);
+    $("#token1").val(text1)
+    $("#token2").val(text2)
+  }
+});
+$("#amount").val($("#slider").slider("values", 0) +
+  " - " + $("#slider").slider("values", 1));
   $('#splitModal').show();
 };
 
@@ -136,8 +155,7 @@ function edit_span(){
     $('#join_orth').val(join_text);
 
   } else {
-    $('#selected_token').text(token);
-    $('#splitModal').show();
+   
   };
   
   
@@ -148,19 +166,7 @@ function close_modals(){
   $('#splitModal').hide();
 }
 
-
- // initialize the split slider 
- $("#slider").slider({
-  range: true,
-  min: 1150,
-  max: 1750,
-  values: [1150, 1750],
-  slide: function (event, ui) {
-    $("#amount").val(ui.values[0] + " - " + ui.values[1]);
-    
-  }
-});
-$("#amount").val($("#slider").slider("values", 0) +
-  " - " + $("#slider").slider("values", 1));
+$("#slider").slider();
+ 
 </script>
 {% endblock %}
