@@ -66,6 +66,7 @@
           <input type="hidden" id="token2" name="token2"><br>
           
           <div id="slider"></div>
+          <p>Move the slider to split the token in two</p>
           
       </div>
       <div class="modal-footer">
@@ -151,7 +152,6 @@ function edit_span(){
   if (text.length > 0) {
     $('#joinModal').show();
     let join_text = text //.replace(/[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000]/g,'');
-    console.log(join_text);
     $('#join_orth').val(join_text);
 
   } else {
