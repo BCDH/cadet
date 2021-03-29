@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block navbar %}{% endblock%}
+{% block extrastyle %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+{% endblock%}
 
 {% block content %}
 
@@ -17,6 +20,7 @@
       <div class="faq-list">
       <button class="nice-button" onclick="location.href='/sentences'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
       <button class="nice-button" onclick="location.href='/edit?file_name=tokenizer_exceptions.py'">Edit tokenizer exceptions file<i style='color:white;'class='icofont-code-alt'></i></button>
+      <button class="nice-button" onclick="location.href='/edit?file_name=punctuation.py'">Edit punctuation file<i style='color:white;'class='icofont-code-alt'></i></button>
       <button class="nice-button" onclick="location.href='/lookups'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
         <br>
       
@@ -53,7 +57,12 @@
           
           <input type="text1" id="orth" name="token1">
           <input type="text2" id="orth" name="token2"><br>
-          
+          <style>
+            #slider {
+              margin: 10px;
+            }
+          </style>
+          <div id="slider"></div>
         
       </div>
       <div class="modal-footer">
@@ -96,6 +105,10 @@
 {% endblock %}
 
 {% block extrajs %}
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript"
+    src="//cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+
 <script>
 function edit_me(e){
   let token = e.getAttribute("value");
@@ -134,5 +147,20 @@ function close_modals(){
   $('#joinModal').hide();
   $('#splitModal').hide();
 }
+
+
+ // initialize the split slider 
+ $("#slider").slider({
+  range: true,
+  min: 1150,
+  max: 1750,
+  values: [1150, 1750],
+  slide: function (event, ui) {
+    $("#amount").val(ui.values[0] + " - " + ui.values[1]);
+    
+  }
+});
+$("#amount").val($("#slider").slider("values", 0) +
+  " - " + $("#slider").slider("values", 1));
 </script>
 {% endblock %}

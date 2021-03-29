@@ -19,6 +19,7 @@ def create_object(
     create_punctuation(lang_name, lang_code)
     create_syntax_iterators(lang_name, lang_code)
     create_setup(lang_name, lang_code)
+    create_lemmatizer(lang_name, lang_code)
     install_lang(lang_name, lang_code)
     create_base_config(lang_name, lang_code)
 
@@ -31,8 +32,8 @@ def create_object_file(
     path = Path.cwd() / "new_lang" / lang_name
     path.mkdir(parents=True, exist_ok=True)
     init = path / "__init__.py"
-    init.write_text(
-        f"""import spacy
+    init.write_text(f"""
+import spacy
 from spacy.language import Language
 from spacy.lang.tokenizer_exceptions import URL_MATCH
 #from thinc.api import Config
@@ -43,7 +44,10 @@ from .lex_attrs import LEX_ATTRS
 from .tag_map import TAG_MAP
 from .syntax_iterators import SYNTAX_ITERATORS
 from spacy.tokens import Doc
+from typing import Optional
+from thinc.api import Model
 import srsly
+from .lemmatizer import {lang_name.capitalize()}Lemmatizer
 
 # https://nightly.spacy.io/api/language#defaults
 class {lang_name.capitalize()}Defaults(Language.Defaults):
@@ -62,32 +66,107 @@ class {lang_name.capitalize()}(Language):
     lang = "{lang_code}"
     Defaults = {lang_name.capitalize()}Defaults
 
-class {lang_name.capitalize()}Lemmatizer:
-    def __call__(self, doc: Doc) -> Doc:
-        lookup = srsly.read_json('new_lang/{lang_name}/lookups/{lang_code}_lemma_lookup.json')
-        for t in doc:
-            lemma = lookup.get(t.text, None)
-            if lemma:
-                t.lemma_ = lemma
-        return doc
+    #custom on init
 
-
-@Language.factory(
-    "{lang_code}_lemmatizer",
+@{lang_name.capitalize()}.factory(
+    "lemmatizer",
     assigns=["token.lemma"],
-    default_config={{}},
+    default_config={{"model": None, "mode": "lookup", "overwrite": False}},
     default_score_weights={{"lemma_acc": 1.0}},
 )
 def make_lemmatizer(
-    nlp: Language,
-    name: str,
+    nlp: Language, model: Optional[Model], name: str, mode: str, overwrite: bool
 ):
-    return {lang_name.capitalize()}Lemmatizer()
+    return {lang_name.capitalize()}Lemmatizer(nlp.vocab, model, name, mode=mode, overwrite=overwrite)
+
+#Add locations of lookups data to the registry
+@spacy.registry.lookups("{lang_code}")
+def do_registration():
+    from pathlib import Path
+    cadet_path = Path.cwd()
+    lookups_path = cadet_path / "new_lang" / "{lang_name}" / "lookups"
+    result = {{}}
+    for lookup in lookups_path.iterdir():
+        key = lookup.stem[lookup.stem.find('_') + 1:]
+        result[key] = str(lookup)
+    return result
+
+__all__ = ["{lang_name.capitalize()}"]
+""")
+
+## David's version
+# def create_object_file(
+#     lang_name: str, lang_code: str, direction: str, has_case: bool, has_letters: bool
+# ):
+#     path = Path.cwd() / "new_lang" / lang_name
+#     path.mkdir(parents=True, exist_ok=True)
+#     init = path / "__init__.py"
+#     init.write_text(f"""
+# from .stop_words import STOP_WORDS
+# from .tokenizer_exceptions import TOKENIZER_EXCEPTIONS
+# from .punctuation import TOKENIZER_PREFIXES, TOKENIZER_SUFFIXES, TOKENIZER_INFIXES
+# from spacy.lang.tokenizer_exceptions import URL_MATCH
+# from .tag_map import TAG_MAP
+# from .lex_attrs import LEX_ATTRS
+# from spacy.language import Language
+# from spacy.lang.tokenizer_exceptions import BASE_EXCEPTIONS
+# from spacy.lang.norm_exceptions import BASE_NORMS
+# from spacy.lookups import Lookups
+# from spacy.attrs import LANG, NORM
+# from spacy.util import update_exc, add_lookups
+# from spacy.tokens import Doc
+# import spacy
+# import srsly
 
 
-__all__ = ["{lang_name.capitalize()}","make_lemmatizer"]
-"""
-    )
+# # https://nightly.spacy.io/api/language#defaults
+# class {lang_name.capitalize()}Defaults(Language.Defaults):
+#     stop_words = STOP_WORDS
+#     tokenizer_exceptions = TOKENIZER_EXCEPTIONS
+#     prefixes = TOKENIZER_PREFIXES
+#     suffixes = TOKENIZER_SUFFIXES
+#     infixes = TOKENIZER_INFIXES
+#     token_match = None
+#     url_match = URL_MATCH
+#     tag_map = TAG_MAP
+#     writing_system = {{"direction": "{direction}", "has_case": {has_case}, "has_letters": {has_letters}}}
+
+
+# @spacy.registry.languages("{lang_code}") #https://nightly.spacy.io/api/top-level#registry
+# class {lang_name.capitalize()}(Language):
+#     lang = "{lang_code}"
+#     Defaults = {lang_name.capitalize()}Defaults
+
+# class {lang_name.capitalize()}Lemmatizer:
+#     def __call__(self, doc: Doc) -> Doc:
+#         lookup = srsly.read_json('{lang_name}/lookups/{lang_code}_lemma_lookup.json')
+#         for t in doc:
+#             lemma = lookup.get(t.text, None)
+#             if lemma:
+#                 t.lemma_ = lemma
+#         return doc
+
+
+# @Language.factory(
+#     "{lang_code}_lemmatizer",
+#     assigns=["token.lemma"],
+#     default_config={{}},
+#     default_score_weights={{"lemma_acc": 1.0}},
+# )
+# def make_lemmatizer(
+#     nlp: Language,
+#     name: str,
+# ):
+#     return {lang_name.capitalize()}Lemmatizer()
+
+# #Add locations of lookups data to the registry
+# @spacy.registry.lookups("{lang_code}")
+# def do_registration():
+#     return {{'lemma_lookup': 'path/to/lookup.json' }}
+
+# __all__ = ["{lang_name.capitalize()}","make_lemmatizer"]
+# """)
+
 
 
 def create_stop_words(lang_name: str, lang_code: str):
@@ -259,6 +338,10 @@ pipeline = ["tok2vec","tagger","parser", "attribute_ruler", "lemmatizer"]
 tokenizer = {{"@tokenizers": "spacy.Tokenizer.v1"}}
 batch_size = 1000
 
+[nlp.vocab.lookups]
+lemma_lookup = "new_lang/{lang_name}/lookups/{lang_code}_lemma_lookup.json"
+#lexeme_norm_lookup = "assets/lookups/srp_lexeme_norm.json"
+
 [components]
 
 [components.tok2vec]
@@ -283,11 +366,6 @@ maxout_pieces = 3
 
 [components.attribute_ruler]
 factory = "attribute_ruler"
-
-[components.lemmatizer]
-factory = "srp_lemmatizer"
-lemma_lookup = "new_lang/{lang_name}/lookups/{lang_code}_lemma_lookup.json"
-#lexeme_norm_lookup = "assets/lookups/srp_lexeme_norm.json"
 
 
 # There are no recommended transformer weights available for language 'sr'
@@ -325,3 +403,48 @@ nO = null
 path = "new_lang/{lang_name}/lookups/{lang_code}_tag_map.json"
 """
     )
+
+
+def create_lemmatizer(
+    lang_name: str, lang_code: str):
+    path = Path.cwd() / "new_lang" / lang_name
+    path.mkdir(parents=True, exist_ok=True)
+    init = path / "lemmatizer.py"
+    init.write_text(f"""
+from typing import List, Tuple
+from spacy.pipeline import Lemmatizer
+from spacy.tokens import Token
+from spacy.vocab import Vocab
+from typing import Optional, List, Dict, Tuple
+from thinc.api import Model
+import spacy 
+
+class {lang_name.capitalize()}Lemmatizer(Lemmatizer):
+    def __init__(
+        self,
+        vocab: Vocab,
+        model: Optional[Model],
+        name: str = "lemmatizer",
+        *,
+        mode: str = "lookup",
+        overwrite: bool = False,
+    ) -> None:
+        super().__init__(vocab, model, name, mode=mode, overwrite=overwrite)
+        
+        lookups_tables = spacy.registry.lookups.get({lang_code})()
+        if not nlp.vocab.lookups.has_table('lemma_lookup'):
+            language_data = srsly.read_json(lookups_tables["lemma_lookup"])
+            nlp.vocab.lookups.add_table("lemma_lookup", language_data)
+           
+    
+    def rule_lemmatize(self, token: Token) -> List[str]:
+        pass
+
+    def lookup_lemmatize(self, token: Token) -> List[str]:
+
+        lookup_table = self.lookups.get_table("lemma_lookup")
+        string = token.text.lower()
+        return [lookup_table.get(string, string)]
+
+
+""")

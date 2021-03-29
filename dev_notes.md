@@ -10,7 +10,12 @@ Jan 15 Working on:
     x create defaults
     x clone defaults, lookups data
     x change so only one language/project, give option to delete and start over
-    ? add additional dependencies
+    
+    - add initial config file, with settings from https://spacy.io/usage/training#quickstart
+        - gpu or cpu, efficiency or accuracy 
+        
+    - add additional dependencies
+
     - lex_attrs = rules for token.like_num() add to _num_words
     - prefixes = tuple()
     - suffixes = tuple()
