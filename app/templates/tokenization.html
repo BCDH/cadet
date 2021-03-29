@@ -60,7 +60,7 @@
         <form method="post" action="/add_tokenization_exception">
           
 
-          <h5 id="selected_token"></h5>
+          <h5 class="text-center" id="selected_token"></h5>
           
           <input type="hidden" id="token1" name="token1">
           <input type="hidden" id="token2" name="token2"><br>
@@ -151,7 +151,7 @@ function edit_span(){
   let text = getSelectionText();
   if (text.length > 0) {
     $('#joinModal').show();
-    let join_text = text //.replace(/[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000]/g,'');
+    let join_text = text.replace(/[\u00A0\u1680​\u180e\u2000-\u2009\u200a​\u200b​\u202f\u205f​\u3000]/g,'');
     $('#join_orth').val(join_text);
 
   } else {
