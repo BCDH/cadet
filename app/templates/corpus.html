@@ -79,7 +79,7 @@
     let tokens = {{ tokens_json|safe }};
     let data = []; 
     for (const token of tokens) {
-      data.push(new Array(token.count, token.text, token.lemma_,token.pos_,token.tag_));
+      data.push(new Array(token.count, token.text, token.lemma_,token.pos_,token.tag_,false));
     }
     $('#tokens').DataTable( {
       data: data,
@@ -93,7 +93,13 @@
             { title: "Lemma" },
             { title: "Pos." },
             { title: "Tag" },
+            { title: "is_stop" },
         ]
   } );
 </script>
 {% endblock %}
+
+<!-- TODO 
+add filters to exclude common stop word-type tokens 
+ability to mark token as a stop word and update stop words.py
+ability to click on cell in dataframe and update values, save those in lookups -->

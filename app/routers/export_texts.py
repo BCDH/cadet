@@ -1,4 +1,5 @@
 import srsly
+import shutil
 from pathlib import Path
 from typing import List, Optional
 from spacy.tokens import Doc, Span
@@ -38,11 +39,18 @@ async def download():
 
         docs = update_tokens_with_lookups(nlp, docs)
         conll = [doc_to_conll(doc) for doc in docs]
+
+        temp_path = Path('/tmp/text_export')
+        temp_path.mkdir(parents=True, exist_ok=True)
+        for filename, conll in zip(filenames,conll):
+            (temp_path / filename).write_text(conll)
+
+        #shutil.make_archive("zipped_sample_directory", "zip", "sample_directory")
+        shutil.make_archive(str(temp_path), 'zip', str(temp_path))
+        zip_file = str(temp_path).split('/')[-1]+'.zip'
         #save each doc to a file, return single zip file with all CONFIRM, can import directory into INCEpTION
 
-        #temp_file = Path('/tmp/'+ "hello.txt")
-        #temp_file.write_text(text)
-        #return FileResponse(temp_file, media_type="text/plain", filename="hello.txt")
+        return FileResponse('/tmp/text_export.zip', media_type="application/zip", filename=zip_file)
 
 def get_filenames() -> List[str]:
     new_lang = Path.cwd() / "new_lang"
@@ -178,4 +186,4 @@ def doc_to_conll(doc) -> str:
                 ]
             )
         )
-    return rows
+    return '\n'.join(rows)
