@@ -92,6 +92,18 @@ async def save_texts(
         "texts.html", {"request": request, "message": message}
     )
 
+@router.get('/delete_text')
+async def get_tokenized_texts(text_name:str):
+
+    #Get the path to the file and delete it
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        texts_path = list(new_lang.iterdir())[0] / "texts"
+    selected_file = texts_path / text_name
+    if selected_file.exists():
+        selected_file.unlink()
+        return {'message': f"deleted {selected_file.name}" }
+
 
 @router.get("/texts/stats")
 async def get_text_stats():

@@ -66,11 +66,14 @@
               
             </div>
           </div>
-          <div class="row">
+          
             <h4>Edit existing texts</h4>
           {% for text in texts %}
-          <a href="/edit?file_name={{ text }}&is_text=True">{{ text }}</a><br>
+          <div class="row">
+            <div class="col"><a href="/edit?file_name={{ text }}&is_text=True">{{ text }}</a></div>
+            <div class="col"><i onclick="delete_text('{{ text}}');" title='Delete {{ text }}' class="icofont-ui-delete"></i></div>
           {% endfor %}
+        </div>
         </div>
         </div>
       </section><!-- End About Section -->
@@ -83,6 +86,13 @@
 {% block extrajs %}
 <script>
     $('#header').addClass('header-scrolled')
-    
+    function delete_text(filename){
+      console.log(filename);
+      
+      $.get( 'delete_text?text_name='+filename, function( data ) {
+        console.log(data);
+      });
+      location.reload();
+    };
 </script>
 {% endblock %}
