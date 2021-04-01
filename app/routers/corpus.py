@@ -57,7 +57,6 @@ async def read_items(request: Request):
         ]
         to_json = []
         for i in Counter(tokens).most_common():
-            print(i)
             dict_ = i[0]._asdict()
             dict_["count"] = i[1]
             to_json.append(dict_)

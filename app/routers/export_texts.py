@@ -4,11 +4,12 @@ from pathlib import Path
 from typing import List, Optional
 from spacy.tokens import Doc, Span
 from spacy.matcher import PhraseMatcher
-
+import pandas as pd
 from fastapi import Request, Form, File, UploadFile, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
 from app.util.login import get_current_username
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse,RedirectResponse
+
 
 templates = Jinja2Templates(directory="app/templates")
 
@@ -22,11 +23,28 @@ async def read_items(request: Request):
 @router.get("/download")
 async def download():
     
-    # # update the doc from seeds and lookups 
-    #     #check if under updated seeds
-    #     #elif in lookups 
-    #     #else add to 
-    # text = [a for a in texts if a['filename'] == filename][0]
+
+    #confirm json lookups are valid 
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    lookups_path = new_lang / lang_name / "lookups"
+    for lookup in lookups_path.iterdir():
+        key = lookup.stem[lookup.stem.find('_') + 1:]
+        if 'lemma' in key:
+            lemma_data = srsly.read_json(lookup)
+            if isinstance(lemma_data, str):
+                return RedirectResponse("/edit_lookup?type=lemma")
+
+        if 'entity' in key:
+            entity_data = srsly.read_json(lookup)
+            if isinstance(entity_data, str):
+                return RedirectResponse("/edit_lookup?type=entity")
+        if 'pos' in key:
+            pos_data = srsly.read_json(lookup)
+            if isinstance(pos_data, str):
+                return RedirectResponse("/edit_lookup?type=pos")
+    
+    #if valid, continue
     texts = get_texts()
     filenames = get_filenames()
     nlp = get_nlp()
@@ -84,6 +102,7 @@ def get_nlp():
     nlp = cls()
     return nlp
 
+
 def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
 
     #Read the lookups directory, make dict of table names and path to json files
@@ -94,21 +113,28 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
         key = lookup.stem[lookup.stem.find('_') + 1:]
         if 'lemma' in key:
             lemma_data = srsly.read_json(lookup)
+           
         if 'entity' in key:
             entity_data = srsly.read_json(lookup)
+            assert isinstance(lemma_data, dict)
         if 'pos' in key:
             pos_data = srsly.read_json(lookup)
+            assert isinstance(lemma_data, dict)
 
     matcher = PhraseMatcher(nlp.vocab)
-    for ent in entity_data.keys():
-            matcher.add(ent, [nlp(ent)])
+    try:
+        for ent in entity_data.keys():
+                matcher.add(ent, [nlp(ent)])
+    except AttributeError as e:
+        print(e)
 
     for doc in docs:
         for t in doc:
+            
             lemma = lemma_data.get(t.text, None)
             if lemma:
                 t.lemma_ = lemma
-
+            
             pos = pos_data.get(t.text, None)
             if pos:
                 t.pos_ = pos
@@ -127,63 +153,54 @@ def doc_to_conll(doc) -> str:
     """
     Converts a spaCy Doc object to string formatted using Conll 2012 standards for pos, lemma and entity
     https://inception-project.github.io/releases/0.19.0/docs/user-guide.html#sect_formats_conll2012
-    Adapted from textacy doc_to_conll function 
+    https://dkpro.github.io/dkpro-core/releases/2.2.0/docs/format-reference.html#format-Conll2012
+    
+    The CoNLL 2012 format targets semantic role labeling and coreference. Columns are whitespace-separated 
+    (tabs or spaces). Sentences are separated by a blank new line.
 
     example:
-    en-orig.conll	0	0	John	NNP	(TOP(S(NP*)	john	-	-	-	(PERSON)	(A0)	(1)
-    en-orig.conll	0	1	went	VBD	(VP*	go	go.02	-	-	*	(V*)	-
-    en-orig.conll	0	2	to	TO	(PP*	to	-	-	-	*	*	-
-    en-orig.conll	0	3	the	DT	(NP*	the	-	-	-	*	*	(2
-    en-orig.conll	0	4	market	NN	*)))	market	-	-	-	*	(A1)	2)
-    en-orig.conll	0	5	.	.	*))	.	-	-	-	*	*	-
-
+    #begin document (mz/sinorama/10/ectb_1072); part 000
+    mz/sinorama/10/ectb_1072          0          0          A         DT (TOP(S(NP*          -          -          -          -          *     (ARG1*          -
+    mz/sinorama/10/ectb_1072          0          1        Gao        NNP      (NML*          -          -          -          -   (PERSON*          *         (8
+    mz/sinorama/10/ectb_1072          0          2   Xingjian        NNP         *)          -          -          -          -         *)          *         8)
+    mz/sinorama/10/ectb_1072          0          3      Storm         NN         *)          -          -          -          -          *         *)          -
+    mz/sinorama/10/ectb_1072          0          4      Blows        VBZ       (VP*       blow         01          2          -          *       (V*)          -
+    mz/sinorama/10/ectb_1072          0          5    through         IN       (PP*          -          -          -          -          * (ARGM-DIR*          -
+    # end document
     Args:
         doc ([type]): [description]
     """
-    rows = []
+    data = []
     
     for i, tok in enumerate(doc):
         
         if tok.is_space:
-            form = " "
-            lemma = " "
+            form = "_"
+            lemma = "_"
         else:
             form = tok.orth_
             lemma = tok.lemma_
-        tok_id = i + 1
+        tok_id = i +1
         
         misc = "SpaceAfter=No" if not tok.whitespace_ else "_"
-        rows.append(
-            "\t".join(
-                [
-                    # 1	Document ID	This is a variation on the document filename
-                    doc.user_data['filename'],
-                    # 2	Part number	Some files are divided into multiple parts numbered as 000, 001, 002, ... etc.
-                    "0",
-                    # 3	Word number	
-                    str(tok_id),
-                    # 4	Word itself	This is the token as segmented/tokenized in the Treebank. Initially the *_skel file contain the placeholder [WORD] which gets replaced by the actual token from the Treebank which is part of the OntoNotes release.
-                    form,
-                    # 5	Part-of-Speech	
-                    tok.pos_,
-                    # 6	Parse bit	This is the bracketed structure broken before the first open parenthesis in the parse, and the word/part-of-speech leaf replaced with a *. The full parse can be created by substituting the asterix with the "([pos] [word])" string (or leaf) and concatenating the items in the rows of that column.
-                    "_",
-                    # 7	Predicate lemma	The predicate lemma is mentioned for the rows for which we have semantic role information. All other rows are marked with a "-"
-                    lemma,
-                    # 8	Predicate Frameset ID	This is the PropBank frameset ID of the predicate in Column 7.
-                    "_",
-                    # 9	Word sense	This is the word sense of the word in Column 3.
-                    "_",
-                    # 10	Speaker/Author	This is the speaker or author name where available. Mostly in Broadcast Conversation and Web Log data.
-                    "_",
-                    # 11	Named Entities	These columns identifies the spans representing various named entities.
-                    #ent.label_,
-                    # 12:N	Predicate Arguments	There is one column each of predicate argument structure information for the predicate mentioned in Column 7.
-                    "_",
-                    # N	Coreference	Coreference chain information encoded in a parenthesis structure.
-                    "_",
-                    
-                ]
-            )
-        )
-    return '\n'.join(rows)
+        row = {}
+        
+        row["ID"] = str(tok_id)
+        row["FORM"] = "_" if form == '' else form
+        row["LEMMA"] = '_' if lemma == '' else lemma
+        
+        row["POSTAG"] = "_" if tok.pos_ == '' else tok.pos_
+        row["NER"] = "_"   #TODO add ent.label_ = "_"
+    
+        row["HEAD"] = "_"
+        row["DEPREL"] = "_"
+        
+        data.append(row)
+    output_file = f""""""
+    for row in data:
+        for column in row.keys():
+            if column == "DEPREL":
+                output_file += row[column] + '\n'
+            else:
+                output_file += row[column] + '\t'
+    return output_file

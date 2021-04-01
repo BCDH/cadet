@@ -15,25 +15,29 @@
   {% endblock %}
   {% block content %}
   <div style="margin-top:150px" class="container"> 
-    <div class="row">
-      {% if content %}
-      <div class="col">
-        {{ content }}
-      </div></div>
-      {% endif %}
-      <div class="row">
-
-        <div class="col">
-            <button class="btn btn-light" type="button" onclick="window.location.href='/lookups'">
-                <svg class="bi bi-arrow-left" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" d="M5.854 4.646a.5.5 0 010 .708L3.207 8l2.647 2.646a.5.5 0 01-.708.708l-3-3a.5.5 0 010-.708l3-3a.5.5 0 01.708 0z" clip-rule="evenodd"/>
-                    <path fill-rule="evenodd" d="M2.5 8a.5.5 0 01.5-.5h10.5a.5.5 0 010 1H3a.5.5 0 01-.5-.5z" clip-rule="evenodd"/>
-                  </svg>
-            </button>
-        </div>
-        
-      </div> 
-    </div>
+    <section style="margin-top:150px;" class="breadcrumbs">
+      <div class="container">
+  
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2>Edit JSON</h2>
+            <p style="color:black;" id="message"></p>   
+          </div>
+          <div class="faq-list">
+            <button class="nice-button" onclick="location.href='/lookups'"><i style='color:white;'class='icofont-long-arrow-left'></i> Save and Back to Lookups</button>
+              
+              <button class="nice-button" onclick="location.href='#'">Check JSON<i style='color:white;'class='icofont-coffee-cup'></i></button>
+           </div>  
+          
+          
+          
+          
+      </div>
+  
+      </div>
+    </section><!-- End Breadcrumbs -->
+  
+  
   <div class="container">
      
     <form>
@@ -70,7 +74,15 @@
         type: 'POST',
         url: '/edit_lookup',
         data: JSON.stringify ({'code': code, 'type':type}),
-        success: function(data) { alert('data: ' + data); },
+        success: function(data) { 
+          let message = data.message;
+          if (message == 'Expected object or value') {
+            $('#message').text(message);
+          } else {  
+            $('#message').text(message);
+          };
+
+        },
         contentType: "application/json",
         dataType: 'json'
       });
