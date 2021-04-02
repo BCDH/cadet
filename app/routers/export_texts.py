@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import List, Optional
 from spacy.tokens import Doc, Span
 from spacy.matcher import PhraseMatcher
-import pandas as pd
+
 from fastapi import Request, Form, File, UploadFile, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
 from app.util.login import get_current_username
@@ -151,22 +151,22 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
 
 def doc_to_conll(doc) -> str:
     """
-    Converts a spaCy Doc object to string formatted using Conll 2012 standards for pos, lemma and entity
-    https://inception-project.github.io/releases/0.19.0/docs/user-guide.html#sect_formats_conll2012
-    https://dkpro.github.io/dkpro-core/releases/2.2.0/docs/format-reference.html#format-Conll2012
-    
-    The CoNLL 2012 format targets semantic role labeling and coreference. Columns are whitespace-separated 
-    (tabs or spaces). Sentences are separated by a blank new line.
+    Converts a spaCy Doc object to string formatted using CoreNLP CoNLL format for pos, lemma and entity
+    https://dkpro.github.io/dkpro-core/releases/2.2.0/docs/format-reference.html#format-ConllCoreNlp
+
+    The CoreNLP CoNLL format is used by the Stanford CoreNLP package. 
+    Columns are tab-separated. Sentences are separated by a blank new line.
 
     example:
-    #begin document (mz/sinorama/10/ectb_1072); part 000
-    mz/sinorama/10/ectb_1072          0          0          A         DT (TOP(S(NP*          -          -          -          -          *     (ARG1*          -
-    mz/sinorama/10/ectb_1072          0          1        Gao        NNP      (NML*          -          -          -          -   (PERSON*          *         (8
-    mz/sinorama/10/ectb_1072          0          2   Xingjian        NNP         *)          -          -          -          -         *)          *         8)
-    mz/sinorama/10/ectb_1072          0          3      Storm         NN         *)          -          -          -          -          *         *)          -
-    mz/sinorama/10/ectb_1072          0          4      Blows        VBZ       (VP*       blow         01          2          -          *       (V*)          -
-    mz/sinorama/10/ectb_1072          0          5    through         IN       (PP*          -          -          -          -          * (ARGM-DIR*          -
-    # end document
+    1	Selectum	Selectum	NNP	O	_	_
+    2	,	,	,	O	_	_
+    3	Société	Société	NNP	O	_	_
+    4	d'Investissement	d'Investissement	NNP	O	_	_
+    5	à	à	NNP	O	_	_
+    6	Capital	Capital	NNP	O	_	_
+    7	Variable	Variable	NNP	O	_	_
+    8	.	.	.	O	_	_
+    
     Args:
         doc ([type]): [description]
     """
@@ -185,13 +185,11 @@ def doc_to_conll(doc) -> str:
         misc = "SpaceAfter=No" if not tok.whitespace_ else "_"
         row = {}
         
-        row["ID"] = str(tok_id)
-        row["FORM"] = "_" if form == '' else form
-        row["LEMMA"] = '_' if lemma == '' else lemma
-        
-        row["POSTAG"] = "_" if tok.pos_ == '' else tok.pos_
-        row["NER"] = "_"   #TODO add ent.label_ = "_"
-    
+        row["ID"] = str(tok_id) # Token counter, starting at 1 for each new sentence.
+        row["FORM"] = "_" if form == '' else form #Word form or punctuation symbol.
+        row["LEMMA"] = '_' if lemma == '' else lemma #Lemma of the word form.        
+        row["POSTAG"] = "_" if tok.pos_ == '' else tok.pos_ #Fine-grained part-of-speech tag
+        row["NER"] = "_" #if ent.label_ == '' else ent.label_
         row["HEAD"] = "_"
         row["DEPREL"] = "_"
         
