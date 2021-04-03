@@ -5,7 +5,7 @@ import srsly
 from pathlib import Path
 from typing import List, Optional
 
-from fastapi import Request, Form, File, UploadFile, APIRouter, Depends
+from fastapi import Request, Form, File, UploadFile, APIRouter, Depends, Query
 from fastapi.templating import Jinja2Templates
 from app.util.login import get_current_username
 
@@ -71,3 +71,35 @@ async def update_code(request: Request,):
     return templates.TemplateResponse(
         "edit_json.html", {"request": request, "code": code}
     )
+
+@router.get("/lemma_json")
+async def datatable_json(request:Request,
+    #See https://datatables.net/manual/server-side
+    draw:int = None,
+    start:int = None,
+    length:int = None, #number of entries per page):
+    order:int = None,
+    columns:str = None
+    ):
+    search = request.query_params['search[value]']
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        path = list(new_lang.iterdir())[0] / "lookups"
+        json_file = list(path.glob("*lemma*"))[0]
+        lemma_data = srsly.read_json(json_file)
+
+        data = []
+        for key, value in lemma_data.items():
+            data.append([key,value])
+        if search != '':
+            data = [d for d in data if search.lower() in d[0].lower() or search.lower() in d[1].lower()]
+        data = [[f'<p onclick="edit_word(this)">{key}</p>',f'<p onclick="edit_lemma(this)">{value}</p>'] for key, value in data]
+        filtered = len(data)
+        return {
+            "draw": draw,
+            "recordsTotal": len(lemma_data),
+            "recordsFiltered": filtered,
+            "data":data,
+            "result":"ok",
+            "error":None
+        }

@@ -8,7 +8,7 @@
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
 
-
+<link href="static/css/dropzone.css" rel="stylesheet">
 
 {% endblock %}
 
@@ -36,6 +36,28 @@
 
     </div>
   </section><!-- End Breadcrumbs -->
+  <section class="inner-page">
+    <div class="container">
+      <div class="faq-list">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle nice-button" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+            Select type of lookup to update
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li><a class="dropdown-item" href="#">Part of Speech</a></li>
+            <li><a  class="dropdown-item" href="#">Lemmata</a></li>
+            <li><a class="dropdown-item" href="#">Entities</a></li>
+          </ul>
+        </div>
+        
+       </div>  
+  <form id='dropzone' action="/upload_lookups" class="dropzone" enctype="multipart/form-data" method="post">                   
+    <div class="dz-message" data-dz-message><span></span></div>
+
+  </form>
+  </div>
+  </section>
+
 
   <section class="inner-page">
     <div class="container">
@@ -43,7 +65,7 @@
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">POS</button>
-          <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Lemma</button>
+          <button onclick="load_lemma_table();" class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Lemma</button>
           <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">NER</button>
         </div>
       </nav>
@@ -59,14 +81,7 @@
                 </tr>
             </thead>
             <tbody>
-              <tr><td>antelopes</td><td>herd</td><td></td></tr>
-              <tr><td>elephants</td><td>herd</td><td></td></tr>
-              <tr><td>hounds</td><td>pack</td><td></td></tr>
-              <tr><td>kittens</td><td>kindle</td><td></td></tr>
-              <tr><td>lions</td><td>pride</td><td></td></tr>
-              <tr><td>ravens</td><td>unkindness</td><td></td></tr>
-              <tr><td>whales</td><td>pod</td><td></td></tr>
-              <tr><td>zebras</td><td>herd</td><td></td></tr>
+             
             </tbody>
         </table>
 
@@ -84,11 +99,57 @@
 
   {% block extrajs %}
   <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <script src="static/js/dropzone.js"></script>
+  <script>
+  let dz = Dropzone.options.dropzone = {
+      dictDefaultMessage: "",
+      timeout: 300000000,
+      init: function() {
+        
+        //POST sent with file and form data
+        this.on("sending", function(file, xhr, formData){
+          formData.append("lookup_type", selected_type);
+          $('#spinner').show();
+          
+  
+        //When upload completed, #TODO need event for tesseract complete
+        this.on("success", function(data) { 
+            
+            let texts_html = data.xhr.responseText;
+            let text_results = document.getElementById('text_results');
+            text_results.innerHTML = texts_html;
+            $('#spinner').hide();
+            //setTimeout(() => {  get_texts(); }, 3000);
+          }
+        );
+      });
+    }
+  };
 
+  let selected_type = null;
+  $(".dropdown-item:contains('Part of Speech')").click(function() {
+    $('.dz-message').text('Click here or drag files to upload your part of speech data');
+    selected_type = 'pos';
+  });
+  $(".dropdown-item:contains('Lemmata')").click(function() {
+    $('.dz-message').text('Click here or drag files to upload your lemma data');
+    selected_type = 'lemma';
+  });
+  $(".dropdown-item:contains('Entities')").click(function() {
+    $('.dz-message').text('Click here or drag files to upload your entities data');
+    selected_type = 'ent';
+  });
+  </script>
   
   <script>
+
+  function load_lemma_table() {
     $('#lemmaTable').DataTable({
-      "columns": [
+      "serverSide": true,
+      "ajax": 'lemma_json',
+
+
+      /* "columns": [
         null,
         null,
         { "data": function ( row, type, val, meta ) {
@@ -99,10 +160,22 @@
             return "the data in column 1 is '" + row[0] + "'";
           } 
         }
-      ]
+      ] */
     });
-
+  };
   
+  function edit_word(event, old){
+      //<p contenteditable="true" onkeydown="edit_word(this, 'old');">word</p>
+          event.preventDefault();
+          var word = word.textContent;
+          
+          //alert(word);
+          $.get( '/edit_lookup?old=' + old +'&word=' +word, function( data ) {
+            
+            //$('#lemmata_table').DataTable().ajax.reload(null, false);  
+          });
+  };
+
     $('#header').addClass('header-scrolled');
   </script>
   {% endblock %}

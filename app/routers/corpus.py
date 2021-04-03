@@ -13,6 +13,7 @@ router = APIRouter(dependencies=[Depends(get_current_username)])
 
 Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_", "tag_"])
 
+#TODO automatically update corpus values from lookups
 
 @router.get("/corpus")
 async def read_items(request: Request):
