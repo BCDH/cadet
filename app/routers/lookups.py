@@ -39,38 +39,7 @@ async def edit_pos(request: Request, type: str):
     return templates.TemplateResponse("edit_json.html", context)
 
 
-@router.post("/edit_lookup")
-async def update_code(request: Request,):
 
-    data = await request.json()
-    type = data["type"]
-    code = data["code"]
-   
-    
-    new_lang = Path.cwd() / "new_lang"
-    if len(list(new_lang.iterdir())) > 0:
-        path = list(new_lang.iterdir())[0] / "lookups"
-        if type == "pos":
-            json_file = list(path.glob("*upos*"))[0]
-        if type == "lemma":
-            json_file = list(path.glob("*lemma*"))[0]
-        if type == "entity":
-            json_file = list(path.glob("*entity*"))[0]
-        if json_file.exists():
-            try:
-                code = srsly.json_loads(code)
-            except Exception as e:
-                return {'message': str(e) }
-                
-            srsly.write_json(json_file, code)
-        #TODO This section needs some work 
-        # Need to check that json is valid before save on click of "Save and Back to Lookups" button   
-        # Get errors when Check  on JSON is clicked, or get thumbs up 
-        else:
-            raise HTTPException(status_code=404, detail="File not found")
-    return templates.TemplateResponse(
-        "edit_json.html", {"request": request, "code": code}
-    )
 
 @router.get("/lemma_json")
 async def datatable_json(request:Request,
@@ -93,7 +62,7 @@ async def datatable_json(request:Request,
             data.append([key,value])
         if search != '':
             data = [d for d in data if search.lower() in d[0].lower() or search.lower() in d[1].lower()]
-        data = [[f'<p onclick="edit_word(this)">{key}</p>',f'<p onclick="edit_lemma(this)">{value}</p>'] for key, value in data]
+        data = [[f'''<p contenteditable="true" onkeyup="edit_word(this,'{key}','{value}')">{key}</p>''',f'''<p contenteditable="true" onkeyup="edit_lemma(this,'{key}','{value}')">{value}</p>'''] for key, value in data]
         filtered = len(data)
         return {
             "draw": draw,
@@ -103,3 +72,17 @@ async def datatable_json(request:Request,
             "result":"ok",
             "error":None
         }
+
+@router.get("/update_lemma")
+async def update_lemma(key:str,value:str, new_key:str = None, new_value:str = None):
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        path = list(new_lang.iterdir())[0] / "lookups"
+        json_file = list(path.glob("*lemma*"))[0]
+        lemma_data = srsly.read_json(json_file)
+
+        if new_key and new_key != key:
+            message = 'update key'
+        if new_value and new_value != value: 
+            message = 'update value'
+        return {'message':message}

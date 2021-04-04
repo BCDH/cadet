@@ -142,9 +142,17 @@
   </script>
   
   <script>
-
+    let pos_table = null;
+    let lemma_table = null;
+    let ent_table = null;
   function load_lemma_table() {
-    $('#lemmaTable').DataTable({
+    if (pos_table) {
+      pos_table.destroy();
+    };
+    if (ent_table) {
+      ent_table.destroy();
+    };
+    let lemma_table = $('#lemmaTable').DataTable({
       "serverSide": true,
       "ajax": 'lemma_json',
 
@@ -164,18 +172,27 @@
     });
   };
   
-  function edit_word(event, old){
+  function edit_word(e, key,value){
       //<p contenteditable="true" onkeydown="edit_word(this, 'old');">word</p>
-          event.preventDefault();
-          var word = word.textContent;
+        let new_text = e.textContent;   
           
-          //alert(word);
-          $.get( '/edit_lookup?old=' + old +'&word=' +word, function( data ) {
-            
+          
+          $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_key=" + new_text, function( data ) {
+            console.log(data)
             //$('#lemmata_table').DataTable().ajax.reload(null, false);  
           });
   };
 
+  function edit_lemma(e, key,value){
+    //<p contenteditable="true" onkeydown="edit_word(this, 'old');">word</p>
+      let new_lemma = e.textContent;   
+        
+        
+        $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_value=" + new_lemma, function( data ) {
+          console.log(data)
+          //$('#lemmata_table').DataTable().ajax.reload(null, false);  
+        });
+  };
     $('#header').addClass('header-scrolled');
   </script>
   {% endblock %}
