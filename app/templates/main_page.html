@@ -1,159 +1,186 @@
 {% extends 'base.html' %}
 {% block navbar %}{% endblock%}
 {% block content %}
-  
- <!-- ======= Services Section ======= -->
- <section id="services" class="services section-bg">
-    <div class="container" data-aos="fade-up">
 
-      <div class="section-title">
-        <h2>Home</h2>
-        <p>Welcome to the central hub, from here you can complete all tasks.</p>
-        <p>First, we will create either a blank spaCy language object or clone from an existing object.</p>
-        <p>From there, we will load a corpus of texts to test the existing defaults.</p>
-      </div>
+<!-- ======= Services Section ======= -->
+<section id="services" class="services section-bg">
+  <div class="container" data-aos="fade-up">
 
-      <div class="row">
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
-          <div class="icon-box iconbox-teal">
-            <a style="color:black;" href="/create">
+    <div class="section-title">
+      <h2>Home</h2>
+      <p>Welcome to the central hub, from here you can complete all tasks.</p>
+      <p>First, we will create either a blank spaCy language object or clone from an existing object.</p>
+      <p>From there, we will load a corpus of texts to test the existing defaults.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
+        <div class="icon-box iconbox-teal">
+          <a style="color:black;" href="/create">
             <div class="icon">
               <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
+                <path stroke="none" stroke-width="0" fill="#f5f5f5"
+                  d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174">
+                </path>
               </svg>
               <!-- <i class="bx bx-library"></i> -->
               <img src="static/img/noun/noun_Space_3602629.png">
             </div>
             <h4>1. Create A New Language Object</h4>
-            <p>Create or clone a new custom spaCy language object for your project</p>
-        </a>  
+            <p>Building from spaCy's defaults, this will create a new language object for your language.</p>
+          </a>
         </div>
-        </div>
+      </div>
 
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
-          <div class="icon-box iconbox-orange ">
-            <a style="color:black;" href="/sentences">
+      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
+        <div class="icon-box iconbox-orange ">
+          <a style="color:black;" href="/sentences">
             <div class="icon">
               <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426"></path>
+                <path stroke="none" stroke-width="0" fill="#f5f5f5"
+                  d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426">
+                </path>
               </svg>
               <img src="static/img/noun/noun_Space_1922243.png">
             </div>
             <h4>2. Sentences</h4>
-            <p>Add several example sentences that will be used for initial tokenization.</p>
+            <p>Here you can add example sentences. These will be used in the next section on tokenization to help you
+              assess how well the existing defaults perform with your language.</p>
           </a>
-          </div>
         </div>
+      </div>
 
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="300">
-          <div class="icon-box iconbox-pink">
-            <a style="color:black;" href="/tokenization">
+      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="300">
+        <div class="icon-box iconbox-pink">
+          <a style="color:black;" href="/tokenization">
 
             <div class="icon">
               <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426"></path>
+                <path stroke="none" stroke-width="0" fill="#f5f5f5"
+                  d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426">
+                </path>
               </svg>
               <img src="static/img/noun/noun_Nebula_1922250.png">
             </div>
             <h4><a href="">3. Tokenization</a></h4>
-            <p>During tokenization, a text is split into its constituent parts. The spaCy tokenizes texts using a default algorythm. (<a href="https://nightly.spacy.io/usage/linguistic-features#tokenization">docs</a>)</p>
+            <p>This section provides a visualization of the current tokenization rules using the example sentences. If
+              you find an error, you can add new rules. To split a token in two, click on it and adjust the split point.
+              To join two tokens, highlight the text you want to join and confirm the join. We highly recommend reading
+              the tokenizer documentation to understand how <a target="_blank"
+                href="https://spacy.io/usage/linguistic-features#tokenization">spaCy's tokenization algorithm</a> works
+              and how to make adjustments.</p>
           </a>
-          </div>
         </div>
+      </div>
 
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="100">
-          <div class="icon-box iconbox-yellow">
-            <a style="color:black;" href="/lookups">
-              <div class="icon">
-                <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
-                </svg>
-                <img src="static/img/noun/noun_Planet_1922249.png">
-              </div>
-              <h4>4. Lookups and Matching</h4>
-              <p>Cadet serves automatic suggestions to INCEpTION to create model training data.  To facilitate annotation, Cadet can serve suggestions from lists of lemmata, part-of-speech or entities.</p>
-            </a>  
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="200">
-          <div class="icon-box iconbox-orange ">
-            <a style="color:black;" href="/texts">
+      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="100">
+        <div class="icon-box iconbox-yellow">
+          <a style="color:black;" href="/lookups">
             <div class="icon">
               <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426"></path>
+                <path stroke="none" stroke-width="0" fill="#f5f5f5"
+                  d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174">
+                </path>
+              </svg>
+              <img src="static/img/noun/noun_Planet_1922249.png">
+            </div>
+            <h4>4. Lookups and Matching</h4>
+            <p>If you have existing linguistic data on lemmata, parts of speech, or entities, you can use this section
+              to load that data into simple lookups tables. These tables allow Cadet to automatically bulk update your
+              annotations to save time. This method eliminates the need to re-enter information every time that it
+              appears in your corpus. Keep in mind that simple lookups do not account for context or semantic variation.
+              The table cannot predict if "Chicago" is a place, a theater, or a musical. If you add "Chicago" as a place
+              lookup, all matching tokens in your corpus will be marked as "place." You will have the opportunity to
+              adjust these values during annotation, but you'll need to strike a balance between saving time with bulk
+              updates and losing time by having to change incorrect annotations.</p>
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="200">
+        <div class="icon-box iconbox-orange ">
+          <a style="color:black;" href="/texts">
+            <div class="icon">
+              <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                <path stroke="none" stroke-width="0" fill="#f5f5f5"
+                  d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426">
+                </path>
               </svg>
               <img src="static/img/noun/noun_solar system_1922262.png">
             </div>
-            <h4>5. Create a Corpus to identify Stop Words and Frequent Terms</h4>
-            <p>Cadet uses an initial corpus of texts to identify frequent terms for annotation. The texts are used to test the existing defaults in spaCy for use with your language.</p>
+            <h4>5. Upload Your Corpus</h4>
+            <p>Cadet is used to tokenize and bulk update your corpus before it is exported for annotation work with
+              INCEpTION. In this step, you will upload your corpus into Cadet.</p>
 
           </a>
-          </div>
         </div>
+      </div>
 
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="300">
-          <div class="icon-box iconbox-teal">
+      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="300">
+        <div class="icon-box iconbox-teal">
+          <div class="icon">
+            <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+              <path stroke="none" stroke-width="0" fill="#f5f5f5"
+                d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426">
+              </path>
+            </svg>
+            <img src="static/img/noun/noun_constellation_1922251.png">
+          </div>
+          <h4><a href="/corpus">6. Annotate Stop Words and Frequent Terms</a></h4>
+          <p>In this step, Cadet will help you to identify high-frequency words for bulk annotation. If you have
+            existing lookups from step 4, they will be used to add annotations. You can also update token values in this
+            step. By adding lemma, pos, and entity labels to frequent tokens, you will significantly reduce the amount
+            of time needed to annotate your corpus. You can also mark tokens as stop words. They will have a
+            token.is_stop attribute.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="100">
+        <div class="icon-box iconbox-yellow">
+          <a style="color:black;" href="/export-texts">
             <div class="icon">
               <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426"></path>
+                <path stroke="none" stroke-width="0" fill="#f5f5f5"
+                  d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174">
+                </path>
               </svg>
-              <img src="static/img/noun/noun_constellation_1922251.png">
+              <img src="static/img/noun/noun_Space_2292488.png">
             </div>
-            <h4><a href="/corpus">6. Identify and annotate stop words and frequent terms</a></h4>
-            <p>Using the corpus from the earlier section, add data to frequent terms to generate auto-suggestions.</p>
-          </div>
+            <h4>7. Export to INCEpTION</h4>
+            <p>In this step, your corpus is converted into data that can be imported into INCEpTION. You will receive a
+              single zip file that contains all of your texts in the Stanford CoreNLP format.</p>
+          </a>
         </div>
+      </div>
 
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="100">
-          <div class="icon-box iconbox-yellow">
-            <a style="color:black;" href="/export-texts">
-              <div class="icon">
-                <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                  <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
-                </svg>
-                <img src="static/img/noun/noun_Space_2292488.png">
-              </div>
-              <h4>7. Export to INCEpTION, Serve Auto-suggestions</h4>
-              <p>Configure endpoints to serve suggestions to INCEpTION.</p>
-          </a>  
-          </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="200">
-          <div class="icon-box iconbox-orange ">
-            <a style="color:black;" href="/corpus">
+      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="200">
+        <div class="icon-box iconbox-orange ">
+          <a style="color:black;" href="/corpus">
             <div class="icon">
               <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426"></path>
+                <path stroke="none" stroke-width="0" fill="#f5f5f5"
+                  d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426">
+                </path>
               </svg>
               <img src="static/img/noun/noun_Space_1758786.png">
             </div>
-            <h4>8. Fetch data from INCEpTION, Assess training data</h4>
-            <p>Connect to INCEpTION to gather annotation data, save it as spaCy training data and debug to assess if the data is ready.</p>
+            <h4>8. Export for Model Training</h4>
+            <p>Export project and language object to train a spaCy model. In this step, you will download your new
+              language object, with config file, example sentences, stop words, and tokenization rules as well as a
+              spaCy project template with specifications for training a new language model.
+            </p>
           </a>
-          </div>
         </div>
-
-        <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="300">
-          <div class="icon-box iconbox-pink">
-            <div class="icon">
-              <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-                <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426"></path>
-              </svg>
-              <img src="static/img/noun/noun_tile design_2610741.png">
-            </div>
-            <h4><a href="">9. Export Language Object and Training Data</a></h4>
-            <p>The final step.  Cadet exports files for the language object, its lookups data and training data from INCEpTION. It's everything you'll need to begin training model pipelines.</p>
-          </div>
-        </div>
-
       </div>
 
+
+
     </div>
-  </section><!-- End Services Section -->
+
+  </div>
+</section><!-- End Services Section -->
 
 
-  {% endblock %}
+{% endblock %}
 
-  {% block extrajs %}{% endblock %}
+{% block extrajs %}{% endblock %}
