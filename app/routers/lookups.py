@@ -50,7 +50,10 @@ async def datatable_json(request:Request,
     order:int = None,
     columns:str = None
     ):
-    search = request.query_params['search[value]']
+    try:
+        search = request.query_params['search[value]']
+    except KeyError:
+        search = ''
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
         path = list(new_lang.iterdir())[0] / "lookups"
@@ -58,11 +61,14 @@ async def datatable_json(request:Request,
         lemma_data = srsly.read_json(json_file)
 
         data = []
+        id = 1
         for key, value in lemma_data.items():
-            data.append([key,value])
+            data.append({"id": id, "word":key, "lemma":value})
+            id += 1
         if search != '':
             data = [d for d in data if search.lower() in d[0].lower() or search.lower() in d[1].lower()]
-        data = [[f'''<p contenteditable="true" onkeyup="edit_word(this,'{key}','{value}')">{key}</p>''',f'''<p contenteditable="true" onkeyup="edit_lemma(this,'{key}','{value}')">{value}</p>'''] for key, value in data]
+        #data = [[f'''<p contenteditable="true" onclick="testing(this)">{key}</p>''',f'''<p contenteditable="true" onkeyup="edit_lemma(this,'{key}','{value}')">{value}</p>'''] for key, value in data]
+        
         filtered = len(data)
         return {
             "draw": draw,
@@ -74,15 +80,29 @@ async def datatable_json(request:Request,
         }
 
 @router.get("/update_lemma")
-async def update_lemma(key:str,value:str, new_key:str = None, new_value:str = None):
+async def update_lemma(
+    key:str,
+    value:str, 
+    col:int,
+    row:int,
+    new_key:str = None, 
+    new_value:str = None, 
+    new:str ='false', 
+    delete:str ='false'):
+
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
         path = list(new_lang.iterdir())[0] / "lookups"
         json_file = list(path.glob("*lemma*"))[0]
         lemma_data = srsly.read_json(json_file)
+        if new == 'false' and delete =='false':
+            if new_key:
+                lemma_data[new_key] = lemma_data[key]
+                del lemma_data[key]
+                result = {"new_key":new_key, "col":col, "row":row}
+            if new_value: 
+                lemma_data[key] = new_value
+                message = f'update value from {value} to {new_value}'
 
-        if new_key and new_key != key:
-            message = 'update key'
-        if new_value and new_value != value: 
-            message = 'update value'
-        return {'message':message}
+        srsly.write_json(json_file, lemma_data)
+        return result

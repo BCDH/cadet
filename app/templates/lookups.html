@@ -156,31 +156,32 @@
       "serverSide": true,
       "ajax": 'lemma_json',
 
-
-      /* "columns": [
-        null,
-        null,
-        { "data": function ( row, type, val, meta ) {
-            //console.log(row);
-            //console.log(type);
-            //console.log(val);
-            //console.log(meta);
-            return "the data in column 1 is '" + row[0] + "'";
+      "columns": [
+        
+        { "data": "word",
+          "render": function ( row, type, val, meta ) {
+           return "<p contenteditable='true' onkeyup='edit_word(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' >" +row +"</p>";
           } 
+        },
+        { "data": "lemma",
+        "render": function ( row, type, val, meta ) {
+          return "<p contenteditable='true' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' >" +row +"</p>";
+         } 
         }
-      ] */
+      ] 
+
     });
   };
   
-  function edit_word(e, key,value){
-      //<p contenteditable="true" onkeydown="edit_word(this, 'old');">word</p>
-        let new_text = e.textContent;   
-          
-          
-          $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_key=" + new_text, function( data ) {
-            console.log(data)
-            //$('#lemmata_table').DataTable().ajax.reload(null, false);  
+  function edit_word(e, key,row, col){
+        
+          let new_key = e.textContent;
+          let value = $('#lemmaTable').DataTable().column(col).row(row).data().lemma;
+          $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_key=" + new_key + "&row=" + row +"&col=" + col, function( data ) {
+            // Reload data so that table matches server json
+            $('#lemmaTable').DataTable().ajax.reload(null, true);
           });
+        
   };
 
   function edit_lemma(e, key,value){
@@ -193,6 +194,8 @@
           //$('#lemmata_table').DataTable().ajax.reload(null, false);  
         });
   };
+  
+  
     $('#header').addClass('header-scrolled');
   </script>
   {% endblock %}
