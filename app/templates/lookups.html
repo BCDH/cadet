@@ -144,34 +144,35 @@
   <script>
     let pos_table = null;
     let ent_table = null;
-  function load_lemma_table() {
-    if (pos_table) {
-      pos_table.destroy();
-    };
-    if (ent_table) {
-      ent_table.destroy();
-    };
-    let _lemma_table = $('#lemmaTable').DataTable({
-      "serverSide": true,
-      "ajax": 'lemma_json',
-
-      "columns": [
-        
-        { "data": "word",
+    function load_lemma_table() {
+      if (pos_table) {
+        pos_table.destroy();
+      };
+      if (ent_table) {
+        ent_table.destroy();
+      };
+          
+      let _lemma_table = $('#lemmaTable').DataTable({
+        "serverSide": true,
+        "ajax": 'lemma_json',
+  
+        "columns": [
+          
+          { "data": "word",
+            "render": function ( row, type, val, meta ) {
+             return "<p onclick='edit_mode();'>" +row +"</p>";
+            } 
+          },
+          { "data": "lemma",
           "render": function ( row, type, val, meta ) {
-           return "<p onclick='edit_mode();'>" +row +"</p>";
-          } 
-        },
-        { "data": "lemma",
-        "render": function ( row, type, val, meta ) {
-          return "<p onclick='edit_mode();'>" +row +"</p>";
-         } 
-        }
-      ] 
-
-    });
-    return _lemma_table;
-  };
+            return "<p onclick='edit_mode();'>" +row +"</p>";
+           } 
+          }
+        ] 
+  
+      });
+      return _lemma_table;
+    };
   
   let lemma_table = load_lemma_table();
   function edit_mode(){
@@ -203,7 +204,7 @@
   };
   function edit_word(e, key,row, col){
 
-          let new_key = e.textContent;
+          let new_key = e.value; //for contenteditable
           let value = $('#lemmaTable').DataTable().column(col).row(row).data().lemma;
           $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_key=" + new_key + "&row=" + row +"&col=" + col, function( data ) {
             // Reload data so that table matches server json
@@ -213,9 +214,8 @@
   };
 
   function edit_lemma(e, key,value){
-    //<p contenteditable="true" onkeydown="edit_word(this, 'old');">word</p>
-      let new_lemma = e.textContent;   
-        
+    
+      let new_key = e.value; 
         
         $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_value=" + new_lemma, function( data ) {
           console.log(data)

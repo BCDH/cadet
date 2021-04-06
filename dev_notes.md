@@ -1,3 +1,46 @@
+April 6: 
+
+Goal is to establish end-to-end workflow, not get bogged down in UI.
+- Notebook prototype
+
+Major work to be done: 
+1. Create object
+- clone object, decide to keep or not?
+
+2. Sentences
+- DONE
+
+3. Tokenization
+- DONE
+
+4. Lookups: 
+- handle file upload
+- table updates 
+
+5. Upload Corpus
+- DONE
+
+6. Annotate frequent terms
+- table updates and write to lookups 
+- update stop_words.py 
+- update punctuation rules
+
+7. Export to INCEpTION 
+- Done
+
+8. Export for Model training 
+- package object files, with dependencies 
+- generate project file
+- can be added last
+
+Tasks to delegate:
+- explore potential dependencies for project languages 
+
+
+
+
+
+
 Jan 15 Working on: 
 
 - identify stop words and freqent terms from corpus
