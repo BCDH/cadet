@@ -65,7 +65,7 @@
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">POS</button>
-          <button onclick="load_lemma_table();" class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Lemma</button>
+          <button  class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Lemma</button>
           <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">NER</button>
         </div>
       </nav>
@@ -143,7 +143,6 @@
   
   <script>
     let pos_table = null;
-    let lemma_table = null;
     let ent_table = null;
   function load_lemma_table() {
     if (pos_table) {
@@ -152,7 +151,7 @@
     if (ent_table) {
       ent_table.destroy();
     };
-    let lemma_table = $('#lemmaTable').DataTable({
+    let _lemma_table = $('#lemmaTable').DataTable({
       "serverSide": true,
       "ajax": 'lemma_json',
 
@@ -160,21 +159,50 @@
         
         { "data": "word",
           "render": function ( row, type, val, meta ) {
-           return "<p contenteditable='true' onkeyup='edit_word(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' >" +row +"</p>";
+           return "<p onclick='edit_mode();'>" +row +"</p>";
           } 
         },
         { "data": "lemma",
         "render": function ( row, type, val, meta ) {
-          return "<p contenteditable='true' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' >" +row +"</p>";
+          return "<p onclick='edit_mode();'>" +row +"</p>";
          } 
         }
       ] 
 
     });
+    return _lemma_table;
   };
   
-  function edit_word(e, key,row, col){
+  let lemma_table = load_lemma_table();
+  function edit_mode(){
+    console.log('edit_mode')
+    lemma_table.destroy();
+    lemma_table = $('#lemmaTable').DataTable({
+      "serverSide": true,
+      "ajax": 'lemma_json',
+
+      "columns": [
         
+        { "data": "word",
+          "render": function ( row, type, val, meta ) {
+           return "<input type='text' onkeyup='edit_word(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'>";
+
+          } 
+        },
+        { "data": "lemma",
+        "render": function ( row, type, val, meta ) {
+          return "<input type='text' onkeyup='edit_word(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'>";
+
+          //return "<p contenteditable='true' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' >" +row +"</p>";
+         } 
+        }
+      ] 
+
+    });
+    //$('#lemmaTable').DataTable().column(col).row(row)
+  };
+  function edit_word(e, key,row, col){
+
           let new_key = e.textContent;
           let value = $('#lemmaTable').DataTable().column(col).row(row).data().lemma;
           $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_key=" + new_key + "&row=" + row +"&col=" + col, function( data ) {
