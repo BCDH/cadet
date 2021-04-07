@@ -66,7 +66,7 @@ async def datatable_json(request:Request,
             data.append({"id": id, "word":key, "lemma":value})
             id += 1
         if search != '':
-            data = [d for d in data if search.lower() in d[0].lower() or search.lower() in d[1].lower()]
+            data = [d for d in data if search.lower() in d['word'].lower() or search.lower() in d['lemma'].lower()]
         #data = [[f'''<p contenteditable="true" onclick="testing(this)">{key}</p>''',f'''<p contenteditable="true" onkeyup="edit_lemma(this,'{key}','{value}')">{value}</p>'''] for key, value in data]
         
         filtered = len(data)
