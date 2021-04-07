@@ -173,10 +173,9 @@
       });
       return _lemma_table;
     };
-  
   let lemma_table = load_lemma_table();
+
   function edit_mode(){
-    console.log('edit_mode')
     lemma_table.destroy();
     lemma_table = $('#lemmaTable').DataTable({
       "serverSide": true,
@@ -192,7 +191,7 @@
         },
         { "data": "lemma",
         "render": function ( row, type, val, meta ) {
-          return "<input type='text' onkeyup='edit_word(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'>";
+          return "<input type='text' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'>";
 
           //return "<p contenteditable='true' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' >" +row +"</p>";
          } 
@@ -213,11 +212,12 @@
         
   };
 
-  function edit_lemma(e, key,value){
+  function edit_lemma(e, value, row, col){
     
-      let new_key = e.value; 
+      let new_lemma = e.value; 
+      let key = $('#lemmaTable').DataTable().column(col).row(row).data().word;
         
-        $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_value=" + new_lemma, function( data ) {
+        $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_value=" + new_lemma + "&row=" + row +"&col=" + col, function( data ) {
           console.log(data)
           //$('#lemmata_table').DataTable().ajax.reload(null, false);  
         });

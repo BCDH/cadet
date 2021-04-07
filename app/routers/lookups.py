@@ -97,12 +97,14 @@ async def update_lemma(
         lemma_data = srsly.read_json(json_file)
         if new == 'false' and delete =='false':
             if new_key:
+                print('has new key')
                 lemma_data[new_key] = lemma_data[key]
                 del lemma_data[key]
                 result = {"new_key":new_key, "col":col, "row":row}
-            if new_value: 
+            if new_value:
+                print('has new value') 
                 lemma_data[key] = new_value
-                message = f'update value from {value} to {new_value}'
+                result = {"new_value":new_value, "col":col, "row":row}
 
         srsly.write_json(json_file, lemma_data)
         return result
