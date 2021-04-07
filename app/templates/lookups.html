@@ -73,7 +73,7 @@
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">This is the POS stuff. TODO add DataFrame, with search/filter/edit ability</div>
         <!-- Lemma tab datatable -->
         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-          <table id="lemmaTable" class="display">
+          <table id="lemmaTable" class="display" style="width:100%">
             <thead>
                 <tr>
                     <th>Word</th>
@@ -185,13 +185,13 @@
         
         { "data": "word",
           "render": function ( row, type, val, meta ) {
-           return "<input type='text' onkeyup='edit_word(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'>";
+           return "<p><input type='text' onkeyup='edit_word(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'></p>";
 
           } 
         },
         { "data": "lemma",
         "render": function ( row, type, val, meta ) {
-          return "<input type='text' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'>";
+          return "<p><input type='text' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'></p>";
 
           //return "<p contenteditable='true' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' >" +row +"</p>";
          } 
