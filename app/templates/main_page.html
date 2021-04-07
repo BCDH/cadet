@@ -64,11 +64,7 @@
             </div>
             <h4><a href="">3. Tokenization</a></h4>
             <p>This section provides a visualization of the current tokenization rules using the example sentences. If
-              you find an error, you can add new rules. To split a token in two, click on it and adjust the split point.
-              To join two tokens, highlight the text you want to join and confirm the join. We highly recommend reading
-              the tokenizer documentation to understand how <a target="_blank"
-                href="https://spacy.io/usage/linguistic-features#tokenization">spaCy's tokenization algorithm</a> works
-              and how to make adjustments.</p>
+              you find an error, you can add new rules.</p>
           </a>
         </div>
       </div>
@@ -86,13 +82,7 @@
             </div>
             <h4>4. Lookups and Matching</h4>
             <p>If you have existing linguistic data on lemmata, parts of speech, or entities, you can use this section
-              to load that data into simple lookups tables. These tables allow Cadet to automatically bulk update your
-              annotations to save time. This method eliminates the need to re-enter information every time that it
-              appears in your corpus. Keep in mind that simple lookups do not account for context or semantic variation.
-              The table cannot predict if "Chicago" is a place, a theater, or a musical. If you add "Chicago" as a place
-              lookup, all matching tokens in your corpus will be marked as "place." You will have the opportunity to
-              adjust these values during annotation, but you'll need to strike a balance between saving time with bulk
-              updates and losing time by having to change incorrect annotations.</p>
+              to load that data into simple lookups tables.</p>
           </a>
         </div>
       </div>
@@ -126,12 +116,9 @@
             </svg>
             <img src="static/img/noun/noun_constellation_1922251.png">
           </div>
-          <h4>6. Annotate Stop Words and Frequent Terms</h4>
+          <h4>6. Stop Words and Frequent Tokens</h4>
           <p>In this step, Cadet will help you to identify high-frequency words for bulk annotation. If you have
-            existing lookups from step 4, they will be used to add annotations. You can also update token values in this
-            step. By adding lemma, pos, and entity labels to frequent tokens, you will significantly reduce the amount
-            of time needed to annotate your corpus. You can also mark tokens as stop words. They will have a
-            token.is_stop attribute.</p>
+            existing lookups from step 4, they will be used to add annotations. </p>
           </a>
         </div>
       </div>
