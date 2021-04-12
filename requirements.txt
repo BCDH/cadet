@@ -1,5 +1,5 @@
 spacy
-#spacy-lookups-data
+spacy-lookups-data
 fastapi
 pytz
 uvicorn
