@@ -20,7 +20,7 @@ from app.util.login import get_current_username
 from pathlib import Path
 
 import logging
-from app.custom_logging import CustomizeLogger
+#from app.custom_logging import CustomizeLogger
 
 logger = logging.getLogger(__name__)
 config_path = Path(__file__).with_name("logging_config.json")
