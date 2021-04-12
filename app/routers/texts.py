@@ -1,5 +1,5 @@
 import httpx
-import textract
+
 import srsly
 from pathlib import Path
 from typing import List, Optional
