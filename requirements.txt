@@ -1,12 +1,13 @@
-spacy==3.0.0
-spacy-lookups-data
+spacy
+#spacy-lookups-data
 fastapi
 pytz
 uvicorn
-textract
+#textract
 requests
 jinja2
 aiofiles
 python-multipart
 httpx
 python-slugify
+dkpro-cassis
