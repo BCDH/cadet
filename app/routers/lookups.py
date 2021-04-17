@@ -18,6 +18,16 @@ async def read_items(request: Request):
     return templates.TemplateResponse("lookups.html", {"request": request})
 
 
+@router.post("/upload_lookups")
+async def update_lookups(file: UploadFile = File(...),lookup_type:str= Form(...)):
+    contents = file.file.read()
+    if file.content_type == 'application/pdf':
+        print('pdf',lookup_type, len(contents))
+    else:
+        print(lookup_type, len(contents))
+
+
+###None of these are needed vvv
 @router.get("/edit_lookup")
 async def edit_pos(request: Request, type: str):
     context = {}
@@ -37,29 +47,6 @@ async def edit_pos(request: Request, type: str):
             raise HTTPException(status_code=404, detail="File not found")
     return templates.TemplateResponse("edit_json.html", context)
 
-@router.post("/edit_lookup")
-async def edit_lookup(request: Request):
-
-    data = await request.json()
-    type = data["type"]
-    code = data["code"]
-
-    new_lang = Path.cwd() / "new_lang"
-    if len(list(new_lang.iterdir())) > 0:
-        path = list(new_lang.iterdir())[0] / "lookups"
-        if type == "pos":
-            json_file = list(path.glob("*upos*"))[0]
-        if type == "lemma":
-            json_file = list(path.glob("*lemma*"))[0]
-        if type == "entity":
-            json_file = list(path.glob("*entity*"))[0]
-        if json_file.exists():
-            srsly.write_json(json_file, code)
-            context["code"] = srsly.read_json(json_file)
-   
-    return templates.TemplateResponse(
-        "edit_code.html", {"request": request, "code": code}
-    )
 
 @router.get("/lemma_json")
 async def datatable_json(request:Request,
