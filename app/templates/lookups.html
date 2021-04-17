@@ -24,9 +24,9 @@
         </div>
         <div class="faq-list">
           <button class="nice-button" onclick="location.href='/tokenization'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
-          <button class="nice-button" onclick="location.href='edit_lookup?type=pos'">Edit POS json<i style='color:white;'class='icofont-code-alt'></i></button>
-          <button class="nice-button" onclick="location.href='edit_lookup?type=lemma'">Edit Lemma json<i style='color:white;'class='icofont-code-alt'></i></button>
-          <button class="nice-button" onclick="location.href='edit_lookup?type=entity'">Edit Entity json<i style='color:white;'class='icofont-code-alt'></i></button>
+          <button class="nice-button" onclick="location.href='edit?file_name=pos'">Edit POS json<i style='color:white;'class='icofont-code-alt'></i></button>
+          <button class="nice-button" onclick="location.href='edit?file_name=lemma'">Edit Lemma json<i style='color:white;'class='icofont-code-alt'></i></button>
+          <button class="nice-button" onclick="location.href='edit?file_name=entity'">Edit Entity json<i style='color:white;'class='icofont-code-alt'></i></button>
           <button class="nice-button" onclick="location.href='/texts'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
          </div>  
         
@@ -66,41 +66,7 @@
   </section>
 
 
-  <section class="inner-page">
-    <div class="container">
-        
-      <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">POS</button>
-          <button  class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Lemma</button>
-          <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">NER</button>
-        </div>
-      </nav>
-      <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">This is the POS stuff. TODO add DataFrame, with search/filter/edit ability</div>
-        <!-- Lemma tab datatable -->
-        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-          <table id="lemmaTable" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>Word</th>
-                    <th>Lemma</th>
-                </tr>
-            </thead>
-            <tbody>
-             
-            </tbody>
-        </table>
-
-        </div>
-        <!-- End Lemma tab datatable -->
-
-        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">I haz NER</div>
-      </div>
-     
-    </div>
-  </section>
-
+  
 </main><!-- End #main -->
     {% endblock %}
 
@@ -146,91 +112,8 @@
     $('.dz-message').text('Click here or drag files to upload your entities data');
     selected_type = 'ent';
   });
+  $('#header').addClass('header-scrolled');
+
   </script>
   
-  <script>
-    let pos_table = null;
-    let ent_table = null;
-    function load_lemma_table() {
-      if (pos_table) {
-        pos_table.destroy();
-      };
-      if (ent_table) {
-        ent_table.destroy();
-      };
-          
-      let _lemma_table = $('#lemmaTable').DataTable({
-        "serverSide": true,
-        "ajax": 'lemma_json',
-  
-        "columns": [
-          
-          { "data": "word",
-            "render": function ( row, type, val, meta ) {
-             return "<p onclick='edit_mode();'>" +row +"</p>";
-            } 
-          },
-          { "data": "lemma",
-          "render": function ( row, type, val, meta ) {
-            return "<p onclick='edit_mode();'>" +row +"</p>";
-           } 
-          }
-        ] 
-  
-      });
-      return _lemma_table;
-    };
-  let lemma_table = load_lemma_table();
-
-  function edit_mode(){
-    lemma_table.destroy();
-    lemma_table = $('#lemmaTable').DataTable({
-      "serverSide": true,
-      "ajax": 'lemma_json',
-
-      "columns": [
-        
-        { "data": "word",
-          "render": function ( row, type, val, meta ) {
-           return "<p><input type='text' onkeyup='edit_word(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'></p>";
-
-          } 
-        },
-        { "data": "lemma",
-        "render": function ( row, type, val, meta ) {
-          return "<p><input type='text' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' value='" +row +"'></p>";
-
-          //return "<p contenteditable='true' onkeyup='edit_lemma(this," + '"' + row + '"' + "," + meta.row  + "," + meta.col +")' >" +row +"</p>";
-         } 
-        }
-      ] 
-
-    });
-    //$('#lemmaTable').DataTable().column(col).row(row)
-  };
-  function edit_word(e, key,row, col){
-
-          let new_key = e.value; //for contenteditable
-          let value = $('#lemmaTable').DataTable().column(col).row(row).data().lemma;
-          $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_key=" + new_key + "&row=" + row +"&col=" + col, function( data ) {
-            // Reload data so that table matches server json
-            $('#lemmaTable').DataTable().ajax.reload(null, true);
-          });
-        
-  };
-
-  function edit_lemma(e, value, row, col){
-    
-      let new_lemma = e.value; 
-      let key = $('#lemmaTable').DataTable().column(col).row(row).data().word;
-        
-        $.get( '/update_lemma?key=' + key +'&value=' + value + "&new_value=" + new_lemma + "&row=" + row +"&col=" + col, function( data ) {
-          console.log(data)
-          //$('#lemmata_table').DataTable().ajax.reload(null, false);  
-        });
-  };
-  
-  
-    $('#header').addClass('header-scrolled');
-  </script>
   {% endblock %}
