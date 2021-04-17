@@ -57,17 +57,7 @@
           <input type="radio" class="btn-check" name="btnradio" id="ent" autocomplete="off">
           <label class="btn btn-outline-primary" for="ent">Entities</label>
         </div>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle nice-button" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-            Select type of lookup to update
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="#">Part of Speech</a></li>
-            <li><a  class="dropdown-item" href="#">Lemmata</a></li>
-            <li><a class="dropdown-item" href="#">Entities</a></li>
-          </ul>
-        </div>
-        
+                
        </div>  
   <form id='dropzone' action="/upload_lookups" class="dropzone" enctype="multipart/form-data" method="post">                   
     <div class="dz-message" data-dz-message><span></span></div>
@@ -110,16 +100,18 @@
     }
   };
 
-  let selected_type = null;
-  $(".dropdown-item:contains('Part of Speech')").click(function() {
+  
+  let selected_type = 'pos';
+  $('.dz-message').text('Click here or drag files to upload your part of speech data');
+  $("#pos").click(function() {
     $('.dz-message').text('Click here or drag files to upload your part of speech data');
     selected_type = 'pos';
   });
-  $(".dropdown-item:contains('Lemmata')").click(function() {
+  $("#lemma").click(function() {
     $('.dz-message').text('Click here or drag files to upload your lemma data');
     selected_type = 'lemma';
   });
-  $(".dropdown-item:contains('Entities')").click(function() {
+  $("#ent").click(function() {
     $('.dz-message').text('Click here or drag files to upload your entities data');
     selected_type = 'ent';
   });
