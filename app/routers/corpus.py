@@ -6,19 +6,40 @@ from fastapi.templating import Jinja2Templates
 from app.util.login import get_current_username
 from collections import Counter, namedtuple
 from itertools import chain
+from functools import lru_cache
+
 
 templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter(dependencies=[Depends(get_current_username)])
 
-Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_", "tag_"])
+Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_", "tag_","is_stop"])
 
 #TODO automatically update corpus values from lookups
 
+@lru_cache
+def load_lookups():
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    if len(list(new_lang.iterdir())) > 0:
+        lookups_path = new_lang / lang_name / "lookups"
+        for lookup in lookups_path.iterdir():
+            key = lookup.stem[lookup.stem.find('_') + 1:]
+            if 'lemma' in key:
+                lemma_data = srsly.read_json(lookup)
+            if 'entity' in key:
+                ent_data = srsly.read_json(lookup)
+            if 'pos' in key:
+                pos_data = srsly.read_json(lookup)
+    return lemma_data,ent_data,pos_data
+
+
 @router.get("/corpus")
 async def read_items(request: Request):
+    lemma_data,ent_data,pos_data = load_lookups()
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
+
         text_path = list(new_lang.iterdir())[0] / "texts"
         corpus = ""
         text_count = 0
@@ -48,10 +69,11 @@ async def read_items(request: Request):
         tokens = [
             Token(
                 text=t.text,
-                lemma_=t.lemma_,
-                pos_=t.pos_,
-                ent_type_=t.ent_type_,
+                lemma_=lemma_data.get(t.text,''),
+                pos_=pos_data.get(t.text,''),
+                ent_type_= ent_data.get(t.text,''),
                 tag_=t.tag_,
+                is_stop=False #TODO read stopwords.py 
             )
             for t in doc
             if not t.text in ignore and not t.is_punct
