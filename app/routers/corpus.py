@@ -1,6 +1,6 @@
 import srsly
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Set
 from fastapi import Request, Form, File, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
 from app.util.login import get_current_username
@@ -27,6 +27,15 @@ def load_stopwords():
         STOP_WORDS = module.STOP_WORDS
         print("yo" in STOP_WORDS)
         return STOP_WORDS
+
+
+def is_stop(word:str, STOP_WORDS:Set):
+    """JavaScript will interpret 'False' as a boolean, so I need to an alternative value"""
+    if word in STOP_WORDS:
+        return "is_stop"
+    else: 
+        return "not_stop"
+
 
 @lru_cache
 def load_lookups():
@@ -83,7 +92,7 @@ async def read_items(request: Request):
                 lemma_=lemma_data.get(t.text,''),
                 pos_=pos_data.get(t.text,''),
                 ent_type_= ent_data.get(t.text,''),
-                is_stop= str(t.text in STOP_WORDS)
+                is_stop= is_stop(t.text, STOP_WORDS)
             )
             for t in doc
             if not t.text in ignore and not t.is_punct

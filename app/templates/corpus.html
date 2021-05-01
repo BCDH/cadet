@@ -98,14 +98,23 @@
             { title: "Part of Speech" },
             { title: "Stop Word",
             "render": function ( row, type, val, meta ) {
-              return "<p onclick='edit_stop("+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
+              return "<p onclick='edit_stop(this,"+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
             }
         ]
   } );
 </script>
 <script>
-  function edit_stop(e) { 
-    console.log(e)
+  function edit_stop(e, val) { 
+
+    if (e.innerHTML == 'not_stop'){
+      e.innerHTML="is_stop";
+     
+    }
+    else {
+      e.innerHTML = "not_stop";
+     
+    }
+    
   };
 </script>
 
