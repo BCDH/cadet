@@ -83,7 +83,7 @@
     let tokens = {{ tokens_json|safe }};
     let data = []; 
     for (const token of tokens) {
-      data.push(new Array(token.count, token.text, token.lemma_,token.pos_,token.tag_,false));
+      data.push(new Array(token.count, token.text, token.lemma_,token.pos_,false));
     }
     $('#tokens').DataTable( {
       data: data,
@@ -96,7 +96,6 @@
             //{ title: "After" },
             { title: "Lemma" },
             { title: "Pos." },
-            { title: "Tag" },
             { title: "is_stop" },
         ]
   } );

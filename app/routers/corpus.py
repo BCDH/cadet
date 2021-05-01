@@ -13,7 +13,7 @@ templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter(dependencies=[Depends(get_current_username)])
 
-Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_", "tag_","is_stop"])
+Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_","is_stop"])
 
 #TODO automatically update corpus values from lookups
 
@@ -72,7 +72,6 @@ async def read_items(request: Request):
                 lemma_=lemma_data.get(t.text,''),
                 pos_=pos_data.get(t.text,''),
                 ent_type_= ent_data.get(t.text,''),
-                tag_=t.tag_,
                 is_stop=False #TODO read stopwords.py 
             )
             for t in doc
