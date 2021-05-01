@@ -5,7 +5,7 @@ from typing import List, Optional
 from spacy.tokens import Doc, Span
 from spacy.matcher import PhraseMatcher
 
-from fastapi import Request, Form, File, UploadFile, APIRouter, Depends
+from fastapi import Request, Form, File, UploadFile, APIRouter, Depends,HTTPException
 from fastapi.templating import Jinja2Templates
 from app.util.login import get_current_username
 from fastapi.responses import FileResponse,RedirectResponse
@@ -137,7 +137,10 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
             
             pos = pos_data.get(t.text, None)
             if pos:
-                t.pos_ = pos
+                try:
+                    t.pos_ = pos
+                except Exception as e: 
+                    raise HTTPException(status_code=404, detail="Invalid part of speech type: " + str(e))
             
         matches = matcher(doc)
         for match_id, start, end in matches:
