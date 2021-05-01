@@ -32,9 +32,9 @@ def load_stopwords():
 def is_stop(word:str, STOP_WORDS:Set):
     """JavaScript will interpret 'False' as a boolean, so I need to an alternative value"""
     if word in STOP_WORDS:
-        return "is_stop"
+        return "☑"
     else: 
-        return "not_stop"
+        return "☐"
 
 
 @lru_cache
