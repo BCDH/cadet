@@ -83,7 +83,7 @@
     let tokens = {{ tokens_json|safe }};
     let data = []; 
     for (const token of tokens) {
-      data.push(new Array(token.count, token.text, token.lemma_,token.pos_,false));
+      data.push(new Array(token.count, token.text, token.lemma_,token.pos_,token.is_stop));
     }
     $('#tokens').DataTable( {
       data: data,
@@ -95,11 +95,20 @@
             { title: "Text" },
             //{ title: "After" },
             { title: "Lemma" },
-            { title: "Pos." },
-            { title: "is_stop" },
+            { title: "Part of Speech" },
+            { title: "Stop Word",
+            "render": function ( row, type, val, meta ) {
+              return "<p onclick='edit_stop("+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
+            }
         ]
   } );
 </script>
+<script>
+  function edit_stop(e) { 
+    console.log(e)
+  };
+</script>
+
 {% endblock %}
 
 <!-- TODO 
