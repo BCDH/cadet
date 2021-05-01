@@ -108,11 +108,16 @@
 
     if (e.innerHTML == '☐'){
       e.innerHTML="☑";
+      $.get( "add_stopword?word="+val, function( data ) {
+        // success
+      });
      
     }
     else {
       e.innerHTML = "☐";
-     
+      $.get( "delete_stopword?word="+val, function( data ) {
+        // success
+      });
     }
     
   };
