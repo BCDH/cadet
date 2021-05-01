@@ -32,7 +32,7 @@ async def create(request: Request):
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
         name = list(new_lang.iterdir())[0].name
-        message = f"<div class='alert alert-warning' role='alert'>Found an existing object for {name}. If you'd like to delete {name} and start over click delete. To continue to edit {name}, click next.</div><a href='/edit?file_name=__init__.py' class='read-more'>Edit init file<i style='color:white;'class='icofont-code-alt'></i></a><br><a href='/delete_new_lang/{name}' class='read-more'><i style='color:white;'class='icofont-trash'></i> Delete {name}</a><div></div><br><a href='/sentences' class='read-more'>Next<i style='color:white;'class='icofont-long-arrow-right'></i></a>"
+        message = f"<div class='alert alert-warning' role='alert'>Found an existing object for {name.title()}. If you'd like to delete {name.title()} and start over click delete. To continue to edit {name}, click next.</div><a href='/edit?file_name=__init__.py' class='read-more'>Edit init file<i style='color:white;'class='icofont-code-alt'></i></a><br><a href='/delete_new_lang/{name}' class='read-more'><i style='color:white;'class='icofont-trash'></i> Delete {name.title()}</a><div></div><br><a href='/sentences' class='read-more'>Next<i style='color:white;'class='icofont-long-arrow-right'></i></a>"
         return templates.TemplateResponse(
             "create.html",
             {
@@ -76,7 +76,7 @@ async def create_post(
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
         name = list(new_lang.iterdir())[0].name
-        message = f"<div class='alert alert-warning' role='alert'>Created a language object for {name.title()}. If you'd like to delete {name} and start over click delete. To continue to edit {name}, click next.</div><a href='/edit?file_name=__init__.py' class='read-more'>Edit init file<i style='color:white;'class='icofont-code-alt'></i></a><br><a href='/delete_new_lang/{name}' class='read-more'><i style='color:white;'class='icofont-trash'></i> Delete {name}</a><div></div><br><a href='/sentences' class='read-more'>Next<i style='color:white;'class='icofont-long-arrow-right'></i></a>"
+        message = f"<div class='alert alert-warning' role='alert'>Created a language object for {name.title()}. If you'd like to delete {name.title()} and start over click delete. To continue to edit {name}, click next.</div><a href='/edit?file_name=__init__.py' class='read-more'>Edit init file<i style='color:white;'class='icofont-code-alt'></i></a><br><a href='/delete_new_lang/{name}' class='read-more'><i style='color:white;'class='icofont-trash'></i> Delete {name.title()}</a><div></div><br><a href='/sentences' class='read-more'>Next<i style='color:white;'class='icofont-long-arrow-right'></i></a>"
         return templates.TemplateResponse(
             "create.html",
             {
