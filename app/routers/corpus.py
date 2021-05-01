@@ -39,7 +39,28 @@ async def update_lemma(word:str,lemma:str):
     lemma_data[word] = lemma
     srsly.write_json(lemma_file, lemma_data)
 
+###########
+# POS #
+###########
 
+@router.get("/update_pos")
+async def update_lemma(word:str,pos:str):
+    # load lemma file, needed because we update the file
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    if len(list(new_lang.iterdir())) > 0:
+        lookups_path = new_lang / lang_name / "lookups"
+        for lookup in lookups_path.iterdir():
+            key = lookup.stem[lookup.stem.find('_') + 1:]
+            if 'pos' in key:
+                pos_file = lookup
+                pos_data = srsly.read_json(lookup)
+
+    # remove any accidental spaces 
+    word = word.strip()
+    pos = pos.strip()
+    pos_data[word] = pos
+    srsly.write_json(pos_file, pos_data)
 
 ##############
 # Stop words #

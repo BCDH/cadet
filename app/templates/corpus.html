@@ -106,7 +106,10 @@
             "render": function ( row, type, val, meta ) {
               return "<p contenteditable='true' onkeyup='update_lemma(this,"+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
             },
-            { title: "Part of Speech" },
+            { title: "Part of Speech",
+            "render": function ( row, type, val, meta ) {
+              return "<p contenteditable='true' onkeyup='update_pos(this,"+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
+            },
             { title: "Stop Word",
             "render": function ( row, type, val, meta ) {
               return "<p onclick='edit_stop(this,"+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
@@ -135,6 +138,12 @@
 
   function update_lemma(e, val){
     $.get( "update_lemma?word="+val+'&lemma='+ e.innerHTML, function( data ) {
+      // success
+    });
+  };
+
+  function update_pos(e, val){
+    $.get( "update_pos?word="+val+'&pos='+ e.innerHTML, function( data ) {
       // success
     });
   };
