@@ -114,32 +114,32 @@ async def datatable_json(request:Request,
             "error":None
         }
 
-@router.get("/update_lemma")
-async def update_lemma(
-    key:str,
-    value:str, 
-    col:int,
-    row:int,
-    new_key:str = None, 
-    new_value:str = None, 
-    new:str ='false', 
-    delete:str ='false'):
+# @router.get("/update_lemma")
+# async def update_lemma(
+#     key:str,
+#     value:str, 
+#     col:int,
+#     row:int,
+#     new_key:str = None, 
+#     new_value:str = None, 
+#     new:str ='false', 
+#     delete:str ='false'):
 
-    new_lang = Path.cwd() / "new_lang"
-    if len(list(new_lang.iterdir())) > 0:
-        path = list(new_lang.iterdir())[0] / "lookups"
-        json_file = list(path.glob("*lemma*"))[0]
-        lemma_data = srsly.read_json(json_file)
-        if new == 'false' and delete =='false':
-            if new_key:
-                print('has new key')
-                lemma_data[new_key] = lemma_data[key]
-                del lemma_data[key]
-                result = {"new_key":new_key, "col":col, "row":row}
-            if new_value:
-                print('has new value') 
-                lemma_data[key] = new_value
-                result = {"new_value":new_value, "col":col, "row":row}
+#     new_lang = Path.cwd() / "new_lang"
+#     if len(list(new_lang.iterdir())) > 0:
+#         path = list(new_lang.iterdir())[0] / "lookups"
+#         json_file = list(path.glob("*lemma*"))[0]
+#         lemma_data = srsly.read_json(json_file)
+#         if new == 'false' and delete =='false':
+#             if new_key:
+#                 print('has new key')
+#                 lemma_data[new_key] = lemma_data[key]
+#                 del lemma_data[key]
+#                 result = {"new_key":new_key, "col":col, "row":row}
+#             if new_value:
+#                 print('has new value') 
+#                 lemma_data[key] = new_value
+#                 result = {"new_value":new_value, "col":col, "row":row}
 
-        srsly.write_json(json_file, lemma_data)
-        return result
+#         srsly.write_json(json_file, lemma_data)
+#         return result

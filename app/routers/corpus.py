@@ -20,12 +20,9 @@ Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_","is_stop"])
 # Lemmata #
 ###########
 
-router.get("/update_lemma")
-def update_lemma(word:str,lemma:str):
-    # remove any accidental spaces 
-    word = word.strip()
-    lemma = lemma.strip()
-    
+@router.get("/update_lemma")
+async def update_lemma(word:str,lemma:str):
+    # load lemma file, needed because we update the file
     new_lang = Path.cwd() / "new_lang"
     lang_name = list(new_lang.iterdir())[0].name
     if len(list(new_lang.iterdir())) > 0:
@@ -33,8 +30,15 @@ def update_lemma(word:str,lemma:str):
         for lookup in lookups_path.iterdir():
             key = lookup.stem[lookup.stem.find('_') + 1:]
             if 'lemma' in key:
+                lemma_file = lookup
                 lemma_data = srsly.read_json(lookup)
-        #hi
+
+    # remove any accidental spaces 
+    word = word.strip()
+    lemma = lemma.strip()
+    lemma_data[word] = lemma
+    srsly.write_json(lemma_file, lemma_data)
+
 
 
 ##############
@@ -49,7 +53,6 @@ def load_stopwords():
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         STOP_WORDS = module.STOP_WORDS
-        print("yo" in STOP_WORDS)
         return STOP_WORDS
 
 

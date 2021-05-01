@@ -134,7 +134,9 @@
   };
 
   function update_lemma(e, val){
-    console.log(e, val)
+    $.get( "update_lemma?word="+val+'&lemma='+ e.innerHTML, function( data ) {
+      // success
+    });
   };
 </script>
 
