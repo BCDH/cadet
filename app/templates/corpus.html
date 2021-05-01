@@ -2,6 +2,13 @@
 {% block navbar %}
 <li class="active"><a href="/main">Home</a></li>
 {% endblock%}
+
+{% block extrastyle %}
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.2.7/css/responsive.bootstrap.min.css" rel="stylesheet">
+
+{% endblock %}
 {% block content %}
 
 <main style="margin-top: 200px;" id="main">
@@ -64,7 +71,8 @@
   </section><!-- End Counts Section -->
   <section id="testimonials" class="testimonials section-bg">
     <div class="container">
-      <table id="tokens" class="display" style="width:100%"></table>
+      
+      <table id="tokens" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%"></table>
       </div>
   </section>
 
@@ -94,7 +102,10 @@
             //{ title: "Before" },
             { title: "Text" },
             //{ title: "After" },
-            { title: "Lemma" },
+            { title: "Lemma",
+            "render": function ( row, type, val, meta ) {
+              return "<p contenteditable='true' onkeyup='update_lemma(this,"+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
+            },
             { title: "Part of Speech" },
             { title: "Stop Word",
             "render": function ( row, type, val, meta ) {
@@ -120,6 +131,10 @@
       });
     }
     
+  };
+
+  function update_lemma(e, val){
+    console.log(e, val)
   };
 </script>
 

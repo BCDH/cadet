@@ -16,7 +16,30 @@ router = APIRouter(dependencies=[Depends(get_current_username)])
 
 Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_","is_stop"])
 
-#TODO automatically update corpus values from lookups
+###########
+# Lemmata #
+###########
+
+router.get("/update_lemma")
+def update_lemma(word:str,lemma:str):
+    # remove any accidental spaces 
+    word = word.strip()
+    lemma = lemma.strip()
+    
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    if len(list(new_lang.iterdir())) > 0:
+        lookups_path = new_lang / lang_name / "lookups"
+        for lookup in lookups_path.iterdir():
+            key = lookup.stem[lookup.stem.find('_') + 1:]
+            if 'lemma' in key:
+                lemma_data = srsly.read_json(lookup)
+        #hi
+
+
+##############
+# Stop words #
+##############
 def load_stopwords():
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
@@ -67,6 +90,11 @@ def delete_stopword(word:str):
         stopwords = re.sub(fr'\b{word}\b', '', stopwords)
         text = text[:start] + stopwords + text[end:]
         path.write_text(text)
+
+
+###############
+# Corpus Page #
+###############
 
 @lru_cache
 def load_lookups():
@@ -152,48 +180,3 @@ async def read_items(request: Request):
     else:
         return templates.TemplateResponse("corpus.html", {"request": request})
 
-@router.get("/update_corpus")
-async def update_items(text:str,lemma:str, pos:str = None,ent:str =None):
-    """A get endpoint to receive data updates from the corpus page. 
-
-    Args:
-        text (str): [description]
-        lemma (str): [description]
-        pos (str, optional): [description]. Defaults to None.
-        ent (str, optional): [description]. Defaults to None.
-    """
-    
-    #Read the lookups directory, make dict of table names and path to json files
-    new_lang = Path.cwd() / "new_lang"
-    lang_name = list(new_lang.iterdir())[0].name
-    lookups_path = new_lang / lang_name / "lookups"
-    for lookup in lookups_path.iterdir():
-        key = lookup.stem[lookup.stem.find('_') + 1:]
-        if 'lemma' in key:
-            lemma_data = srsly.read_json(lookup)
-        if 'entity' in key:
-            ent_data = srsly.read_json(lookup)
-        if 'pos' in key:
-            pos_data = srsly.read_json(lookup)
-    # use type to the open lookups file 
-    # Check if key exists in the file 
-    # if not add new entry
-    # if so, update value
-    
-    if lemma and lemma_data.get(text, None):
-        lemma_data[text] = lemma
-    if pos and pos_data.get(text, None):
-        pos_data[text] = pos
-    if ent and ent_data.get(text, None):
-        ent_data[text] = ent
-    #save to updated dicts to files 
-    for lookup in lookups_path.iterdir():
-        key = lookup.stem[lookup.stem.find('_') + 1:]
-        if lemma and 'lemma' in key:
-            srsly.write_json(lookup)
-        if ent and 'entity' in key:
-            srsly.write_json(lookup)
-        if pos and 'pos' in key:
-            srsly.write_json(lookup)
-
-    
