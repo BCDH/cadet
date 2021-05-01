@@ -1,4 +1,5 @@
 import srsly
+import re
 from pathlib import Path
 from typing import List, Optional, Set
 from fastapi import Request, Form, File, APIRouter, Depends
@@ -36,6 +37,36 @@ def is_stop(word:str, STOP_WORDS:Set):
     else: 
         return "☐"
 
+@router.get("/add_stopword")
+def add_stopword(word:str):
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        path = list(new_lang.iterdir())[0]
+        path = path / "stop_words.py"
+        text = path.read_text()
+        #Edit only the stopwords string, otherwise we could replace other sections of the file
+        start = text.find('"""')
+        end = text.find('""".split()')
+        stopwords = text[start:end]
+        if not word in stopwords:
+            stopwords = stopwords + ' ' + word
+            text = text[:start] + stopwords + text[end:]
+            path.write_text(text)
+
+@router.get("/delete_stopword")
+def delete_stopword(word:str):
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        path = list(new_lang.iterdir())[0]
+        path = path / "stop_words.py"
+        text = path.read_text()
+        #Edit only the stopwords string, otherwise we could replace other sections of the file
+        start = text.find('"""')
+        end = text.find('""".split()')
+        stopwords = text[start:end]
+        stopwords = re.sub(fr'\b{word}\b', '', stopwords)
+        text = text[:start] + stopwords + text[end:]
+        path.write_text(text)
 
 @lru_cache
 def load_lookups():
