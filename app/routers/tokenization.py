@@ -45,7 +45,9 @@ async def tokenization(request: Request, login=Depends(get_current_username)):
             "tokenization.html", {"request": request, "sentences": spacy_sentences}
         )
     else:
-        return templates.TemplateResponse("tokenization.html", {"request": request})
+        return templates.TemplateResponse(
+            "error_please_create.html", {"request": request}
+        )
 
 
 @router.post("/add_tokenization_exception")

@@ -16,8 +16,14 @@ router = APIRouter(dependencies=[Depends(get_current_username)])
 
 @router.get("/lookups")
 async def read_items(request: Request):
-    return templates.TemplateResponse("lookups.html", {"request": request})
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        return templates.TemplateResponse("lookups.html", {"request": request})
 
+    else:
+        return templates.TemplateResponse(
+            "error_please_create.html", {"request": request}
+        )
 
 @router.post("/upload_lookups")
 async def update_lookups(file: UploadFile = File(...),lookup_type:str= Form(...)):

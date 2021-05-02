@@ -123,8 +123,8 @@ def delete_stopword(word:str):
 @lru_cache
 def load_lookups():
     new_lang = Path.cwd() / "new_lang"
-    lang_name = list(new_lang.iterdir())[0].name
     if len(list(new_lang.iterdir())) > 0:
+        lang_name = list(new_lang.iterdir())[0].name
         lookups_path = new_lang / lang_name / "lookups"
         for lookup in lookups_path.iterdir():
             key = lookup.stem[lookup.stem.find('_') + 1:]
@@ -134,14 +134,15 @@ def load_lookups():
                 ent_data = srsly.read_json(lookup)
             if 'pos' in key:
                 pos_data = srsly.read_json(lookup)
-    return lemma_data,ent_data,pos_data
+        return lemma_data,ent_data,pos_data
 
 
 @router.get("/corpus")
 async def read_items(request: Request):
-    lemma_data,ent_data,pos_data = load_lookups()
+    
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
+        lemma_data,ent_data,pos_data = load_lookups()
         STOP_WORDS = load_stopwords()
         text_path = list(new_lang.iterdir())[0] / "texts"
         corpus = ""
@@ -202,5 +203,7 @@ async def read_items(request: Request):
             {"request": request, "stats": stats, "tokens_json": tokens_json},
         )
     else:
-        return templates.TemplateResponse("corpus.html", {"request": request})
+        return templates.TemplateResponse(
+            "error_please_create.html", {"request": request}
+        )
 

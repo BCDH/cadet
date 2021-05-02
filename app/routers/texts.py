@@ -26,7 +26,9 @@ async def read_items(request: Request):
             "texts.html", {"request": request, "texts": texts}
         )
     else:
-        return templates.TemplateResponse("texts.html", {"request": request})
+        return templates.TemplateResponse(
+            "error_please_create.html", {"request": request}
+        )
 
 
 @router.post("/texts")

@@ -16,6 +16,11 @@ router = APIRouter(dependencies=[Depends(get_current_username)])
 
 @router.get("/project")
 async def project(request:Request):
-    context = {}
-    context["request"] = request
-    return templates.TemplateResponse("project.html", context)
+    
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        return templates.TemplateResponse("project.html", {"request": request})
+    else:
+        return templates.TemplateResponse(
+            "error_please_create.html", {"request": request}
+        )
