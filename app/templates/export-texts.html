@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block navbar %}{% endblock%}
+
+{% block content %}
+<!-- ======= Breadcrumbs ======= -->
+<section style="margin-top:150px;" class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Export Texts to INCEpTION</h2>
+          <p>Using the current language object, this step will tokenize the text and add relevant annotations from the lookups.</p>
+        </div>
+        <div class="faq-list">
+          <button class="nice-button" onclick="location.href='/corpus'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
+          
+          <button class="nice-button" onclick="location.href='/project'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
+         </div>  
+        
+        
+        
+        
+    </div>
+
+    </div>
+  </section><!-- End Breadcrumbs -->
+
+
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center">
+
+  <div class="container-fluid" data-aos="fade-up">
+    <div class="row justify-content-center">
+      <div class="col-xl-5 col-lg-6 pt-3 pt-lg-0 order-2 order-lg-1 d-flex flex-column justify-content-center">
+        <div><a onclick="get_download();" class=" btn-get-started scrollto">Export CoreNLP CoNLL-like file of current texts</a></div>
+      </div>
+      <div class="col-xl-4 col-lg-6 order-1 order-lg-2 hero-img animated" data-aos="zoom-in" data-aos-delay="350">
+        <img id="spinner" style="height:75%; opacity: 0.7;" src="/static/img/inception.png"/>
+      </div>
+    </div>
+  </div>
+
+</section><!-- End Hero -->
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+  $('#header').addClass('header-scrolled');
+function get_download(){
+  const url = 'download'
+  window.location.assign(url);
+};
+
+$('#spinner').mouseenter(function() {
+  $('#spinner').attr('src', "/static/img/inception_inverse.png");
+});
+$('#spinner').mouseleave(function() {
+  $('#spinner').attr('src', "/static/img/inception.png");
+});
+</script>
+{% endblock %}

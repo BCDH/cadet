@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block extrastyle %}{% endblock %}
+{% block navbar %}
+<li class="active"><a href="/main">Home</a></li>
+{% endblock%}
+
+{% block content %}
+<section style="margin-top:150px;" class="breadcrumbs">
+    <div class="container">
+
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2>Export for Model Training</h2>
+            <p>Once you have annotated your text corpus and are ready to train your model, you'll need your language object
+              and a project template that will help to load and pre-process your data and then run model training and packaging.
+              spaCy projects make this process clear and reproducible.
+            </p>
+        </div>
+        <div class="faq-list">
+            <button class="nice-button" onclick="location.href='/export-texts'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
+
+         </div>  
+        
+        
+        
+        
+    </div>
+
+    </div>
+  </section><!-- End Breadcrumbs -->
+
+ <!-- ======= Testimonials Section ======= -->
+ <section id="testimonials" class="testimonials section-bg">
+    <div class="container" data-aos="fade-up">
+
+      <div id="sentences">
+
+     
+      <div class="card text">
+        
+
+        <div class="card-body">
+          <p>Hi there</p>
+         
+         
+      </div>
+      
+      
+    </div>
+            
+    </div>
+  </section><!-- End Testimonials Section -->
+
+
+{% endblock %}
+
+{% block extrajs %}
+<script>
+    $('#header').addClass('header-scrolled');
+
+    
+</script>
+{% endblock %}
