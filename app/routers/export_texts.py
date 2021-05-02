@@ -58,7 +58,7 @@ async def download():
         docs = update_tokens_with_lookups(nlp, docs)
         conll = [doc_to_conll(doc) for doc in docs]
 
-        temp_path = Path('/tmp/text_export')
+        temp_path = Path('/tmp/conll_export')
         temp_path.mkdir(parents=True, exist_ok=True)
         for filename, conll in zip(filenames,conll):
             (temp_path / filename).write_text(conll)
@@ -68,7 +68,7 @@ async def download():
         zip_file = str(temp_path).split('/')[-1]+'.zip'
         #save each doc to a file, return single zip file with all CONFIRM, can import directory into INCEpTION
 
-        return FileResponse('/tmp/text_export.zip', media_type="application/zip", filename=zip_file)
+        return FileResponse(f'/tmp/conll_export.zip', media_type="application/zip", filename=lang_name + '_'+ zip_file)
 
 def get_filenames() -> List[str]:
     new_lang = Path.cwd() / "new_lang"
@@ -113,13 +113,14 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
         key = lookup.stem[lookup.stem.find('_') + 1:]
         if 'lemma' in key:
             lemma_data = srsly.read_json(lookup)
-           
+            assert isinstance(lemma_data, dict)
+
         if 'entity' in key:
             entity_data = srsly.read_json(lookup)
-            assert isinstance(lemma_data, dict)
+            assert isinstance(entity_data, dict)
         if 'pos' in key:
             pos_data = srsly.read_json(lookup)
-            assert isinstance(lemma_data, dict)
+            assert isinstance(pos_data, dict)
 
     matcher = PhraseMatcher(nlp.vocab)
     try:
