@@ -55,7 +55,8 @@ async def save_texts(
 
     if text_url:
         text = httpx.get(text_url).text
-        file_save_path = save_path / f"{current_id()+1}.txt"
+        filename= text_url.split('/')[-1]
+        file_save_path = save_path / filename
         file_save_path.write_text(text)
         # data = [{"text": line} for line in text.split("\n")]
         # file_save_path = str((save_path / f"{current_id()+1}_text.jsonl"))
@@ -64,24 +65,9 @@ async def save_texts(
     if files:
         for file in files:
             contents = await file.read()
-            file_save_path = save_path / f"{current_id()+1}.txt"
+            file_save_path = save_path / file.filename #UploadFile object 
             file_save_path.write_text(contents.decode("utf-8"))
-        ### Textract for OCR, too complicated and messy, switching to just txt files
-        # for file in files:
-        #     # Write the UploadFile to disk, this is a trade-off required by textract
-        #     p = Path("/tmp") / file.filename
-        #     try:
-        #         p.write_bytes(file.file.read())
-        #         text = textract.process(str(p))
-        #         text = text.decode("utf-8")
-        #         #data = [{"text": line} for line in text.split("\n")]
-        #         file_save_path = (save_path / f"{current_id()+1}.txt")
-        #         file_save_path.write_text(text)
-        #         #srsly.write_jsonl(file_save_path, data)
-        #         p.unlink()
-
-        #    except IsADirectoryError:
-        #        pass  # No file selected
+        
     if text_area:
         file_save_path = save_path / f"{current_id()+1}.txt"
         file_save_path.write_text(text_area)
