@@ -24,9 +24,9 @@
         </div>
         <div class="faq-list">
           <button class="nice-button" onclick="location.href='/tokenization'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
-          <button class="nice-button" onclick="location.href='edit?file_name=pos'">Edit POS json<i style='color:white;'class='icofont-code-alt'></i></button>
-          <button class="nice-button" onclick="location.href='edit?file_name=lemma'">Edit Lemma json<i style='color:white;'class='icofont-code-alt'></i></button>
-          <button class="nice-button" onclick="location.href='edit?file_name=entity'">Edit Entity json<i style='color:white;'class='icofont-code-alt'></i></button>
+          <button class="nice-button" onclick="location.href='edit_lookup?type=pos'">Edit POS json<i style='color:white;'class='icofont-code-alt'></i></button>
+          <button class="nice-button" onclick="location.href='edit_lookup?type=lemma'">Edit Lemma json<i style='color:white;'class='icofont-code-alt'></i></button>
+          <button class="nice-button" onclick="location.href='edit_lookup?type=entity'">Edit Entity json<i style='color:white;'class='icofont-code-alt'></i></button>
           <button class="nice-button" onclick="location.href='/texts'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
          </div>  
         
@@ -41,6 +41,10 @@
       lookup, all matching tokens in your corpus will be marked as "place." You will have the opportunity to
       adjust these values during annotation, but you'll need to strike a balance between saving time with bulk
       updates and losing time by having to change incorrect annotations.</p>
+      <p>
+        If you have existing dictionaries or other linguistic data, please create separate files for lemmata, part of speech 
+        and entities.  You can then upload them here as json or CSV files. If you don't have this data, just go to the next step.
+      </p>
     </div>
   </section><!-- End Breadcrumbs -->
   <section class="inner-page">
