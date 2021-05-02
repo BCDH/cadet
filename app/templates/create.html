@@ -78,7 +78,7 @@
                     <label class="form-check-label" for="flexCheckDefault">
                       Has case 
                     </label>
-                    <p>This languages has upper and lower case system. Right? Not really sure about this. English tests show yes, Chinese, Japanese no.</p>
+                    <p>This languages has upper and lower case system.</p>
                     
                   
                     <input class="form-check-input" type="checkbox" name="has_letters" value=True id="flexCheckDefault">
@@ -105,7 +105,7 @@
             </div>
             
             <div class="image col-lg-6 order-1 order-lg-2 " data-aos="zoom-in" data-aos-delay="100">
-              <img src="static/img/skylab.jpg" alt="" class="img-fluid">
+              <img id="skylab" src="static/img/skylab.jpg" alt="" class="img-fluid">
             </div>
            
           </div>
@@ -157,7 +157,13 @@
         $('#lang__name_error').remove();
       };
     });
-       
+     
+    $('#skylab').mouseenter(function() {
+      $('#skylab').attr('src', "static/img/skylab-inverse.png");
+    });
+    $('#skylab').mouseleave(function() {
+      $('#skylab').attr('src', "static/img/skylab.jpg");
+    });
     
 </script>
 {% endblock %}
