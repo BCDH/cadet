@@ -7,7 +7,7 @@
 
       <div class="row">
         <div class="col-lg-6 order-1 order-lg-2" data-aos="zoom-in" data-aos-delay="150">
-          <img src="static/img/soyuz.jpg" class="img-fluid" alt="">
+          <img id="spinner" src="static/img/soyuz.jpg" class="img-fluid" alt="">
         </div>
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content" data-aos="fade-right">
           <h3>To get started, you need to create a language object.</h3>
@@ -24,6 +24,11 @@
 {% block extrajs %}
 <script>
     $('#header').addClass('header-scrolled')
-    
+    $('#spinner').mouseenter(function() {
+      $('#spinner').attr('src', "/static/img/soyuz-inverse.png");
+    });
+    $('#spinner').mouseleave(function() {
+      $('#spinner').attr('src', "/static/img/soyuz.jpg");
+    });
 </script>
 {% endblock %}
