@@ -152,10 +152,13 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
         matches = matcher(doc)
         for match_id, start, end in matches:
             string_id = nlp.vocab.strings[match_id]
-            ent_label = entity_data.get(string_id, None)
-            if ent_label:
-                span = Span(doc, start, end, label=ent_label)
-                doc.ents = list(doc.ents) + [span]
+            #ent_label = entity_data.get(string_id, None)
+            span = Span(doc, start, end, label=string_id)
+            if doc.spans.get('ents',None):
+                doc.spans['ents'].append(span)
+            else:
+                doc.spans["ents"] = [span]
+
 
     return docs
 
