@@ -162,11 +162,28 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
 
     return docs
 
+def load_ents(doc):
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    lookups_path = new_lang / lang_name / "lookups"
+    for lookup in lookups_path.iterdir():
+        key = lookup.stem[lookup.stem.find('_') + 1:]
+        if 'entity' in key:
+            entity_data = srsly.read_json(lookup)
+            assert isinstance(entity_data, dict)
+    tokens_with_ents = {}
+    for span in doc.spans['ents']:
+        ent = entity_data.get(span.text,None)
+        for t in span:
+            tokens_with_ents[t.i] = ent
+    return tokens_with_ents
+    #return list of tokens and their ent value, problem of overlapping ent-spans  
+
 def doc_to_conll(doc) -> str:
     """
     Converts a spaCy Doc object to string formatted using CoreNLP CoNLL format for pos, lemma and entity
     https://dkpro.github.io/dkpro-core/releases/2.2.0/docs/format-reference.html#format-ConllCoreNlp
-
+    
     The CoreNLP CoNLL format is used by the Stanford CoreNLP package. 
     Columns are tab-separated. Sentences are separated by a blank new line.
 
@@ -185,15 +202,18 @@ def doc_to_conll(doc) -> str:
     """
     data = []
     
-    for i, tok in enumerate(doc):
+    tokens_with_ents = load_ents(doc)
+
+    for tok in doc:
         
+
         if tok.is_space:
             form = "_"
             lemma = "_"
         else:
             form = tok.orth_
             lemma = tok.lemma_
-        tok_id = i +1
+        tok_id = tok.i +1
         
         misc = "SpaceAfter=No" if not tok.whitespace_ else "_"
         row = {}
@@ -202,7 +222,14 @@ def doc_to_conll(doc) -> str:
         row["FORM"] = "_" if form == '' else form #Word form or punctuation symbol.
         row["LEMMA"] = '_' if lemma == '' else lemma #Lemma of the word form.        
         row["POSTAG"] = "_" if tok.pos_ == '' else tok.pos_ #Fine-grained part-of-speech tag
-        row["NER"] = "_" #if ent.label_ == '' else ent.label_
+        #Named Entity tag, or underscore if not available. 
+        # If a named entity covers multiple tokens, all of the tokens simply carry 
+        # the same label without (no sequence encoding).
+        # TODO How does INCEpTION interpret this data? As separate ents or ent spans? 
+        if tok.i in tokens_with_ents.keys():
+            row["NER"] = tokens_with_ents[tok.i]
+        else:
+            row["NER"] = "_" 
         row["HEAD"] = "_"
         row["DEPREL"] = "_"
         
