@@ -158,11 +158,13 @@
   let x_data = [];
   let y_data = [];
   let hover_data = [];
+  let total_tokens = {{ stats.tokens }};
   for (const token of tokens) {
-    if (token.count > 1){
+    if (token.count > 3){
     x_data.push(token.rank);
     y_data.push(token.remain);
-    hover_data.push(token.text + ':'+ token.count);
+    let percent_annotated = 1 - (token.remain / total_tokens);
+    hover_data.push((percent_annotated*100).toFixed(0) +'%<br>Token: '+token.text + '<br>Count: '+ token.count);
     };
   }
 
@@ -179,7 +181,7 @@ var data1 = [trace1];
 
 var layout = {
   title: {
-    text:'Correlation of Frequent Tokens to Total Corpus Annotation',
+    text:'Correlation of Frequent Tokens and Corpus Annotation',
     font: {
       family: 'Poppins,  sans-serif',
       size: 18
@@ -199,7 +201,7 @@ var layout = {
   },
   yaxis: {
     title: {
-      text: 'Total Tokens Annotated',
+      text: 'Tokens Remaining',
       font: {
         family: 'Open Sans, sans-serif',
         size: 14,
