@@ -159,14 +159,24 @@
   let y_data = [];
   let hover_data = [];
   let total_tokens = {{ stats.tokens }};
+  let fifty_percent = [];
+  let one_third = [];
   for (const token of tokens) {
     if (token.count > 3){
     x_data.push(token.rank);
     y_data.push(token.remain);
     let percent_annotated = 1 - (token.remain / total_tokens);
+    let percent_annotated_str = (percent_annotated*100).toFixed(0);
+    if (percent_annotated_str == '33'){
+      one_third.push(new Array(token.rank,token.remain))
+    };
+    if (percent_annotated_str == '50'){
+      fifty_percent.push(new Array(token.rank,token.remain))
+    };
     hover_data.push((percent_annotated*100).toFixed(0) +'%<br>Token: '+token.text + '<br>Count: '+ token.count);
     };
   }
+  
 
 // mousewheel or two-finger scroll zooms the plot
 
@@ -210,7 +220,31 @@ var layout = {
     }
   },
   paper_bgcolor: '#f9f8ff',
-  plot_bgcolor: '#f9f8ff'
+  plot_bgcolor: '#f9f8ff',
+  annotations: [
+    {
+      x: one_third[0][0],
+      y: one_third[0][1],
+      xref: 'x',
+      yref: 'y',
+      text: '33%',
+      showarrow: true,
+      arrowhead: 7,
+      ax: 0,
+      ay: -60
+    },
+    {
+      x: fifty_percent[0][0],
+      y: fifty_percent[0][1],
+      xref: 'x',
+      yref: 'y',
+      text: '50%',
+      showarrow: true,
+      arrowhead: 7,
+      ax: 0,
+      ay: -60
+    }
+  ]
 };
 
 Plotly.newPlot('chart', data1, layout, {scrollZoom: true,displaylogo: false});
