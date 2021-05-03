@@ -182,9 +182,12 @@ async def read_items(request: Request):
             if not t.text in ignore and not t.is_punct
         ]
         to_json = []
+        counter = token_count
         for i in Counter(tokens).most_common():
             dict_ = i[0]._asdict()
             dict_["count"] = i[1]
+            counter = counter - i[1]
+            dict_["remain"] = counter
             to_json.append(dict_)
         tokens_json = srsly.json_dumps(to_json)
         try:

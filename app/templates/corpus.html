@@ -51,6 +51,7 @@
           <p>Tokens</p>
           {% endif %}
         </div>
+       
         {% if stats.sents %}
         <div class="col-lg-3 col-6 text-center">
           <span data-toggle="counter-up">{{ stats.sents }}</span>
@@ -67,14 +68,12 @@
         
         {% endif %}
 
-        <p>TODO add visualizations, based on counts what is relationship of terms to % of corpus, for example if I annotate 
-          50 terms, what percentage of the corpus would be automatically annotated?
-        </p>
       </div>
     </div>
   </section><!-- End Counts Section -->
   <section id="testimonials" class="testimonials section-bg">
     <div class="container">
+      <div id='chart'><!-- Plotly chart will be drawn inside this DIV --></div>
       
       <table id="tokens" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%"></table>
       </div>
@@ -89,6 +88,7 @@
 {% block extrajs %}
 <script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap4.min.js"></script>
+<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
 
 <script>
     $('#header').addClass('header-scrolled')
@@ -152,7 +152,34 @@
     });
   };
 </script>
+<script>
 
+// Plotly Chart Section 
+  let x_data = [];
+  let y_data = [];
+  for (const token of tokens) {
+    x_data.push(token.count);
+    y_data.push(token.remain);
+  }
+
+// mousewheel or two-finger scroll zooms the plot
+
+var trace1 = {
+  x: x_data,
+  y: y_data,
+  type: 'line'
+};
+
+var data1 = [trace1];
+
+var layout = {
+  title: 'Correlation of Frequent Tokens and Total Corpus Annotation',
+  showlegend: false
+};
+
+Plotly.newPlot('chart', data1, layout, {scrollZoom: true});
+
+</script>
 {% endblock %}
 
 <!-- TODO 
