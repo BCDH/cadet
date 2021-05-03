@@ -157,9 +157,11 @@
 // Plotly Chart Section 
   let x_data = [];
   let y_data = [];
+  let hover_data = [];
   for (const token of tokens) {
     x_data.push(token.count);
     y_data.push(token.remain);
+    hover_data.push(token.text + ':'+ token.count);
   }
 
 // mousewheel or two-finger scroll zooms the plot
@@ -167,6 +169,7 @@
 var trace1 = {
   x: x_data,
   y: y_data,
+  text: hover_data,
   type: 'line'
 };
 
@@ -201,7 +204,9 @@ var layout = {
         color: '#7f7f7f'
       }
     }
-  }
+  },
+  paper_bgcolor: '#f9f8ff',
+  plot_bgcolor: '#f9f8ff'
 };
 
 Plotly.newPlot('chart', data1, layout, {scrollZoom: true,displaylogo: false});
