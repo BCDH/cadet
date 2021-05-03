@@ -183,10 +183,13 @@ async def read_items(request: Request):
         ]
         to_json = []
         counter = token_count
+        rank = 1
         for i in Counter(tokens).most_common():
             dict_ = i[0]._asdict()
             dict_["count"] = i[1]
             counter = counter - i[1]
+            dict_['rank'] = rank
+            rank += 1
             dict_["remain"] = counter
             to_json.append(dict_)
         tokens_json = srsly.json_dumps(to_json)
