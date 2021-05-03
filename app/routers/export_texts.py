@@ -163,6 +163,19 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
     return docs
 
 def load_ents(doc):
+    """Take a Doc object with ent spans.  Use the lookups to label 
+    each token in the Doc using the token's index. Returns a dictionary with the 
+    token index as key and the entity label as value. If
+    #TODO This does not handle overlapping entities! When a token is part of two overlapping ent 
+    spans, it will only record the last ent-span.  There's no way to account for multiple-ents in the 
+    CoreNLP CoNLL format, so that's my excuse. Please prove me wrong.  
+
+    Args:
+        doc (Doc): a spaCy doc object with entries in doc.spans['ents']
+
+    Returns:
+        dict: ent lookup by token index
+    """
     new_lang = Path.cwd() / "new_lang"
     lang_name = list(new_lang.iterdir())[0].name
     lookups_path = new_lang / lang_name / "lookups"
@@ -177,7 +190,6 @@ def load_ents(doc):
         for t in span:
             tokens_with_ents[t.i] = ent
     return tokens_with_ents
-    #return list of tokens and their ent value, problem of overlapping ent-spans  
 
 def doc_to_conll(doc) -> str:
     """
