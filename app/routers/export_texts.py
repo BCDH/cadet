@@ -67,7 +67,8 @@ async def download():
         temp_path = Path('/tmp/conll_export')
         temp_path.mkdir(parents=True, exist_ok=True)
         for filename, conll in zip(filenames,conll):
-            (temp_path / filename).write_text(conll)
+            conll_filename = filename.split('.')[0] +'.conll'
+            (temp_path / conll_filename).write_text(conll)
 
         #shutil.make_archive("zipped_sample_directory", "zip", "sample_directory")
         shutil.make_archive(str(temp_path), 'zip', str(temp_path))
@@ -237,7 +238,7 @@ def doc_to_conll(doc) -> str:
         #Named Entity tag, or underscore if not available. 
         # If a named entity covers multiple tokens, all of the tokens simply carry 
         # the same label without (no sequence encoding).
-        # TODO How does INCEpTION interpret this data? As separate ents or ent spans? 
+        # INCEpTION interprets this data as ent spans, yay! 
         if tok.i in tokens_with_ents.keys():
             row["NER"] = tokens_with_ents[tok.i]
         else:
