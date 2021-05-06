@@ -65,6 +65,13 @@
           <p>Entities</p>
         </div>
         {% endif %}
+
+        {% if stats.unique_tokens %}
+        <div class="col-lg-3 col-6 text-center">
+          <span data-toggle="counter-up">{{ stats.unique_tokens }}</span>
+          <p>Entities</p>
+        </div>
+        {% endif %}
         
         {% endif %}
 
@@ -161,6 +168,7 @@
   let total_tokens = {{ stats.tokens }};
   let fifty_percent = []; 
   let one_third = [];
+  let two_thirds = [];
   for (const token of tokens) {
     if (token.count > 3){
     x_data.push(token.rank);
@@ -172,6 +180,9 @@
     };
     if (percent_annotated_str == '50'){
       fifty_percent.push(new Array(token.rank,token.remain))
+    };
+    if (percent_annotated_str == '66'){
+      two_thirds.push(new Array(token.rank,token.remain))
     };
     hover_data.push((percent_annotated*100).toFixed(0) +'%<br>Token: '+token.text + '<br>Count: '+ token.count);
     };
@@ -239,6 +250,17 @@ var layout = {
       xref: 'x',
       yref: 'y',
       text: '50%',
+      showarrow: true,
+      arrowhead: 7,
+      ax: 0,
+      ay: -60
+    },
+    {
+      x: two_thirds[0][0],
+      y: two_thirds[0][1],
+      xref: 'x',
+      yref: 'y',
+      text: '66%',
       showarrow: true,
       arrowhead: 7,
       ax: 0,

@@ -1,4 +1,7 @@
 import srsly
+from spacy.tokens import Doc
+from spacy.lang.char_classes import HYPHENS, PUNCT, UNITS, CONCAT_QUOTES
+
 import re
 from pathlib import Path
 from typing import List, Optional, Set
@@ -147,8 +150,15 @@ async def read_items(request: Request):
         text_path = list(new_lang.iterdir())[0] / "texts"
         corpus = ""
         text_count = 0
+        token_count = 0
+        max_length = 0
+        corpus = []
+        tokens = []
+    
         for text in text_path.iterdir():
-            corpus += text.read_text()
+            corpus.append(text.read_text())
+            if len(text.read_text()) > max_length:
+                max_length = len(text.read_text()) + 1
             text_count += 1
         # create doc from corpus with obj, count tokens
         lang_name = list(new_lang.iterdir())[0].name
@@ -158,29 +168,41 @@ async def read_items(request: Request):
             # redirect /edit?file_name=examples.py
             message = "[*] SyntaxError, please correct this file to proceed."
             return RedirectResponse(url="/edit?file_name=tokenizer_exceptions.py")
-        cls = getattr(mod, lang_name.capitalize())
-        nlp = cls()
-        doc = nlp(corpus)
-        # I use namedtuple/Token rather than spaCy Token for needed results and variation of tokens
-        token_count = len([t for t in doc])
+        
         ignore = [
             "\n",
             " ",
             "\n\n",
             "\n     ",
             "\n\n\n\n",
-        ] #TODO update this with lang/char_classes: HYPHENS, PUNCT, UNITS, CONCAT_QUOTES
-        tokens = [
-            Token(
-                text=t.text,
-                lemma_=lemma_data.get(t.text,''),
-                pos_=pos_data.get(t.text,''),
-                ent_type_= ent_data.get(t.text,''),
-                is_stop= is_stop(t.text, STOP_WORDS)
-            )
-            for t in doc
-            if not t.text in ignore and not t.is_punct
-        ]
+        ] #TODO option in the UI to show/hide the following: 
+        #    LIST_UNITS = split_chars(_units)
+        #     LIST_CURRENCY = split_chars(_currency)
+        #     LIST_QUOTES = split_chars(_quotes)
+        #     LIST_PUNCT = split_chars(_punct)
+        #     LIST_HYPHENS = split_chars(_hyphens)
+        #     LIST_ELLIPSES = [r"\.\.+", "…"]
+        #     LIST_ICONS = [r"[{i}]".format(i=_other_symbols)]
+        
+        
+        cls = getattr(mod, lang_name.capitalize())
+        nlp = cls()
+        nlp.max_length = max_length
+        for doc in nlp.pipe(corpus):
+            token_count += len([t for t in doc])
+        
+        
+            tokens.extend([
+                Token(
+                    text=t.text,
+                    lemma_=lemma_data.get(t.text,''),
+                    pos_=pos_data.get(t.text,''),
+                    ent_type_= ent_data.get(t.text,''),
+                    is_stop= is_stop(t.text, STOP_WORDS)
+                )
+                for t in doc
+                if not t.text in ignore
+            ])
         to_json = []
         counter = token_count
         rank = 1
@@ -203,6 +225,7 @@ async def read_items(request: Request):
             "tokens": token_count,
             "sents": sent_count,
             "ents": ent_count,
+            "unique_tokens": len(set([t.text for t in tokens]))
         }
         return templates.TemplateResponse(
             "corpus.html",
