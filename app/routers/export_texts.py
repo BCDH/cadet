@@ -186,10 +186,11 @@ def load_ents(doc):
             entity_data = srsly.read_json(lookup)
             assert isinstance(entity_data, dict)
     tokens_with_ents = {}
-    for span in doc.spans['ents']:
-        ent = entity_data.get(span.text,None)
-        for t in span:
-            tokens_with_ents[t.i] = ent
+    if doc.spans.get('ents', None):
+        for span in doc.spans['ents']:
+            ent = entity_data.get(span.text,None)
+            for t in span:
+                tokens_with_ents[t.i] = ent
     return tokens_with_ents
 
 def doc_to_conll(doc) -> str:
