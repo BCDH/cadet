@@ -5,19 +5,25 @@ from spacy.lang.char_classes import HYPHENS, PUNCT, UNITS, CONCAT_QUOTES
 import re
 from pathlib import Path
 from typing import List, Optional, Set
-from fastapi import Request, Form, File, APIRouter, Depends
+from fastapi import Request, Form, File, APIRouter, Depends, BackgroundTasks
 from fastapi.templating import Jinja2Templates
 from app.util.login import get_current_username
 from collections import Counter, namedtuple
 from itertools import chain
 from functools import lru_cache
 import importlib
-
+from ..util.manage_corpus import make_corpus
 templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter(dependencies=[Depends(get_current_username)])
 
 Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_","is_stop"])
+
+@router.get("/update_corpus")
+async def update_corpus(background_tasks: BackgroundTasks,):
+    background_tasks.add_task(make_corpus)
+
+
 
 ###########
 # Lemmata #
@@ -145,7 +151,8 @@ async def read_items(request: Request):
     
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
-        corpus_dir = new_lang / "corpus_json"
+        lang_name = list(new_lang.iterdir())[0].name
+        corpus_dir = new_lang / lang_name / "corpus_json"
         tokens_json = srsly.read_json((corpus_dir / 'tokens.json'))
         stats = srsly.read_json((corpus_dir / 'stats.json'))
         stats = srsly.json_loads(stats)

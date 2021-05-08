@@ -20,7 +20,7 @@ def is_stop(word:str, STOP_WORDS:Set):
         return "☑"
     else: 
         return "☐"
-        
+
 def load_stopwords():
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
@@ -51,6 +51,7 @@ def load_lookups():
 async def make_corpus():
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
+        lang_name = list(new_lang.iterdir())[0].name
         lemma_data,ent_data,pos_data = load_lookups()
         STOP_WORDS = load_stopwords()
         text_path = list(new_lang.iterdir())[0] / "texts"
@@ -136,7 +137,7 @@ async def make_corpus():
         stats_json = srsly.json_dumps(stats)
 
         #save json to disk  
-        corpus_dir = Path.cwd() / "new_lang" / "corpus_json"
+        corpus_dir = Path.cwd() / "new_lang" / lang_name / "corpus_json"
         if not corpus_dir.exists():  # Directory does not exist the first time the app is used
             corpus_dir.mkdir(parents=True, exist_ok=True)
 
