@@ -1,3 +1,9 @@
+May 8:
+
+- Main issue is delay when loading corpus page
+- Lookup data edits and valid json 
+
+
 April 6: 
 
 Goal is to establish end-to-end workflow, not get bogged down in UI.
