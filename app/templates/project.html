@@ -35,7 +35,7 @@
         
       <div class="row">
         <div class="col-lg-6 order-1 order-lg-2" data-aos="zoom-in" data-aos-delay="150">
-          <img src="static/img/load_shuttle.png" class="img-fluid" alt="">
+          <img id="solaris" src="static/img/solaris.png" class="img-fluid" alt="">
         </div>
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content" data-aos="fade-right">
           
@@ -51,18 +51,23 @@
           <p>To run these tasks, please enter the following information:</p>
             <form enctype="multipart/form-data" method="post">
                 <div class="mb-3">
-                  <label for="text_url">Enter a URL to a file to load:</label>
+                  <label for="text_url">URL for your GitHub repository Leave blank if you don't have one and we'll create one for you.</label>
                   <input name="text_url"  type="url" class="form-control" id="text_url" aria-describedby="text_url">
                   <small id="emailHelp" class="form-text text-muted"></small>
                 </div>
                 
                 
+                  
                   <div class="mb-3">
-                    <input name="files" class="form-control" type="file" id="text_files"  multiple>
-                  </div>
-                  <div class="mb-3">
-                    <textarea id="text_area" name="text_area" rows="10" cols="68" placeholder="Enter text here"></textarea>
+                    <label for="text_url">GitHub Username:</label><br>
+                    <input id="username" name="username">
+                    
                 </div>
+                <div class="mb-3">
+                  <label for="text_url">Password:</label><br>
+                  <input type="password" id="username" name="username">
+                  
+              </div>
                 
                 <button type="submit" class="read-more">Submit</button>
               </form>
@@ -89,7 +94,12 @@
 {% block extrajs %}
 <script>
     $('#header').addClass('header-scrolled');
-
+    $('#solaris').mouseenter(function() {
+      $('#solaris').attr('src', "/static/img/solaris1.png");
+    });
+    $('#solaris').mouseleave(function() {
+      $('#solaris').attr('src', "/static/img/solaris.png");
+    });
     
 </script>
 {% endblock %}
