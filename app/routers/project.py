@@ -38,24 +38,22 @@ def get_lang_name():
 async def form_post(
     request: Request,
     token:str = Form(None),
-    username:str = Form(None),
+    organization:str = Form(None),
     repository:str = Form(None),
 ):
     g = Github(token)
 
     #get_user works for both user or organization
     try:
-        repo = g.get_user(username).get_repo(repository) # repo name
+        repo = g.get_user(organization).get_repo(repository) # repo name
     except GithubException as e:
-        return templates.TemplateResponse("project.html", {"request": request, "message":e._GithubException__data['message']})
-
-
-    # does repo exist? https://stackoverflow.com/questions/33398384/github-api-how-to-check-if-repository-is-empty
-    try:
-        repo.get_contents("/")
-    except GithubException as e:
-        return templates.TemplateResponse("project.html", {"request": request, "message":"2"+e._GithubException__data['message']})
-        
+        if e._GithubException__data['message'] == 'Not Found':
+            org = g.get_organization(organization)
+            repo = org.create_repo(repository.strip()) 
+            #TODO actually want from a template https://docs.github.com/en/rest/reference/repos#create-a-repository-using-a-template            
+        else:
+            return templates.TemplateResponse("project.html", {"request": request, "message":e._GithubException__data['message']})
+    return templates.TemplateResponse("project.html", {"request": request, })
     # all_files = []
     # contents = repo.get_contents("")
     # while contents:
@@ -80,5 +78,5 @@ async def form_post(
     #     repo.create_file(git_file, "committing files", content, branch="master")
     #     print(git_file + ' CREATED')
 
-    message = f"Successfully uploaded files. <a target='_blank' href='https://github.com/{username}/{repository}'>Click here to proceed to GitHub.</a>"
-    return templates.TemplateResponse("project.html", {"request": request, "message":message})
+    #message = f"Successfully uploaded files. <a target='_blank' href='https://github.com/{username}/{repository}'>Click here to proceed to GitHub.</a>"
+    #return templates.TemplateResponse("project.html", {"request": request, "message":message})
