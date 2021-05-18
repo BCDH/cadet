@@ -8,6 +8,10 @@ from collections import Counter, namedtuple
 from itertools import chain
 from functools import lru_cache
 import importlib
+from github import Github, GithubException
+from github import InputGitTreeElement
+
+
 
 templates = Jinja2Templates(directory="app/templates")
 
@@ -25,17 +29,56 @@ async def project(request:Request):
             "error_please_create.html", {"request": request}
         )
 
+def get_lang_name():
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        return list(new_lang.iterdir())[0].name
+
 @router.post("/project")
 async def form_post(
     request: Request,
-    git_url: Optional[str] = Form(None),
-    username: Optional[str] = Form(None),
-    password: Optional[str] = Form(None),
+    token:str = Form(None),
+    username:str = Form(None),
+    repository:str = Form(None),
 ):
-    if git_url:
-        pass
-    else:
-        pass
-    print(git_url, username, password)
-    message = f"Successfully uploaded files. <a href='{git_url}'>Click here to proceed to GitHub.</a>"
+    g = Github(token)
+
+    #get_user works for both user or organization
+    try:
+        repo = g.get_user(username).get_repo(repository) # repo name
+    except GithubException as e:
+        return templates.TemplateResponse("project.html", {"request": request, "message":e._GithubException__data['message']})
+
+
+    # does repo exist? https://stackoverflow.com/questions/33398384/github-api-how-to-check-if-repository-is-empty
+    try:
+        repo.get_contents("/")
+    except GithubException as e:
+        return templates.TemplateResponse("project.html", {"request": request, "message":"2"+e._GithubException__data['message']})
+        
+    # all_files = []
+    # contents = repo.get_contents("")
+    # while contents:
+    #     file_content = contents.pop(0)
+    #     if file_content.type == "dir":
+    #         contents.extend(repo.get_contents(file_content.path))
+    #     else:
+    #         file = file_content
+    #         all_files.append(str(file).replace('ContentFile(path="','').replace('")',''))
+
+    # with open('/tmp/file.txt', 'r') as file:
+    #     content = file.read()
+
+    # # Upload to github
+    # git_prefix = 'folder1/'
+    # git_file = git_prefix + 'file.txt'
+    # if git_file in all_files:
+    #     contents = repo.get_contents(git_file)
+    #     repo.update_file(contents.path, "committing files", content, contents.sha, branch="master")
+    #     print(git_file + ' UPDATED')
+    # else:
+    #     repo.create_file(git_file, "committing files", content, branch="master")
+    #     print(git_file + ' CREATED')
+
+    message = f"Successfully uploaded files. <a target='_blank' href='https://github.com/{username}/{repository}'>Click here to proceed to GitHub.</a>"
     return templates.TemplateResponse("project.html", {"request": request, "message":message})
