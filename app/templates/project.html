@@ -28,7 +28,14 @@
 
     </div>
   </section><!-- End Breadcrumbs -->
+{% if message %}
+<section id="about" class="about">
+  <div class="container">
+ {{ message|safe }}
 
+ </div>
+ </section>
+{% else %}
    <!-- ======= About Section ======= -->
    <section id="about" class="about">
     <div class="container">
@@ -51,9 +58,9 @@
           <p>To run these tasks, please enter the following information:</p>
             <form enctype="multipart/form-data" method="post">
                 <div class="mb-3">
-                  <label for="text_url">URL for your GitHub repository. Leave blank if you don't have one and we'll create one for you.</label>
-                  <input name="text_url"  type="url" class="form-control" id="text_url" aria-describedby="text_url">
-                  <small id="emailHelp" class="form-text text-muted"></small>
+                  <label for="git_url">URL for your GitHub repository. Leave blank if you don't have one and we'll create one for you.</label>
+                  <input name="git_url"  type="url" class="form-control" id="git_url" aria-describedby="git_url">
+                  
                 </div>
                 
                 
@@ -65,11 +72,11 @@
                 </div>
                 <div class="mb-3">
                   <label for="text_url">Password:</label><br>
-                  <input type="password" id="username" name="username">
+                  <input type="password" id="password" name="password">
                   
               </div>
                 
-                <button type="submit" class="read-more">Submit</button>
+                <button type="submit" class="read-more">Send</button>
               </form>
              
               {% if message %}
@@ -85,7 +92,7 @@
     </div>
     </div>
   </section><!-- End About Section -->
-      
+    {% endif %}
       
  
 

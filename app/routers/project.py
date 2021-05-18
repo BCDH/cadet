@@ -24,3 +24,18 @@ async def project(request:Request):
         return templates.TemplateResponse(
             "error_please_create.html", {"request": request}
         )
+
+@router.post("/project")
+async def form_post(
+    request: Request,
+    git_url: Optional[str] = Form(None),
+    username: Optional[str] = Form(None),
+    password: Optional[str] = Form(None),
+):
+    if git_url:
+        pass
+    else:
+        pass
+    print(git_url, username, password)
+    message = f"Successfully uploaded files. <a href='{git_url}'>Click here to proceed to GitHub.</a>"
+    return templates.TemplateResponse("project.html", {"request": request, "message":message})
