@@ -29,28 +29,60 @@
     </div>
   </section><!-- End Breadcrumbs -->
 
- <!-- ======= Testimonials Section ======= -->
- <section id="testimonials" class="testimonials section-bg">
-    <div class="container" data-aos="fade-up">
-
-      <div id="sentences">
-
-     
-      <div class="card text">
+   <!-- ======= About Section ======= -->
+   <section id="about" class="about">
+    <div class="container">
         
-
-        <div class="card-body">
-          <p>Hi there</p>
-         
-         
+      <div class="row">
+        <div class="col-lg-6 order-1 order-lg-2" data-aos="zoom-in" data-aos-delay="150">
+          <img src="static/img/load_shuttle.png" class="img-fluid" alt="">
+        </div>
+        <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content" data-aos="fade-right">
+          
+          <p>The final step in your journey will push your data to GitHub where it can be loaded for model training.</p>
+          <p>Cadet will automatically:</p>  
+          <ul>
+            <li><i class="icofont-check-circled"></i>Upload your original texts and generate a datasheet for your dataset.</li>
+            <li><i class="icofont-check-circled"></i>Upload your lookups for lemma, pos and entities.</li>
+            <li><i class="icofont-check-circled"></i>Upload your corpus.json file with frequency data for tokens in the corpus.</li>
+            <li><i class="icofont-check-circled"></i>Upload the bulk updated texts in CoNLL format for annotation with INCEpTION.</li>
+            <li><i class="icofont-check-circled"></i>Finally, we'll serialize and upload your new spaCy language object.</li>
+          </ul>
+          <p>To run these tasks, please enter the following information:</p>
+            <form enctype="multipart/form-data" method="post">
+                <div class="mb-3">
+                  <label for="text_url">Enter a URL to a file to load:</label>
+                  <input name="text_url"  type="url" class="form-control" id="text_url" aria-describedby="text_url">
+                  <small id="emailHelp" class="form-text text-muted"></small>
+                </div>
+                
+                
+                  <div class="mb-3">
+                    <input name="files" class="form-control" type="file" id="text_files"  multiple>
+                  </div>
+                  <div class="mb-3">
+                    <textarea id="text_area" name="text_area" rows="10" cols="68" placeholder="Enter text here"></textarea>
+                </div>
+                
+                <button type="submit" class="read-more">Submit</button>
+              </form>
+             
+              {% if message %}
+              <div class="mb-3">
+                <b class="text-grad">{{ message }}</b>
+                </div>
+              <a href='/corpus' class="read-more">Next <i class="icofont-long-arrow-right"></i></a>
+              {% endif %}
+          
+        </div>
       </div>
       
+    </div>
+    </div>
+  </section><!-- End About Section -->
       
-    </div>
-            
-    </div>
-  </section><!-- End Testimonials Section -->
-
+      
+ 
 
 {% endblock %}
 

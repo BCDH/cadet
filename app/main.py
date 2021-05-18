@@ -47,7 +47,6 @@ app.include_router(export_texts.router)
 app.include_router(inception.router)
 app.include_router(project.router)
 
-
 # app.include_router(auth_router, prefix="/auth")
 
 

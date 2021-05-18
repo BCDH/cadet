@@ -1,6 +1,24 @@
+May 17: 
+
+  Working on final export process, added template for data and documentation 
+
+
+#TODO automatically push files to relevant folders 
+  https://stackoverflow.com/questions/50071841/how-to-push-local-files-to-github-using-python-or-post-a-commit-via-python
+
+
+
 May 8:
 
 - Main issue is delay when loading corpus page
+    - create corpus object on startup, then add to it when new texts are added?
+      is that any better than re-generating the corpus? is that a common use case? 
+      if I've just uploaded, then there'll be a delay, but otherwise in cache (might cause memory issues?), perhaps save generated corpus to disk? 
+      ## update corpus or just generate?
+      ## save to disk
+        - json object with tokens_json and stats
+            when texts added 
+
 - Lookup data edits and valid json 
 
 
