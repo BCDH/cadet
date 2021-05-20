@@ -20,7 +20,7 @@ router = APIRouter(dependencies=[Depends(get_current_username)])
 Token = namedtuple("Token", ["text", "lemma_", "pos_", "ent_type_","is_stop"])
 
 @router.get("/update_corpus")
-async def update_corpus(background_tasks: BackgroundTasks,):
+async def update_corpus(background_tasks: BackgroundTasks):
     background_tasks.add_task(make_corpus)
 
 

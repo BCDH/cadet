@@ -11,7 +11,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <div class="d-flex justify-content-between align-items-center">
             <h2>Export for Model Training</h2>
-            <p>Once you have annotated your text corpus and are ready to train your model, you'll need your language object
+            <p style="padding: 10px;">Once you have annotated your text corpus and are ready to train your model, you'll need your language object
               and a project template that will help to load and pre-process your data and then run model training and packaging.
               spaCy projects make this process clear and reproducible.
             </p>
@@ -46,43 +46,24 @@
         </div>
         <div class="col-lg-6 pt-4 pt-lg-0 order-2 order-lg-1 content" data-aos="fade-right">
           
-          <p>The final step in your journey will push your data to GitHub where it can be loaded for model training.</p>
-          <p>Cadet will automatically:</p>  
+          <p>The final step in your journey will save your data for use in model training.</p>
+          <p>Cadet will create a compressed zip file that contains:</p>  
           <ul>
-            <li><i class="icofont-space"></i>Upload your original texts and generate a datasheet for your dataset.</li>
-            <li><i class="icofont-space"></i>Upload your lookups for lemma, pos and entities.</li>
-            <li><i class="icofont-space"></i>Upload your corpus.json file with frequency data for tokens in the corpus.</li>
-            <li><i class="icofont-space"></i>Upload the bulk updated texts in CoNLL format for annotation with INCEpTION.</li>
-            <li><i class="icofont-space"></i>Finally, we'll serialize and upload your new spaCy language object. We also create a project file for training.</li>
+            <li><i class="icofont-space"></i>Your original texts and a template datasheet for your dataset.</li>
+            <li><i class="icofont-space"></i>Your lookups for lemma, pos and entities.</li>
+            <li><i class="icofont-space"></i>We'll serialize your new spaCy language object.</li>
+            <li><i class="icofont-space"></i>Finally, we'll create a spaCy project file for use in training.</li>
           </ul>
-          <p>To run these tasks, you will need a GitHub account and a personal access token.  If you don't have one, please follow the <a href="https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token">instructions here</a> before proceeding.</p>
-          <p>You can lookup and access existing tokens <a href="https://github.com/settings/tokens">here</a></p>
-          <p>Cadet will use your token to access the GitHub API, but it is not stored on disk or accessible to other users.</p>
-            <form enctype="multipart/form-data" method="post">
-                
-              <div class="mb-3">
-                <label for="text_url">GitHub Token</label><br>
-                <input type="password" id="token" name="token">
-              </div>
-                  <div class="mb-3">
-                    <label for="text_url">GitHub organization (not username)</label><br>
-                    <input id="organization" name="organization">
-                    
-                </div>
-                <div class="mb-3">
-                  <label for="text_url">Repository name</label><br>
-                  <input id="repository" name="repository">
-                  
-              </div>
-                
-                <button type="submit" class="read-more">Send</button>
-              </form>
+          <p>If you're planning to save your data in GitHub, we've created a template to get you started. </p>          
+          <p><a target="_blank" href="https://github.com/New-Languages-for-NLP/repo-template"><i class="bx bxl-github"></i>&nbsp;Click here for the template.</a></p>
+
+          <div><a onclick="get_download();" class="nice-button">Download</a></div>
              
               {% if message %}
               <div class="mb-3">
                 <b class="text-grad">{{ message }}</b>
                 </div>
-              <a href='/corpus' class="read-more">Next <i class="icofont-long-arrow-right"></i></a>
+              
               {% endif %}
           
         </div>
@@ -99,6 +80,10 @@
 
 {% block extrajs %}
 <script>
+  function get_download(){
+    const url = 'download_project'
+    window.location.assign(url);
+  };
     $('#header').addClass('header-scrolled');
     $('#solaris').mouseenter(function() {
       $('#solaris').attr('src', "/static/img/solaris1.png");
