@@ -53,6 +53,13 @@
                       <div class="mb-3">
                         <textarea id="text_area" name="text_area" rows="10" cols="68" placeholder="Enter text here"></textarea>
                     </div>
+                    <div class="mb-3 form-check">
+                      <input id="clicker" onclick="hazclicked();" class="form-check-input" type="checkbox">
+                      <label class="form-check-label" for="flexCheckDefault">
+                        Cadet requires that your texts have one sentence per line in the text file. If time permits, we recommend that you manually mark the boundaries. If you're language uses punctuation to mark boundaries, you can try using spaCy's defaults to automatically add boundaries by checking the box here.
+                      </label>
+                      <input id="newlines" name="newlines" type="hidden" value="no_newline">
+                    </div>
                     
                     <button type="submit" class="read-more">Submit</button>
                   </form>
@@ -99,5 +106,14 @@
       });
       location.reload();
     };
+    function hazclicked(){
+      if ($('#newlines').val() == 'newline') {
+        $('#newlines').val('no_newline');
+      }
+      else { 
+        $('#newlines').val('newline');
+      }
+      
+    }
 </script>
 {% endblock %}

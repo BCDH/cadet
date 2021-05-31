@@ -1,8 +1,9 @@
 import httpx
-
+import spacy
 import srsly
 from pathlib import Path
 from typing import List, Optional
+from datetime import datetime
 
 from fastapi import Request, BackgroundTasks, Form, File, UploadFile, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
@@ -13,6 +14,17 @@ templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter(dependencies=[Depends(get_current_username)])
 
+def add_newlines(text:str):
+    """
+    Use spaCy's default sentencizer to split docs into sents 
+    """
+    nlp = spacy.load("xx_ent_wiki_sm")
+    nlp.add_pipe('sentencizer')
+    doc = nlp(text)
+    output = """"""
+    for sent in doc.sents:
+        output += sent.text + '\n'
+    return output
 
 @router.get("/texts")
 async def read_items(request: Request):
@@ -37,10 +49,16 @@ async def read_items(request: Request):
 async def save_texts(
     request: Request,
     background_tasks: BackgroundTasks,
+    newlines:str = Form(None),
     text_url: Optional[str] = Form(None),
     files: List[UploadFile] = File(None),
     text_area: Optional[str] = Form(None),
+    
 ):
+    if newlines == 'newline':
+        newlines = True
+    else: 
+        newlines = False 
 
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
@@ -58,6 +76,8 @@ async def save_texts(
 
     if text_url:
         text = httpx.get(text_url).text
+        if newlines:
+            text = add_newlines(text)
         filename= text_url.split('/')[-1]
         file_save_path = save_path / filename
         file_save_path.write_text(text)
@@ -69,11 +89,17 @@ async def save_texts(
         for file in files:
             if file.filename:
                 contents = await file.read()
+                if newlines:
+                    contents = add_newlines(contents.decode("utf-8"))
                 file_save_path = save_path / file.filename #UploadFile object 
                 file_save_path.write_text(contents.decode("utf-8"))
             
     if text_area:
-        file_save_path = (save_path / "textarea.txt")
+        if newlines:
+            text_area = add_newlines(text_area)
+        now = datetime.now()
+        dt_string = now.strftime("%d-%m-%Y-%H-%M-%S")
+        file_save_path = (save_path / f"{dt_string}-textarea.txt")
         file_save_path.write_text(text_area)
         
 

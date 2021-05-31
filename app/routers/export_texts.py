@@ -217,42 +217,53 @@ def doc_to_conll(doc) -> str:
     data = []
     
     tokens_with_ents = load_ents(doc)
-
+    # split into sents on \n, then after each sent add blank row
     for tok in doc:
-        
-
-        if tok.is_space:
-            form = "_"
-            lemma = "_"
+        if is_nl_token(tok):
+            data.append({})
         else:
-            form = tok.orth_
-            lemma = tok.lemma_
-        tok_id = tok.i +1
-        
-        misc = "SpaceAfter=No" if not tok.whitespace_ else "_"
-        row = {}
-        
-        row["ID"] = str(tok_id) # Token counter, starting at 1 for each new sentence.
-        row["FORM"] = "_" if form == '' else form #Word form or punctuation symbol.
-        row["LEMMA"] = '_' if lemma == '' else lemma #Lemma of the word form.        
-        row["POSTAG"] = "_" if tok.pos_ == '' else tok.pos_ #Fine-grained part-of-speech tag
-        #Named Entity tag, or underscore if not available. 
-        # If a named entity covers multiple tokens, all of the tokens simply carry 
-        # the same label without (no sequence encoding).
-        # INCEpTION interprets this data as ent spans, yay! 
-        if tok.i in tokens_with_ents.keys():
-            row["NER"] = tokens_with_ents[tok.i]
-        else:
-            row["NER"] = "_" 
-        row["HEAD"] = "_"
-        row["DEPREL"] = "_"
-        
-        data.append(row)
+            if tok.is_space:
+                form = "_"
+                lemma = "_"
+            else:
+                form = tok.orth_
+                lemma = tok.lemma_
+            tok_id = tok.i +1
+            
+            misc = "SpaceAfter=No" if not tok.whitespace_ else "_"
+            row = {}
+            
+            row["ID"] = str(tok_id) # Token counter, starting at 1 for each new sentence.
+            row["FORM"] = "_" if form == '' else form #Word form or punctuation symbol.
+            row["LEMMA"] = '_' if lemma == '' else lemma #Lemma of the word form.        
+            row["POSTAG"] = "_" if tok.pos_ == '' else tok.pos_ #Fine-grained part-of-speech tag
+            #Named Entity tag, or underscore if not available. 
+            # If a named entity covers multiple tokens, all of the tokens simply carry 
+            # the same label without (no sequence encoding).
+            # INCEpTION interprets this data as ent spans, yay! 
+            if tok.i in tokens_with_ents.keys():
+                row["NER"] = tokens_with_ents[tok.i]
+            else:
+                row["NER"] = "_" 
+            row["HEAD"] = "_"
+            row["DEPREL"] = "_"
+            
+            data.append(row)
     output_file = f""""""
     for row in data:
-        for column in row.keys():
-            if column == "DEPREL":
-                output_file += row[column] + '\n'
-            else:
-                output_file += row[column] + '\t'
+        if len(row.keys()) == 0:
+            output_file += '\n'
+        else:
+            for column in row.keys():
+                if column == "DEPREL":
+                    output_file += row[column] + '\n'
+                else:
+                    output_file += row[column] + '\t'
     return output_file
+
+def is_nl_token(t):
+    # if a token consists of all space, and has at least one newline char, we segment as a sentence.
+    if t.is_space and '\n' in t.text:
+        return True
+    else:
+        return False
