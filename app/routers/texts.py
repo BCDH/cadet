@@ -91,8 +91,11 @@ async def save_texts(
                 contents = await file.read()
                 if newlines:
                     contents = add_newlines(contents.decode("utf-8"))
-                file_save_path = save_path / file.filename #UploadFile object 
-                file_save_path.write_text(contents.decode("utf-8"))
+                    file_save_path = save_path / file.filename #UploadFile object 
+                    file_save_path.write_text(contents)
+                else:
+                    file_save_path = save_path / file.filename #UploadFile object 
+                    file_save_path.write_text(contents.decode("utf-8"))
             
     if text_area:
         if newlines:

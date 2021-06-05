@@ -81,11 +81,14 @@
   <section id="testimonials" class="testimonials section-bg">
     <div class="container">
       <div id='chart'><!-- Plotly chart will be drawn inside this DIV --></div>
-      <div class="faq-list">
+      <!-- <div class="faq-list">
         <button class="nice-button" onclick="update_corpus();">Reload Corpus<i style='color:white;'class='icofont-refresh'></i></button>
         
         <button class="nice-button" onclick="">Hello<i style='color:white;'class='icofont-satellite'></i></button>
-       </div> 
+       </div>  -->
+       <button id="punct" class="nice-button">Hide punctuation<i style='color:white;'class='icofont-satellite'></i></button>
+       <button id="stops" class="nice-button">Hide stop words<i style='color:white;'class='icofont-satellite'></i></button>
+
       <table id="tokens" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%"></table>
       </div>
   </section>
@@ -108,7 +111,7 @@
     for (const token of tokens) {
       data.push(new Array(token.count, token.text, token.lemma_,token.pos_,token.is_stop));
     }
-    $('#tokens').DataTable( {
+    let table = $('#tokens').DataTable( {
       data: data,
       pageLength: 50,
       order: [[ 0, "desc" ]],
@@ -132,6 +135,31 @@
             }
         ]
   } );
+
+  $("#punct").click(function() {
+    $.fn.dataTable.ext.search.push(
+        function( settings, data, dataIndex ) {
+            return data[3] !== "PUNCT"
+                ? true
+                : false
+        }     
+    );
+    table.draw();
+    $.fn.dataTable.ext.search.pop();
+  });
+
+  $("#stops").click(function() {
+    $.fn.dataTable.ext.search.push(
+        function( settings, data, dataIndex ) {
+            return data[3] !== "☐"
+                ? true
+                : false
+        }     
+    );
+    table.draw();
+    $.fn.dataTable.ext.search.pop();
+  });
+
 </script>
 <script>
   function edit_stop(e, val) { 
