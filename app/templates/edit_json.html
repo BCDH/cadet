@@ -72,7 +72,7 @@
       
       $.ajax({
         type: 'POST',
-        url: '/edit',
+        url: '/edit_lookup',
         data: JSON.stringify ({'code': code, 'type':type}),
         success: function(data) { 
           let message = data.message;

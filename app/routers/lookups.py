@@ -81,6 +81,34 @@ async def edit_pos(request: Request, type: str):
             raise HTTPException(status_code=404, detail="File not found")
     return templates.TemplateResponse("edit_json.html", context)
 
+@router.post("/edit_lookup")
+async def update_code(request: Request,):
+
+    data = await request.json()
+    type = data["type"]
+    code = data["code"]
+
+    new_lang = Path.cwd() / "new_lang"
+    if len(list(new_lang.iterdir())) > 0:
+        if len(list(new_lang.iterdir())) > 0:
+            path = list(new_lang.iterdir())[0] / "lookups"
+            if type == "pos":
+                json_file = list(path.glob("*upos*"))[0]
+            if type == "lemma":
+                json_file = list(path.glob("*lemma*"))[0]
+            if type == "features":
+                json_file = list(path.glob("*features*"))[0]
+
+            if json_file.exists():
+                json_file.write_text(code)
+                code = srsly.read_json(json_file) #Redundant, right?
+            else:
+                raise HTTPException(status_code=404, detail="File not found")
+
+        
+    return templates.TemplateResponse(
+        "edit_json.html", {"request": request, "code": code}
+    )
 
 @router.get("/lemma_json")
 async def datatable_json(request:Request,

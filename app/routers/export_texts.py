@@ -62,12 +62,12 @@ async def download():
             doc.user_data['filename'] =  filename
 
         docs = update_tokens_with_lookups(nlp, docs)
-        conll = [doc_to_conll(doc) for doc in docs]
+        conll = [doc_to_conllu(doc) for doc in docs]
 
         temp_path = Path('/tmp/conll_export')
         temp_path.mkdir(parents=True, exist_ok=True)
         for filename, conll in zip(filenames,conll):
-            conll_filename = filename.split('.')[0] +'.conll'
+            conll_filename = filename.split('.')[0] +'.conllu'
             (temp_path / conll_filename).write_text(conll)
 
         #shutil.make_archive("zipped_sample_directory", "zip", "sample_directory")
@@ -75,7 +75,7 @@ async def download():
         zip_file = str(temp_path).split('/')[-1]+'.zip'
         #save each doc to a file, return single zip file with all CONFIRM, can import directory into INCEpTION
 
-        return FileResponse(f'/tmp/conll_export.zip', media_type="application/zip", filename=lang_name + '_'+ zip_file)
+        return FileResponse(f'/tmp/conllu_export.zip', media_type="application/zip", filename=lang_name + '_'+ zip_file)
 
 def get_filenames() -> List[str]:
     new_lang = Path.cwd() / "new_lang"
@@ -189,6 +189,74 @@ def load_features(doc):
             for t in span:
                 tokens_with_features[t.i] = feat
     return tokens_with_features
+
+def doc_to_conllu(doc) -> str:
+    """
+    Converts a spaCy Doc object to string formatted using CoNLL-U format 
+    https://dkpro.github.io/dkpro-core/releases/2.2.0/docs/format-reference.html#format-ConllU
+    
+    The CoNLL-U format format targets dependency parsing. 
+    Columns are tab-separated. Sentences are separated by a blank new line.
+    ID  FORM    LEMMA   CPOSTAG POSTAG  FEATS   HEAD    DEPREL  DEPS    MISC   
+    
+    example:
+    1	They	they	PRON	PRN	Case=Nom|Number=Plur	2	nsubj	4:nsubj	_
+    2	buy	buy	VERB	VB	Number=Plur|Person=3|Tense=Pres	0	root	_	_
+    3	and	and	CONJ	CC	_	2	cc	_	_
+    4	sell	sell	VERB	VB	Number=Plur|Person=3|Tense=Pres	2	conj	0:root	_
+    5	books	book	NOUN	NNS	Number=Plur	2	dobj	4:dobj	SpaceAfter=No
+    6	.	.	PUNCT	.	_	2	punct	_	_
+    
+    Args:
+        doc ([type]): [description]
+    """
+    data = []
+    
+    tokens_with_features = load_features(doc)
+    # split into sents on \n, then after each sent add blank row
+    for tok in doc:
+        if is_nl_token(tok):
+            data.append({})
+        else:
+            if tok.is_space:
+                form = "_"
+                lemma = "_"
+            else:
+                form = tok.orth_
+                lemma = tok.lemma_
+            tok_id = tok.i +1
+            
+            misc = "SpaceAfter=No" if not tok.whitespace_ else "_"
+            row = {}
+            #ID  FORM    LEMMA   CPOSTAG POSTAG  FEATS   HEAD    DEPREL  DEPS    MISC   
+
+            row["ID"] = str(tok_id) # Word index, integer starting at 1 for each new sentence; may be a range for tokens with multiple words.
+            row["FORM"] = "_" if form == '' else form #Word form or punctuation symbol.
+            row["LEMMA"] = '_' if lemma == '' else lemma #Lemma or stem of word form.        
+            row["CPOSTAG"] = "_" if tok.pos_ == '' else tok.pos_ #Part-of-speech tag from the universal POS tag set.
+            row["POSTAG"] = "_" #Language-specific part-of-speech tag; underscore if not available.
+            # FEATS List of morphological features from the universal feature inventory or from a defined language-specific extension; underscore if not available.
+            if tok.i in tokens_with_features.keys():
+                row["FEATS"] = tokens_with_features[tok.i]
+            else:
+                row["FEATS"] = "_" 
+            row["HEAD"] = "_"
+            row["DEPREL"] = "_"
+            row["DEPS"] = "_"
+            row["MISC"] = "_"
+            data.append(row)
+    output_file = f""""""
+    for row in data:
+        if len(row.keys()) == 0:
+            output_file += '\n'
+        else:
+            for column in row.keys():
+                if column == "MISC":
+                    output_file += row[column] + '\n'
+                else:
+                    output_file += row[column] + '\t'
+    return output_file
+
 
 def doc_to_conll(doc) -> str:
     """

@@ -47,7 +47,7 @@ async def edit_code(
 async def update_code(request: Request,):
 
     data = await request.json()
-    filename = data["filename"]
+    type = data["type"]
     code = data["code"]
 
     new_lang = Path.cwd() / "new_lang"
