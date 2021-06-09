@@ -53,7 +53,7 @@ async def update_lemma(word:str,lemma:str):
 ###########
 
 @router.get("/update_pos")
-async def update_lemma(word:str,pos:str):
+async def update_pos(word:str,pos:str):
     # load lemma file, needed because we update the file
     new_lang = Path.cwd() / "new_lang"
     lang_name = list(new_lang.iterdir())[0].name
@@ -70,6 +70,29 @@ async def update_lemma(word:str,pos:str):
     pos = pos.strip()
     pos_data[word] = pos
     srsly.write_json(pos_file, pos_data)
+
+###########
+# POS #
+###########
+
+@router.get("/update_features")
+async def update_features(word:str,features:str):
+    # load lemma file, needed because we update the file
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    if len(list(new_lang.iterdir())) > 0:
+        lookups_path = new_lang / lang_name / "lookups"
+        for lookup in lookups_path.iterdir():
+            key = lookup.stem[lookup.stem.find('_') + 1:]
+            if 'features' in key:
+                features_file = lookup
+                features_data = srsly.read_json(lookup)
+
+    # remove any accidental spaces 
+    word = word.strip()
+    features = features.strip()
+    features_data[word] = features
+    srsly.write_json(features_file, features_data)
 
 ##############
 # Stop words #
@@ -139,11 +162,11 @@ def load_lookups():
             key = lookup.stem[lookup.stem.find('_') + 1:]
             if 'lemma' in key:
                 lemma_data = srsly.read_json(lookup)
-            if 'entity' in key:
-                ent_data = srsly.read_json(lookup)
+            if 'features' in key:
+                features_data = srsly.read_json(lookup)
             if 'pos' in key:
                 pos_data = srsly.read_json(lookup)
-        return lemma_data,ent_data,pos_data
+        return lemma_data,features_data,pos_data
 
 
 @router.get("/corpus")

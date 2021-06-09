@@ -38,8 +38,8 @@ async def update_lookups(file: UploadFile = File(...),lookup_type:str= Form(...)
             json_file = list(path.glob("*upos*"))[0]
         if lookup_type == "lemma":
             json_file = list(path.glob("*lemma*"))[0]
-        if lookup_type == "ent":
-            json_file = list(path.glob("*entity*"))[0]
+        if lookup_type == "features":
+            json_file = list(path.glob("*features*"))[0]
         if json_file.exists():
             lookup = srsly.read_json(json_file)
 
@@ -73,8 +73,8 @@ async def edit_pos(request: Request, type: str):
             json_file = list(path.glob("*upos*"))[0]
         if type == "lemma":
             json_file = list(path.glob("*lemma*"))[0]
-        if type == "entity":
-            json_file = list(path.glob("*entity*"))[0]
+        if type == "features":
+            json_file = list(path.glob("*features*"))[0]
         if json_file.exists():
             context["code"] = srsly.read_json(json_file)
         else:

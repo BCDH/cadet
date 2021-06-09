@@ -26,7 +26,7 @@
           <button class="nice-button" onclick="location.href='/tokenization'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
           <button class="nice-button" onclick="location.href='edit_lookup?type=pos'">Edit POS json<i style='color:white;'class='icofont-code-alt'></i></button>
           <button class="nice-button" onclick="location.href='edit_lookup?type=lemma'">Edit Lemma json<i style='color:white;'class='icofont-code-alt'></i></button>
-          <button class="nice-button" onclick="location.href='edit_lookup?type=entity'">Edit Entity json<i style='color:white;'class='icofont-code-alt'></i></button>
+          <button class="nice-button" onclick="location.href='edit_lookup?type=features'">Edit Features json<i style='color:white;'class='icofont-code-alt'></i></button>
           <button class="nice-button" onclick="location.href='/texts'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
          </div>  
         
@@ -46,7 +46,7 @@
         and entities.  You can then upload them here as json or CSV files. If you don't have this data, just go to the next step.
       </p>
       <p>
-        If you have data for morphological features (or similar data), you can add this data as a <a href="https://inception-project.github.io/releases/0.19.4/docs/user-guide.html#_gazeteers">gazetteer in INCEpTION</a>. 
+        If you have data for entities (or similar data), you can add this data as a <a href="https://inception-project.github.io/releases/0.19.4/docs/user-guide.html#_gazeteers">gazetteer in INCEpTION</a>. 
       </p>
     </div>
   </section><!-- End Breadcrumbs -->
@@ -61,8 +61,8 @@
           <input type="radio" class="btn-check" name="btnradio" id="lemma" autocomplete="off">
           <label class="btn btn-outline-primary" for="lemma">Lemmata</label>
         
-          <input type="radio" class="btn-check" name="btnradio" id="ent" autocomplete="off">
-          <label class="btn btn-outline-primary" for="ent">Entities</label>
+          <input type="radio" class="btn-check" name="btnradio" id="features" autocomplete="off">
+          <label class="btn btn-outline-primary" for="features">Features</label>
         </div>
                 
        </div>  
@@ -119,9 +119,9 @@
     $('.dz-message').text('Click here or drag files to upload your lemma data');
     selected_type = 'lemma';
   });
-  $("#ent").click(function() {
+  $("#features").click(function() {
     $('.dz-message').text('Click here or drag files to upload your entities data');
-    selected_type = 'ent';
+    selected_type = 'features';
   });
   $('#header').addClass('header-scrolled');
 

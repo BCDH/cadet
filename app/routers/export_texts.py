@@ -41,10 +41,10 @@ async def download():
             if isinstance(lemma_data, str):
                 return RedirectResponse("/edit_lookup?type=lemma")
 
-        if 'entity' in key:
-            entity_data = srsly.read_json(lookup)
-            if isinstance(entity_data, str):
-                return RedirectResponse("/edit_lookup?type=entity")
+        if 'features' in key:
+            features_data = srsly.read_json(lookup)
+            if isinstance(features_data, str):
+                return RedirectResponse("/edit_lookup?type=features")
         if 'pos' in key:
             pos_data = srsly.read_json(lookup)
             if isinstance(pos_data, str):
@@ -122,16 +122,16 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
             lemma_data = srsly.read_json(lookup)
             assert isinstance(lemma_data, dict)
 
-        if 'entity' in key:
-            entity_data = srsly.read_json(lookup)
-            assert isinstance(entity_data, dict)
+        if 'features' in key:
+            features_data = srsly.read_json(lookup)
+            assert isinstance(features_data, dict)
         if 'pos' in key:
             pos_data = srsly.read_json(lookup)
             assert isinstance(pos_data, dict)
 
     matcher = PhraseMatcher(nlp.vocab)
     try:
-        for ent in entity_data.keys():
+        for ent in features_data.keys():
                 matcher.add(ent, [nlp(ent)])
     except AttributeError as e:
         print(e)
@@ -163,14 +163,11 @@ def update_tokens_with_lookups(nlp, docs:List[Doc]) -> List[Doc]:
 
     return docs
 
-def load_ents(doc):
+def load_features(doc):
     """Take a Doc object with ent spans.  Use the lookups to label 
     each token in the Doc using the token's index. Returns a dictionary with the 
     token index as key and the entity label as value. If
-    #TODO This does not handle overlapping entities! When a token is part of two overlapping ent 
-    spans, it will only record the last ent-span.  There's no way to account for multiple-ents in the 
-    CoreNLP CoNLL format, so that's my excuse. Please prove me wrong.  
-
+     
     Args:
         doc (Doc): a spaCy doc object with entries in doc.spans['ents']
 
@@ -182,16 +179,16 @@ def load_ents(doc):
     lookups_path = new_lang / lang_name / "lookups"
     for lookup in lookups_path.iterdir():
         key = lookup.stem[lookup.stem.find('_') + 1:]
-        if 'entity' in key:
-            entity_data = srsly.read_json(lookup)
-            assert isinstance(entity_data, dict)
-    tokens_with_ents = {}
+        if 'features' in key:
+            features_data = srsly.read_json(lookup)
+            assert isinstance(features_data, dict)
+    tokens_with_features = {}
     if doc.spans.get('ents', None):
         for span in doc.spans['ents']:
-            ent = entity_data.get(span.text,None)
+            feat = features_data.get(span.text,None)
             for t in span:
-                tokens_with_ents[t.i] = ent
-    return tokens_with_ents
+                tokens_with_features[t.i] = feat
+    return tokens_with_features
 
 def doc_to_conll(doc) -> str:
     """
@@ -216,7 +213,7 @@ def doc_to_conll(doc) -> str:
     """
     data = []
     
-    tokens_with_ents = load_ents(doc)
+    tokens_with_features = load_features(doc)
     # split into sents on \n, then after each sent add blank row
     for tok in doc:
         if is_nl_token(tok):
@@ -241,8 +238,8 @@ def doc_to_conll(doc) -> str:
             # If a named entity covers multiple tokens, all of the tokens simply carry 
             # the same label without (no sequence encoding).
             # INCEpTION interprets this data as ent spans, yay! 
-            if tok.i in tokens_with_ents.keys():
-                row["NER"] = tokens_with_ents[tok.i]
+            if tok.i in tokens_with_features.keys():
+                row["NER"] = tokens_with_features[tok.i]
             else:
                 row["NER"] = "_" 
             row["HEAD"] = "_"

@@ -39,6 +39,7 @@ async def tokenization(request: Request, login=Depends(get_current_username)):
             sent = ""
             doc = nlp(sentence)
             for token in doc:
+               
                 sent += f"<span style='margin:5px;' onmouseup='edit_span();' onclick='edit_me(this)' value='{token}' class='token'>{token}</span>&nbsp;"
             spacy_sentences.append(sent)
         return templates.TemplateResponse(

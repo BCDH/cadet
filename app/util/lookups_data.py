@@ -28,8 +28,8 @@ def create_lookups_data(lang_name, lang_code):
     srsly.write_json(lemma_filename, {})
 
     # ENT lookups
-    lemma_filename = new_lookups_path / (new_lang_code + "_entity_lookup.json")
-    srsly.write_json(lemma_filename, {})
+    features_filename = new_lookups_path / (new_lang_code + "_features_lookup.json")
+    srsly.write_json(features_filename, {})
 
 
 def clone_lookups_data(lang_name, lang_code, spacy_language):
