@@ -124,12 +124,12 @@ assets:
     git:
       repo: "https://github.com/New-Languages-for-NLP/${{vars.treebank}}"
       branch: "main"
-      path: "{lang_code}_lookups_data"
+      path: "1_lookups_data/"
   - dest: "assets/tag_map"
     git:
       repo: "https://github.com/New-Languages-for-NLP/${{vars.treebank}}"
       branch: "master"
-      path: "{lang_code}"
+      path: "2_new_language_object"
 
 workflows:
   all:
@@ -141,11 +141,11 @@ workflows:
 
 commands:
   - name: install
-    help: "Install serbian lang files as package with entry point srp"
+    help: "Install {lang_name} lang files as package with entry point srp"
     script: 
-      - "pip install -e lang/srp/"
+      - "pip install -e 2_new_language_object/"
     deps:
-      - "lang/srp/"
+      - "lang/{lang_name}/"
 
   - name: convert
     help: "Convert the data to spaCy's format"
@@ -160,9 +160,9 @@ commands:
       - "mv corpus/${{vars.treebank}}/${{vars.dev_name}}.spacy corpus/${{vars.treebank}}/dev.spacy"
       - "mv corpus/${{vars.treebank}}/${{vars.test_name}}.spacy corpus/${{vars.treebank}}/test.spacy"
     deps:
-      - "assets/${{vars.treebank}}/${vars.train_name}.conllu"
-      - "assets/${{vars.treebank}}/${vars.dev_name}.conllu"
-      - "assets/${{vars.treebank}}/${vars.test_name}.conllu"
+      - "assets/${{vars.treebank}}/${{vars.train_name}}.conllu"
+      - "assets/${{vars.treebank}}/${{vars.dev_name}}.conllu"
+      - "assets/${{vars.treebank}}/${{vars.test_name}}.conllu"
     outputs:
       - "corpus/${{vars.treebank}}/train.spacy"
       - "corpus/${{vars.treebank}}/dev.spacy"
