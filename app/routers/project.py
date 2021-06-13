@@ -3,11 +3,14 @@ from pathlib import Path
 from typing import List, Optional, Set
 from fastapi import Request, Form, File, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
+from fastapi.responses import FileResponse,RedirectResponse
+
 from app.util.login import get_current_username
 from collections import Counter, namedtuple
 from itertools import chain
 from functools import lru_cache
 import importlib
+import shutil
 
 
 
@@ -32,9 +35,9 @@ async def project(request:Request):
 async def download_project():
     """Package all files noted in the template. 
     1. original text files.
-    2.  lookups for lemma, pos and entities
+    2.  lookups for lemma, pos and features
     3. serialize your new spaCy language object
-    4. a spaCy project file
+    4. a spaCy project file template
 
     Returns:
         FileResponse: project zip file

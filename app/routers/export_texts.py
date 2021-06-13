@@ -64,7 +64,7 @@ async def download():
         docs = update_tokens_with_lookups(nlp, docs)
         conll = [doc_to_conllu(doc) for doc in docs]
 
-        temp_path = Path('/tmp/conll_export')
+        temp_path = Path('/tmp/conllu_export')
         temp_path.mkdir(parents=True, exist_ok=True)
         for filename, conll in zip(filenames,conll):
             conll_filename = filename.split('.')[0] +'.conllu'

@@ -124,12 +124,12 @@
             "render": function ( row, type, val, meta ) {
               return "<p contenteditable='true' onkeyup='update_lemma(this,"+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
             },
-            { title: "Part of Speech",
+            { title: "Part of Speech&nbsp;<a target='_blank' href='https://universaldependencies.org/u/pos/'><i class='icofont-question-circle'></i></a>",
             "render": function ( row, type, val, meta ) {
               //return '<select class="custom-select" id="inputGroupSelect01"><option selected>Choose...</option><option value="ADJ">adjective</option><option value="ADP">adposition</option><option value="ADV">adverb</option><option value="AUX">auxiliary</option><option value="CCONJ">coordinating conjunction</option><option value="DET">determiner</option><option value="INTJ">interjection</option><option value="NOUN">noun</option><option value="NUM">numeral</option><option value="PART">particle</option><option value="PRON">pronoun</option><option value="PROPN">proper noun</option><option value="PUNCT">punctuation</option><option value="SCONJ">subordinating conjunction</option><option value="SYM">symbol</option><option value="VERB">verb</option><option value="X">other</option></select>'}
               return "<p id='pos' contenteditable='true' onkeyup='update_pos(this,"+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
             },
-            { title: "Features",
+            { title: "Features&nbsp;<a target='_blank' href='https://universaldependencies.org/u/feat/'><i class='icofont-question-circle'></i></a>",
             "render": function ( row, type, val, meta ) {
               //return '<select class="custom-select" id="inputGroupSelect01"><option selected>Choose...</option><option value="ADJ">adjective</option><option value="ADP">adposition</option><option value="ADV">adverb</option><option value="AUX">auxiliary</option><option value="CCONJ">coordinating conjunction</option><option value="DET">determiner</option><option value="INTJ">interjection</option><option value="NOUN">noun</option><option value="NUM">numeral</option><option value="PART">particle</option><option value="PRON">pronoun</option><option value="PROPN">proper noun</option><option value="PUNCT">punctuation</option><option value="SCONJ">subordinating conjunction</option><option value="SYM">symbol</option><option value="VERB">verb</option><option value="X">other</option></select>'}
               return "<p id='morph' contenteditable='true' onkeyup='update_features(this,"+ '"'+ val[1]+ '"' + ");'>" +row +"</p>"; }
