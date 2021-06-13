@@ -44,33 +44,19 @@ async def download_project():
     """
     new_lang = Path.cwd() / "new_lang"
     lang_name = list(new_lang.iterdir())[0].name
+    new_lang = new_lang / lang_name
     
-    # 1 Texts
-    texts_path = list(new_lang.iterdir())[0] / "texts"
-    texts = [text for text in texts_path.iterdir()]
+    make_project()
     
-    # 2 lookups 
-    lookups_path = new_lang / lang_name / "lookups"
-    lookups = [l for l in lookups_path.iterdir()]
-            
-    # 3 NLP object
-    nlp = get_nlp()
-    #TODO serialize to_disk() or save folder? does to_disk save examples, exceptions?
-
-    # 4 project.yml
-
-    temp_path = Path('/tmp/project_export')
-    temp_path.mkdir(parents=True, exist_ok=True)
+    #make export directory 
+    export_path = Path.cwd() / lang_name
     
-    # TODO copy files to temp_path
-
 
     #shutil.make_archive("zipped_sample_directory", "zip", "sample_directory")
-    shutil.make_archive(str(temp_path), 'zip', str(temp_path))
-    zip_file = str(temp_path).split('/')[-1]+'.zip'
-    #save each doc to a file, return single zip file with all CONFIRM, can import directory into INCEpTION
-
-    return FileResponse(f'/tmp/project_export.zip', media_type="application/zip", filename=lang_name + '_'+ zip_file)
+    shutil.make_archive(str(export_path), 'zip', str(new_lang))
+    zip_file = Path.cwd() / (lang_name + '.zip')
+    
+    return FileResponse(str(zip_file), media_type="application/zip", filename=lang_name +'.zip')
 
 
 def get_nlp():
@@ -88,8 +74,8 @@ def make_project():
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
         lang_name = list(new_lang.iterdir())[0].name
-
-        lookups_path = list(new_lang.iterdir())[0] / "lookups"
+        lookups_path = new_lang/ lang_name / "lookups"
+        print(lookups_path,list(lookups_path.glob("*upos*")))
         json_file = list(lookups_path.glob("*upos*"))[0]
         lang_code = json_file.name.split('_')[0] 
         project_path = new_lang / lang_name / 'project.yml'
