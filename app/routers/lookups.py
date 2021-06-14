@@ -61,7 +61,6 @@ async def update_lookups(file: UploadFile = File(...),lookup_type:str= Form(...)
     
 
 
-###None of these are needed vvv
 @router.get("/edit_lookup")
 async def edit_pos(request: Request, type: str):
     context = {}
@@ -76,11 +75,7 @@ async def edit_pos(request: Request, type: str):
         if type == "features":
             json_file = list(path.glob("*features*"))[0]
         if json_file.exists():
-            try:
-                context["code"] = srsly.read_json(json_file)
-            except Exception as e: #file exists but is not json
-                context['message'] = str(e) 
-                context["code"] = json_file.read_text()
+           context["code"] = json_file.read_text()
 
         else:
             raise HTTPException(status_code=404, detail="File not found")
@@ -98,96 +93,29 @@ async def update_code(request: Request,):
     # need something here to validate the json, return error and 
     # help if not, but never save to disk if not valid (causes so much yuck)
     new_lang = Path.cwd() / "new_lang"
+    
     if len(list(new_lang.iterdir())) > 0:
-        if len(list(new_lang.iterdir())) > 0:
-            path = list(new_lang.iterdir())[0] / "lookups"
-            if type == "pos":
-                json_file = list(path.glob("*upos*"))[0]
-            if type == "lemma":
-                json_file = list(path.glob("*lemma*"))[0]
-            if type == "features":
-                json_file = list(path.glob("*features*"))[0]
+        path = list(new_lang.iterdir())[0] / "lookups"
+        if type == "pos":
+            json_file = list(path.glob("*upos*"))[0]
+        if type == "lemma":
+            json_file = list(path.glob("*lemma*"))[0]
+        if type == "features":
+            json_file = list(path.glob("*features*"))[0]
 
-            if json_file.exists():
-                try: # assert that code is valid json   
-                    code = srsly.read_json(json_file)
-                    json_file.write_text(code) 
-                except Exception as e:
-                    return templates.TemplateResponse(
-                       "edit_json.html", {"request": request, "code": code, "message": "[*] Error:"+str(e)}
-                    )
-            else:
-                raise HTTPException(status_code=404, detail="File not found")
+        if json_file.exists():
+            try: # assert that code is valid json 
+                assert json.loads(code)
+                json_file.write_text(code) 
+                return {'message':'200'}
+            except Exception as e:
+                return {'message': str(e)}
+                
+        else:
+            raise HTTPException(status_code=404, detail="File not found")
 
         
     return templates.TemplateResponse(
         "edit_json.html", {"request": request, "code": code}
     )
 
-@router.get("/lemma_json")
-async def datatable_json(request:Request,
-    #See https://datatables.net/manual/server-side
-    draw:int = None,
-    start:int = None,
-    length:int = None, #number of entries per page):
-    order:int = None,
-    columns:str = None
-    ):
-    try:
-        search = request.query_params['search[value]']
-    except KeyError:
-        search = ''
-    new_lang = Path.cwd() / "new_lang"
-    if len(list(new_lang.iterdir())) > 0:
-        path = list(new_lang.iterdir())[0] / "lookups"
-        json_file = list(path.glob("*lemma*"))[0]
-        lemma_data = srsly.read_json(json_file)
-
-        data = []
-        id = 1
-        for key, value in lemma_data.items():
-            data.append({"id": id, "word":key, "lemma":value})
-            id += 1
-        if search != '':
-            data = [d for d in data if search.lower() in d['word'].lower() or search.lower() in d['lemma'].lower()]
-        #data = [[f'''<p contenteditable="true" onclick="testing(this)">{key}</p>''',f'''<p contenteditable="true" onkeyup="edit_lemma(this,'{key}','{value}')">{value}</p>'''] for key, value in data]
-        
-        filtered = len(data)
-        return {
-            "draw": draw,
-            "recordsTotal": len(lemma_data),
-            "recordsFiltered": filtered,
-            "data":data,
-            "result":"ok",
-            "error":None
-        }
-
-# @router.get("/update_lemma")
-# async def update_lemma(
-#     key:str,
-#     value:str, 
-#     col:int,
-#     row:int,
-#     new_key:str = None, 
-#     new_value:str = None, 
-#     new:str ='false', 
-#     delete:str ='false'):
-
-#     new_lang = Path.cwd() / "new_lang"
-#     if len(list(new_lang.iterdir())) > 0:
-#         path = list(new_lang.iterdir())[0] / "lookups"
-#         json_file = list(path.glob("*lemma*"))[0]
-#         lemma_data = srsly.read_json(json_file)
-#         if new == 'false' and delete =='false':
-#             if new_key:
-#                 print('has new key')
-#                 lemma_data[new_key] = lemma_data[key]
-#                 del lemma_data[key]
-#                 result = {"new_key":new_key, "col":col, "row":row}
-#             if new_value:
-#                 print('has new value') 
-#                 lemma_data[key] = new_value
-#                 result = {"new_value":new_value, "col":col, "row":row}
-
-#         srsly.write_json(json_file, lemma_data)
-#         return result

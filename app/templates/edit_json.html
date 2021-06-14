@@ -21,10 +21,10 @@
         <div class="d-flex justify-content-between align-items-center">
           <div class="d-flex justify-content-between align-items-center">
             <h2>Edit JSON</h2>
-            <p style="color:black;" id="message"></p>   
+              
           </div>
           <div class="faq-list">
-            <button class="nice-button" onclick="save_code(); location.href='/lookups'"><i style='color:white;'class='icofont-long-arrow-left'></i> Save and Back to Lookups</button>
+            <button class="nice-button" onclick="save_code();"><i style='color:white;'class='icofont-long-arrow-left'></i> Save and Back to Lookups</button>
               
               <button class="nice-button" onclick="validate_json();">Check JSON<i style='color:white;'class='icofont-coffee-cup'></i></button>
            </div>  
@@ -40,7 +40,8 @@
   
   <div class="container">
     <p id="message"></p>
-     {{ message }}
+    {{ message }}
+  
     <form>
         <textarea id="code" name="code">{{ code }}</textarea>
     </form>
@@ -66,6 +67,7 @@
       mode: 'python',
       viewportMargin: Infinity,
     });
+
     function save_code() {
       let code = editor.getValue();
       let current_url = new URL(window.location.href);
@@ -77,17 +79,18 @@
         data: JSON.stringify ({'code': code, 'type':type}),
         success: function(data) { 
           let message = data.message;
-          if (message == 'Expected object or value') {
-            $('#message').text(message);
-          } else {  
-            $('#message').text(message);
-          };
-
+        
+          if (message == '200'){
+            // go back a page
+            location.href = '/lookups';
+          }
+          else{
+          $('#message').text(message);
+          }
         },
         contentType: "application/json",
         dataType: 'json'
       });
-
     };
 
    function validate_json() {
