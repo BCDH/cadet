@@ -24,9 +24,9 @@
             <p style="color:black;" id="message"></p>   
           </div>
           <div class="faq-list">
-            <button class="nice-button" onclick="location.href='/lookups'"><i style='color:white;'class='icofont-long-arrow-left'></i> Save and Back to Lookups</button>
+            <button class="nice-button" onclick="save_code(); location.href='/lookups'"><i style='color:white;'class='icofont-long-arrow-left'></i> Save and Back to Lookups</button>
               
-              <button class="nice-button" onclick="location.href='#'">Check JSON<i style='color:white;'class='icofont-coffee-cup'></i></button>
+              <button class="nice-button" onclick="validate_json();">Check JSON<i style='color:white;'class='icofont-coffee-cup'></i></button>
            </div>  
           
           
@@ -39,7 +39,8 @@
   
   
   <div class="container">
-     
+    <p id="message"></p>
+     {{ message }}
     <form>
         <textarea id="code" name="code">{{ code }}</textarea>
     </form>
@@ -65,8 +66,8 @@
       mode: 'python',
       viewportMargin: Infinity,
     });
-    editor.on("change", function (cm, change) {
-      let code = cm.getValue();
+    function save_code() {
+      let code = editor.getValue();
       let current_url = new URL(window.location.href);
       let type = current_url.searchParams.get("type");
       
@@ -87,9 +88,19 @@
         dataType: 'json'
       });
 
-    });
+    };
 
-  
+   function validate_json() {
+    let code = editor.getValue();
+    try {
+       JSON.parse(code);
+       $('#message').text("JSON is valid");
+    }
+    catch(err) {
+      $('#message').text(err.message);
+    }
+    
+   }
   </script>
 
   {% endblock %}

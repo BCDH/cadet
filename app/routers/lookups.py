@@ -76,10 +76,17 @@ async def edit_pos(request: Request, type: str):
         if type == "features":
             json_file = list(path.glob("*features*"))[0]
         if json_file.exists():
-            context["code"] = srsly.read_json(json_file)
+            try:
+                context["code"] = srsly.read_json(json_file)
+            except Exception as e: #file exists but is not json
+                context['message'] = str(e) 
+                context["code"] = json_file.read_text()
+
         else:
             raise HTTPException(status_code=404, detail="File not found")
     return templates.TemplateResponse("edit_json.html", context)
+
+#when code is not valid json, saves to file, but does not load 
 
 @router.post("/edit_lookup")
 async def update_code(request: Request,):
@@ -87,7 +94,9 @@ async def update_code(request: Request,):
     data = await request.json()
     type = data["type"]
     code = data["code"]
-
+    
+    # need something here to validate the json, return error and 
+    # help if not, but never save to disk if not valid (causes so much yuck)
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
         if len(list(new_lang.iterdir())) > 0:
@@ -100,8 +109,13 @@ async def update_code(request: Request,):
                 json_file = list(path.glob("*features*"))[0]
 
             if json_file.exists():
-                json_file.write_text(code)
-                code = srsly.read_json(json_file) #Redundant, right?
+                try: # assert that code is valid json   
+                    code = srsly.read_json(json_file)
+                    json_file.write_text(code) 
+                except Exception as e:
+                    return templates.TemplateResponse(
+                       "edit_json.html", {"request": request, "code": code, "message": "[*] Error:"+str(e)}
+                    )
             else:
                 raise HTTPException(status_code=404, detail="File not found")
 
