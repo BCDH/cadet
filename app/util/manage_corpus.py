@@ -32,7 +32,7 @@ def load_stopwords():
         STOP_WORDS = module.STOP_WORDS
         return STOP_WORDS
 
-@lru_cache
+#@lru_cache removing so works on 3.6
 def load_lookups():
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:

@@ -151,7 +151,7 @@ def delete_stopword(word:str):
 # Corpus Page #
 ###############
 
-@lru_cache
+#@lru_cache removing to work on 3.6, but is good
 def load_lookups():
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
