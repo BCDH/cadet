@@ -61,3 +61,18 @@ async def update_code(request: Request,):
     return templates.TemplateResponse(
         "edit_code.html", {"request": request, "code": code}
     )
+
+@router.get("/check_logs")
+async def check_logs(
+    request: Request,
+    
+):
+    context = {} 
+    context['request']   = request
+    log_file = Path.cwd() / "error.log"
+    if log_file.exists():
+        context["code"] = log_file.read_text()
+    else:
+        raise HTTPException(status_code=404, detail="File not found")
+    return templates.TemplateResponse("edit_code.html", context)
+
