@@ -35,8 +35,10 @@ async def read_items(request: Request):
         if not texts_path.exists():
             texts_path.mkdir(parents=True, exist_ok=True)
         texts = [text.name for text in texts_path.iterdir()]
+        nlp = get_nlp()
+        writing_system = nlp.vocab.writing_system['direction']
         return templates.TemplateResponse(
-            "texts.html", {"request": request, "texts": texts}
+            "texts.html", {"request": request, "texts": texts, "writing_system":writing_system}
         )
     else:
         return templates.TemplateResponse(
@@ -126,3 +128,16 @@ async def get_tokenized_texts(text_name:str):
         return {'message': f"deleted {selected_file.name}" }
 
 
+def get_nlp():
+    # Load language object as nlp
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    try:
+        mod = __import__(f"new_lang.{lang_name}", fromlist=[lang_name.capitalize()])
+    except SyntaxError:  # Unable to load __init__ due to syntax error
+        # redirect /edit?file_name=examples.py
+        message = "[*] SyntaxError, please correct this file to proceed."
+        return RedirectResponse(url="/edit?file_name=tokenizer_exceptions.py")
+    cls = getattr(mod, lang_name.capitalize())
+    nlp = cls()
+    return nlp

@@ -178,12 +178,29 @@ async def read_items(request: Request):
         tokens_json = srsly.read_json((corpus_dir / 'tokens.json'))
         stats = srsly.read_json((corpus_dir / 'stats.json'))
         stats = srsly.json_loads(stats)
+        nlp = get_nlp()
+        writing_system = nlp.vocab.writing_system['direction']
+
         return templates.TemplateResponse(
             "corpus.html",
-            {"request": request, "stats": stats, "tokens_json": tokens_json},
+            {"request": request, "stats": stats, "tokens_json": tokens_json, "writing_system":writing_system},
         )
     else:
         return templates.TemplateResponse(
             "error_please_create.html", {"request": request}
         )
 
+
+def get_nlp():
+    # Load language object as nlp
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    try:
+        mod = __import__(f"new_lang.{lang_name}", fromlist=[lang_name.capitalize()])
+    except SyntaxError:  # Unable to load __init__ due to syntax error
+        # redirect /edit?file_name=examples.py
+        message = "[*] SyntaxError, please correct this file to proceed."
+        return RedirectResponse(url="/edit?file_name=tokenizer_exceptions.py")
+    cls = getattr(mod, lang_name.capitalize())
+    nlp = cls()
+    return nlp

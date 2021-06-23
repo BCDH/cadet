@@ -34,6 +34,7 @@ async def tokenization(request: Request, login=Depends(get_current_username)):
             return RedirectResponse(url="/edit?file_name=tokenizer_exceptions.py")
         cls = getattr(mod, lang_name.capitalize())
         nlp = cls()
+        writing_system = nlp.vocab.writing_system['direction']
         spacy_sentences = []
         for sentence in sentences:
             sent = ""
@@ -43,7 +44,7 @@ async def tokenization(request: Request, login=Depends(get_current_username)):
                 sent += f"<span style='margin:5px;' onmouseup='edit_span();' onclick='edit_me(this)' value='{token}' class='token'>{token}</span>&nbsp;"
             spacy_sentences.append(sent)
         return templates.TemplateResponse(
-            "tokenization.html", {"request": request, "sentences": spacy_sentences}
+            "tokenization.html", {"request": request, "sentences": spacy_sentences, "writing_system":writing_system}
         )
     else:
         return templates.TemplateResponse(

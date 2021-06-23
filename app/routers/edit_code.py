@@ -49,6 +49,7 @@ async def update_code(request: Request,):
     data = await request.json()
     type = data["type"]
     code = data["code"]
+    filename = data["filename"]
 
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:

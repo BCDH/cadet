@@ -19,13 +19,17 @@ async def create(request: Request):
     if len(list(new_lang.iterdir())) > 0:
         path = list(new_lang.iterdir())[0]
         path = path / "examples.py"
-        print(path)
         spec = importlib.util.spec_from_file_location("sentences", str(path))
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         sentences = module.sentences
+        
+        #ltr or rtl
+        nlp = get_nlp()
+        writing_system = nlp.vocab.writing_system['direction']
+
         return templates.TemplateResponse(
-            "sentences.html", {"request": request, "sentences": sentences}
+            "sentences.html", {"request": request, "sentences": sentences, "writing_system":writing_system}
         )
     else:
         return templates.TemplateResponse(
@@ -50,3 +54,17 @@ async def update_sentences(request: Request, sentences: str = Form(...)):
                 sents += '"' + sentence + '",'
             examples_file.write_text(examples[:start] + sents + examples[end:])
             return sentences
+
+def get_nlp():
+    # Load language object as nlp
+    new_lang = Path.cwd() / "new_lang"
+    lang_name = list(new_lang.iterdir())[0].name
+    try:
+        mod = __import__(f"new_lang.{lang_name}", fromlist=[lang_name.capitalize()])
+    except SyntaxError:  # Unable to load __init__ due to syntax error
+        # redirect /edit?file_name=examples.py
+        message = "[*] SyntaxError, please correct this file to proceed."
+        return RedirectResponse(url="/edit?file_name=tokenizer_exceptions.py")
+    cls = getattr(mod, lang_name.capitalize())
+    nlp = cls()
+    return nlp

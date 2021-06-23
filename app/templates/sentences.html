@@ -1,74 +1,110 @@
-{% extends 'base.html' %}
-{% block extrastyle %}{% endblock %}
-{% block navbar %}
+{% extends 'base.html' %} {% block extrastyle %}{% endblock %} {% block navbar
+%}
 <li class="active"><a href="/main">Home</a></li>
-{% endblock%}
+{% endblock%} {% block content %}
 
-{% block content %}
-
- <!-- ======= Testimonials Section ======= -->
- <section id="testimonials" class="testimonials section-bg">
-    <div class="container" data-aos="fade-up">
-
-      <div class="section-title">
-        <h2>Example Sentences</h2>
-        <p>This section adds example sentences to assist with tokenization.  Please add 10-15 sentences that are likely to highlight how the spaCy defaults 
-          perform with you language.  You will have the chance to tokenizer rules and exeptions in the next step. To get started, click on "Add" 
-        </p>
-      </div>
-      <div id="sentences">
-      <button class="nice-button" onclick="location.href='/create'">Back<i style='color:white;'class='icofont-long-arrow-left'></i></button>
-      <button class="nice-button" onclick="add_sentence();"><i style='color:white;'class='icofont-plus'></i>Add</button>
-      <button class="nice-button" onclick="save_sentences();"><i style='color:white;'class='icofont-save'></i>Save</button>
-      <button class="nice-button" onclick="location.href='/edit?file_name=examples.py'">Edit Code<i style='color:white;'class='icofont-code-alt'></i></button>
-      <button class="nice-button" onclick="save_sentences(); location.href='/tokenization'">Next<i style='color:white;'class='icofont-long-arrow-right'></i></button>
-
+<!-- ======= Testimonials Section ======= -->
+<section id="testimonials" class="testimonials section-bg">
+  <div class="container" data-aos="fade-up">
+    <div class="section-title">
+      <h2>Example Sentences</h2>
+      <p>
+        This section adds example sentences to assist with tokenization. Please
+        add 10-15 sentences that are likely to highlight how the spaCy defaults
+        perform with you language. You will have the chance to tokenizer rules
+        and exeptions in the next step. To get started, click on "Add"
+      </p>
+    </div>
+    <div id="sentences">
+      <button class="nice-button" onclick="location.href='/create'">
+        Back<i style="color: white" class="icofont-long-arrow-left"></i>
+      </button>
+      <button class="nice-button" onclick="add_sentence();">
+        <i style="color: white" class="icofont-plus"></i>Add
+      </button>
+      <button class="nice-button" onclick="save_sentences();">
+        <i style="color: white" class="icofont-save"></i>Save
+      </button>
+      <button
+        class="nice-button"
+        onclick="location.href='/edit?file_name=examples.py'"
+      >
+        Edit Code<i style="color: white" class="icofont-code-alt"></i>
+      </button>
+      <button
+        class="nice-button"
+        onclick="save_sentences(); location.href='/tokenization'"
+      >
+        Next<i style="color: white" class="icofont-long-arrow-right"></i>
+      </button>
       {% for sentence in sentences %}
       <div class="card text">
-        
         <span onclick="delete_sentence(this);" aria-hidden="true">&times;</span>
 
         <div class="card-body">
-          <i class="bx bxs-quote-alt-left quote-icon-left"></i><p class="sentence" contenteditable="true" id="{{loop.index}}" >{{ sentence }}</p><i class="bx bxs-quote-alt-right quote-icon-right"></i>        </div>
-         
-         
+          <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+          <p class="sentence" dir="{{ writing_system }}" contenteditable="true" id="{{loop.index}}">
+            {{ sentence }}
+          </p>
+          <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+        </div>
       </div>
-      
+
       {% endfor %}
     </div>
-            
-    </div>
-  </section><!-- End Testimonials Section -->
+  </div>
+</section>
+<!-- End Testimonials Section -->
 
-
-{% endblock %}
-
-{% block extrajs %}
+{% endblock %} {% block extrajs %}
 <script>
-    $('#header').addClass('header-scrolled');
+  $("#header").addClass("header-scrolled");
 
-    function save_sentences(){
-      var elements = document.getElementsByClassName("test");
-      let sentences = [];
-      var all = $(".sentence").map(function() {
+  function save_sentences() {
+    var elements = document.getElementsByClassName("test");
+    let sentences = [];
+    var all = $(".sentence")
+      .map(function () {
         sentences.push(this.innerHTML);
-      }).get();
-      $.post("/update_sentences", {"sentences": JSON.stringify(sentences)}, function(result){
+      })
+      .get();
+      console.log(all);
+    $.post(
+      "/update_sentences",
+      { sentences: JSON.stringify(sentences) },
+      function (result) {
         console.log(result);
-      });
-    };
+      }
+    );
+  }
 
-    function add_sentence(){
-      $('#sentences').after(`
+  function add_sentence() {
+    $("#sentences").after(`
       <div class="card">
         <div class="card-body">    
-          <i style="color: #b1a9fc; font-size: 26px;" class="bx bxs-quote-alt-left"></i><p class="sentence" contenteditable="true"></p><i style="color: #b1a9fc; font-size: 26px;" class="bx bxs-quote-alt-right"></i>
+          <i style="color: #b1a9fc; font-size: 26px;" class="bx bxs-quote-alt-left"></i><p class="sentence"  dir="{{ writing_system }}" contenteditable="true"></p><i style="color: #b1a9fc; font-size: 26px;" class="bx bxs-quote-alt-right"></i>
         </div>
-      </div>`)
-      
+      </div>`);
+  }
+  function delete_sentence(element) {
+    element.parentNode.remove();
+  }
+  
+  // remove formatting on paste, should work does not
+  // https://newbedev.com/javascript-trick-for-paste-as-plain-text-in-execcommand
+  $('[contenteditable]').on('paste', function(e) {
+    e.preventDefault();
+    var text = '';
+    if (e.clipboardData || e.originalEvent.clipboardData) {
+      text = (e.originalEvent || e).clipboardData.getData('text/plain');
+    } else if (window.clipboardData) {
+      text = window.clipboardData.getData('Text');
     }
-        function delete_sentence(element){
-          element.parentNode.remove();
-    };
+    if (document.queryCommandSupported('insertText')) {
+      document.execCommand('insertText', false, text);
+    } else {
+      document.execCommand('paste', false, text);
+    }
+});
 </script>
 {% endblock %}

@@ -69,7 +69,7 @@
       $.ajax({
         type: 'POST',
         url: '/edit',
-        data: JSON.stringify ({'code': code, 'filename':filename}),
+        data: JSON.stringify ({'code': code, 'type':'none', 'filename':filename}),
         success: function(data) { alert('data: ' + data); },
         contentType: "application/json",
         dataType: 'json'
