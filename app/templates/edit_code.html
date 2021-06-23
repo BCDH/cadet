@@ -4,14 +4,7 @@
     {% block extrastyle %}
   <link rel="stylesheet" href="https://codemirror.net/theme/cobalt.css">
   <link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
-  <style>
-    .CodeMirror {
-        height: auto;
-        border: 1px solid #eee;
-        max-height: 1200px;
-      }
-      
-  </style>
+  
   {% endblock %}
   {% block content %}
   <div style="margin-top:150px" class="container"> 
@@ -34,13 +27,13 @@
         
       </div> 
     </div>
-  <div class="container">
+  
      
     <form>
-        <textarea id="code" name="code">{{ code }}</textarea>
+        <textarea  rows="5" style="height: auto; position: absolute;" id="code" name="code">{{ code }}</textarea>
     </form>
     
-  </div>
+  
   <div class="container">
     &nbsp;
     <!-- area under the code -->
@@ -55,12 +48,17 @@
 
     let editor = CodeMirror.fromTextArea(document.getElementById("code"), {
       lineNumbers: true,
+      autoRefresh:true,
+      lineWrapping: false,
       styleActiveLine: true,
       matchBrackets: true,
       theme: 'cobalt',
       mode: 'python',
       viewportMargin: Infinity,
     });
+    
+    
+
     editor.on("change", function (cm, change) {
       let code = cm.getValue();
       let current_url = new URL(window.location.href);
@@ -77,7 +75,7 @@
 
     });
 
-  
+    
   </script>
 
   {% endblock %}
