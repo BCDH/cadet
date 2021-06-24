@@ -50,8 +50,8 @@ async def update_sentences(request: Request, sentences: str = Form(...)):
             end = examples.find("]")
             sents = ""
             for sentence in sentences:
-                sentence = sentence.replace('&amp;nbsp','').replace('&nbsp;','') #bug from the template
-                sents += '"' + sentence + '",'
+                sentence = sentence.replace('&amp;nbsp','').replace('&nbsp;','').replace('\n','') #bug from the template
+                sents += '"""' + sentence + '""",'
             examples_file.write_text(examples[:start] + sents + examples[end:])
             return sentences
 
