@@ -75,7 +75,9 @@ async def edit_pos(request: Request, type: str):
         if type == "features":
             json_file = list(path.glob("*features*"))[0]
         if json_file.exists():
-           context["code"] = json_file.read_text()
+           code = json_file.read_text()
+           code = srsly.json_loads(code)
+           context["code"] = str(code).replace("'",'"')
 
         else:
             raise HTTPException(status_code=404, detail="File not found")
