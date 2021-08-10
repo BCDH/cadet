@@ -64,8 +64,13 @@ async def download():
         docs = update_tokens_with_lookups(nlp, docs)
         conll = [doc_to_conllu(doc) for doc in docs]
 
+        # write conll to file, TODO this should be possible to do in memory
         temp_path = Path('/tmp/conllu_export')
-        temp_path.mkdir(parents=True, exist_ok=True)
+        if temp_path.exists():
+            shutil.rmtree(temp_path)
+            temp_path.mkdir(parents=True, exist_ok=True)
+        else:
+            temp_path.mkdir(parents=True, exist_ok=True)
         for filename, conll in zip(filenames,conll):
             conll_filename = filename.split('.')[0] +'.conllu'
             (temp_path / conll_filename).write_text(conll)
