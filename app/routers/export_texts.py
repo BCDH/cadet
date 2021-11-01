@@ -54,6 +54,8 @@ async def download():
     texts = get_texts()
     filenames = get_filenames()
     nlp = get_nlp()
+    nlp.max_length = len(max(texts, key=len))+1
+    #TODO handle memory errors caused by change above 
     if texts and nlp: 
         docs = [doc for doc in list(nlp.pipe(texts))]
         
