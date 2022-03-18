@@ -221,9 +221,11 @@ def doc_to_conllu(doc) -> str:
     
     tokens_with_features = load_features(doc)
     # split into sents on \n, then after each sent add blank row
+    index = 0
     for tok in doc:
-        if is_nl_token(tok):
+        if is_nl_token(tok) and len(data) > 0:  # to avoid generating the first line as empty
             data.append({})
+            index = 0
         else:
             if tok.is_space:
                 form = "_"
@@ -231,7 +233,8 @@ def doc_to_conllu(doc) -> str:
             else:
                 form = tok.orth_
                 lemma = tok.lemma_
-            tok_id = tok.i +1
+            tok_id = index + 1  # tok.i + 1
+            index += 1
             
             misc = "SpaceAfter=No" if not tok.whitespace_ else "_"
             row = {}
@@ -246,7 +249,9 @@ def doc_to_conllu(doc) -> str:
             if tok.i in tokens_with_features.keys():
                 row["FEATS"] = tokens_with_features[tok.i]
             else:
-                row["FEATS"] = "_" 
+                row["FEATS"] = "_"
+            if row["FEATS"] == '':
+                row["FEATS"] = '_'
             row["HEAD"] = "_"
             row["DEPREL"] = "_"
             row["DEPS"] = "_"
@@ -263,7 +268,6 @@ def doc_to_conllu(doc) -> str:
                 else:
                     output_file += row[column] + '\t'
     return output_file
-
 
 def doc_to_conll(doc) -> str:
     """
