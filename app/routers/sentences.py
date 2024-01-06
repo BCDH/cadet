@@ -23,13 +23,18 @@ async def create(request: Request):
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         sentences = module.sentences
-        
-        #ltr or rtl
+
+        # ltr or rtl
         nlp = get_nlp()
-        writing_system = nlp.vocab.writing_system['direction']
+        writing_system = nlp.vocab.writing_system["direction"]
 
         return templates.TemplateResponse(
-            "sentences.html", {"request": request, "sentences": sentences, "writing_system":writing_system}
+            "sentences.html",
+            {
+                "request": request,
+                "sentences": sentences,
+                "writing_system": writing_system,
+            },
         )
     else:
         return templates.TemplateResponse(
@@ -50,10 +55,16 @@ async def update_sentences(request: Request, sentences: str = Form(...)):
             end = examples.find("]")
             sents = ""
             for sentence in sentences:
-                sentence = sentence.replace('&amp;nbsp','').replace('&nbsp;','').replace('\n','').strip() #bug from the template
+                sentence = (
+                    sentence.replace("&amp;nbsp", "")
+                    .replace("&nbsp;", "")
+                    .replace("\n", "")
+                    .strip()
+                )  # bug from the template
                 sents += '"""' + sentence + '""",'
             examples_file.write_text(examples[:start] + sents + examples[end:])
             return sentences
+
 
 def get_nlp():
     # Load language object as nlp

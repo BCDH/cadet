@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List, Optional, Set
 from fastapi import Request, Form, File, APIRouter, Depends
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import FileResponse,RedirectResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
 from app.util.login import get_current_username
 from collections import Counter, namedtuple
@@ -13,15 +13,13 @@ import importlib
 import shutil
 
 
-
 templates = Jinja2Templates(directory="app/templates")
 
 router = APIRouter(dependencies=[Depends(get_current_username)])
 
 
 @router.get("/project")
-async def project(request:Request):
-    
+async def project(request: Request):
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
         return templates.TemplateResponse("project.html", {"request": request})
@@ -33,7 +31,7 @@ async def project(request:Request):
 
 @router.get("/download_project")
 async def download_project():
-    """Package all files noted in the template. 
+    """Package all files noted in the template.
     1. original text files.
     2.  lookups for lemma, pos and features
     3. serialize your new spaCy language object
@@ -45,18 +43,19 @@ async def download_project():
     new_lang = Path.cwd() / "new_lang"
     lang_name = list(new_lang.iterdir())[0].name
     new_lang = new_lang / lang_name
-    
-    make_project()
-    
-    #make export directory 
-    export_path = Path.cwd() / lang_name
-    
 
-    #shutil.make_archive("zipped_sample_directory", "zip", "sample_directory")
-    shutil.make_archive(str(export_path), 'zip', str(new_lang))
-    zip_file = Path.cwd() / (lang_name + '.zip')
-    
-    return FileResponse(str(zip_file), media_type="application/zip", filename=lang_name +'.zip')
+    make_project()
+
+    # make export directory
+    export_path = Path.cwd() / lang_name
+
+    # shutil.make_archive("zipped_sample_directory", "zip", "sample_directory")
+    shutil.make_archive(str(export_path), "zip", str(new_lang))
+    zip_file = Path.cwd() / (lang_name + ".zip")
+
+    return FileResponse(
+        str(zip_file), media_type="application/zip", filename=lang_name + ".zip"
+    )
 
 
 def get_nlp():
@@ -67,20 +66,19 @@ def get_nlp():
     cls = getattr(mod, lang_name.capitalize())
     nlp = cls()
     return nlp
-    
-        
-    
+
+
 def make_project():
     new_lang = Path.cwd() / "new_lang"
     if len(list(new_lang.iterdir())) > 0:
         lang_name = list(new_lang.iterdir())[0].name
-        lookups_path = new_lang/ lang_name / "lookups"
-        print(lookups_path,list(lookups_path.glob("*upos*")))
+        lookups_path = new_lang / lang_name / "lookups"
+        print(lookups_path, list(lookups_path.glob("*upos*")))
         json_file = list(lookups_path.glob("*upos*"))[0]
-        lang_code = json_file.name.split('_')[0] 
-        project_path = new_lang / lang_name / 'project.yml'
+        lang_code = json_file.name.split("_")[0]
+        project_path = new_lang / lang_name / "project.yml"
         project_path.write_text(
-f"""
+            f"""
 title: "New Language Project for Part-of-speech Tagging, Lemmatizer and Features from CoNLL-U data"
 description: "This project template lets you train a part-of-speech tagger, lemmatizer and features from a [Universal Dependencies-style](https://universaldependencies.org/) corpus. It takes care of downloading the treebank, converting it to spaCy's format and training and evaluating the model. Just make sure to adjust the `lang` and treebank settings in the variables below."
 
@@ -189,4 +187,5 @@ commands:
       - "rm -rf training/*"
       - "rm -rf metrics/*"
       - "rm -rf corpus/*"    
-""")
+"""
+        )

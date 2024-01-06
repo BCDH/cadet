@@ -21,7 +21,8 @@ from app.util.login import get_current_username
 from pathlib import Path
 
 import logging
-#from app.custom_logging import CustomizeLogger
+
+# from app.custom_logging import CustomizeLogger
 
 logger = logging.getLogger(__name__)
 config_path = Path(__file__).with_name("logging_config.json")
@@ -32,8 +33,8 @@ templates = Jinja2Templates(directory="app/templates")
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="./app/static"), name="static")
 
-#logger = CustomizeLogger.make_logger(config_path)
-#app.logger = logger
+# logger = CustomizeLogger.make_logger(config_path)
+# app.logger = logger
 
 app.include_router(create.router)
 
@@ -56,8 +57,9 @@ if not new_lang.exists():  # Directory does not exist the first time the app is 
 
 
 @app.get("/")
-def root(request: Request,):
-
+def root(
+    request: Request,
+):
     return templates.TemplateResponse("login.html", {"request": request})
 
 

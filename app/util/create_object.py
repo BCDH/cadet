@@ -32,7 +32,8 @@ def create_object_file(
     path = Path.cwd() / "new_lang" / lang_name
     path.mkdir(parents=True, exist_ok=True)
     init = path / "__init__.py"
-    init.write_text(f"""
+    init.write_text(
+        f"""
 import spacy
 from spacy.language import Language
 from spacy.lang.tokenizer_exceptions import URL_MATCH
@@ -92,7 +93,9 @@ def do_registration():
     return result
 
 __all__ = ["{lang_name.capitalize()}"]
-""")
+"""
+    )
+
 
 ## David's version
 # def create_object_file(
@@ -166,7 +169,6 @@ __all__ = ["{lang_name.capitalize()}"]
 
 # __all__ = ["{lang_name.capitalize()}","make_lemmatizer"]
 # """)
-
 
 
 def create_stop_words(lang_name: str, lang_code: str):
@@ -405,12 +407,12 @@ path = "new_lang/{lang_name}/lookups/{lang_code}_tag_map.json"
     )
 
 
-def create_lemmatizer(
-    lang_name: str, lang_code: str):
+def create_lemmatizer(lang_name: str, lang_code: str):
     path = Path.cwd() / "new_lang" / lang_name
     path.mkdir(parents=True, exist_ok=True)
     init = path / "lemmatizer.py"
-    init.write_text(f"""
+    init.write_text(
+        f"""
 from typing import List, Tuple
 from spacy.pipeline import Lemmatizer
 from spacy.tokens import Token
@@ -447,4 +449,5 @@ class {lang_name.capitalize()}Lemmatizer(Lemmatizer):
         return [lookup_table.get(string, string)]
 
 
-""")
+"""
+    )

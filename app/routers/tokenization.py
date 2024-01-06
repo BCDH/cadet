@@ -34,17 +34,21 @@ async def tokenization(request: Request, login=Depends(get_current_username)):
             return RedirectResponse(url="/edit?file_name=tokenizer_exceptions.py")
         cls = getattr(mod, lang_name.capitalize())
         nlp = cls()
-        writing_system = nlp.vocab.writing_system['direction']
+        writing_system = nlp.vocab.writing_system["direction"]
         spacy_sentences = []
         for sentence in sentences:
             sent = ""
             doc = nlp(sentence)
             for token in doc:
-               
                 sent += f"<span style='margin:5px;' onmouseup='edit_span();' onclick='edit_me(this)' value='{token}' class='token'>{token}</span>&nbsp;"
             spacy_sentences.append(sent)
         return templates.TemplateResponse(
-            "tokenization.html", {"request": request, "sentences": spacy_sentences, "writing_system":writing_system}
+            "tokenization.html",
+            {
+                "request": request,
+                "sentences": spacy_sentences,
+                "writing_system": writing_system,
+            },
         )
     else:
         return templates.TemplateResponse(
@@ -64,10 +68,12 @@ async def add_tokenization_exception(
     if exceptions_file.exists():
         script = exceptions_file.read_text()
         cursor = script.find("exclusions = [") + 14
-        
-        if token2: #is split
-            addition = f"{{'{token1+token2}':[{{ORTH: '{token1}'}},{{ORTH: '{token2}'}}]}},\n"
-        else: # is join
+
+        if token2:  # is split
+            addition = (
+                f"{{'{token1+token2}':[{{ORTH: '{token1}'}},{{ORTH: '{token2}'}}]}},\n"
+            )
+        else:  # is join
             addition = f"{{'{token1}':[{{ORTH: '{token1}'}}]}},\n"
         new_script = script[:cursor] + addition + script[cursor:]
         exceptions_file.write_text(new_script)
