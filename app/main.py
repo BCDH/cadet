@@ -31,13 +31,12 @@ app_dir = Path.cwd()
 templates = Jinja2Templates(directory="app/templates")
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="./app/static"), name="static")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # logger = CustomizeLogger.make_logger(config_path)
 # app.logger = logger
 
 app.include_router(create.router)
-
 app.include_router(texts.router)
 app.include_router(corpus.router)
 app.include_router(tokenization.router)
