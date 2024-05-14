@@ -22,3 +22,9 @@ Please note that you will be prompted to create a Hiroku user account if you do 
 <a href="https://heroku.com/deploy">
   <img src="https://www.herokucdn.com/deploy/button.svg" alt="Deploy">
 </a>
+
+## Funding
+
+<img src="https://i.imgur.com/z7WiXJU.jpeg" width=20% height=20%>
+
+This project has received funding from the European Union’s Horizon 2020 Research and Innovation Programme under Grant Agreement No 101004984 (CLS Infra).
