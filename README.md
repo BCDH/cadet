@@ -72,6 +72,26 @@ Building from spaCy's defaults, this will create a new language object for your 
 
 ![](https://i.imgur.com/kQxhPtZ.png)<!-- .element: style="width:70%; border:none; background: #222222; box-shadow:none;" -->
 
+## Install and run with Docker
+
+1. Make sure you have docker installed on your machine (including the `docker` command).
+2. After cloning this repository, navigate to the root of the repository
+For example:
+```
+git clone git@github.com:BCDH/cadet.git
+cd cadet
+```
+3. Build the Docker image
+```
+docker build -t cadet .
+```
+
+4. Run the Docker Container
+```
+docker run -p 8000:8000 cadet
+```
+ 
+
 ## Repo template
 
 ![](https://i.imgur.com/ttcnsAr.png)<!-- .element: style="width:70%; border:none; background: #222222; box-shadow:none;" -->
